@@ -132,6 +132,14 @@
           font-weight: 500;
           margin-bottom: 1.7rem;
           color: #222222;
+
+          &:hover {
+            background-color: darken(#ffffff, 2%);
+          }
+
+          &:active {
+            background-color: darken(#ffffff, 5%);
+          }
         }
       }
     }
@@ -174,9 +182,12 @@
         border-radius: 1.25rem;
         box-sizing: border-box;
         padding: 0.3rem 0.7rem;
+        cursor: pointer;
 
         &.-dark {
           background-color: #e0e0e095;
+          pointer-events: none;
+          user-select: none;
         }
 
         > .item {
@@ -187,6 +198,7 @@
           text-overflow: ellipsis;
           white-space: nowrap;
           cursor: pointer;
+
 
           &.recommend-text {
             cursor: default;
