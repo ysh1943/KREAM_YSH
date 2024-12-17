@@ -1,0 +1,299 @@
+@charset "UTF-8";
+
+@import "../../../assets/styles/global";
+
+body {
+  @include flex(column, flex-start, flex-start);
+  width: 100vw;
+  height: 100vh;
+}
+
+#header {
+  background-color: #ffffff;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6rem;
+  position: fixed;
+  border-bottom: 0.0625rem solid #a0a0a0;
+  z-index: 5;
+
+  > .header-container {
+    width: 100%;
+    max-width: 80rem;
+    margin: 0 auto;
+
+    > .top-inner {
+      height: 1.5rem;
+
+      > .top-list {
+        @include flex(row, center, flex-start, 1.5rem);
+        box-sizing: border-box;
+        padding: 1rem 1.5rem;
+        font-size: 0.75rem;
+
+        > .top-item > .top-link {
+          color: #745b39;
+          text-decoration: none;
+        }
+      }
+    }
+
+    > .main-inner {
+      @include flex(row, center, flex-start, 1.6rem);
+      height: 4.5rem;
+      box-sizing: border-box;
+      padding: 1.25rem 1.5rem;
+
+      > .logo > .logo-icon {
+        width: 10rem;
+      }
+
+      > .menu > .menu-list {
+        @include flex(row, center, flex-start, 1.6rem);
+
+        > .menu-item > .menu-link {
+          color: inherit;
+          font-size: 1.15rem;
+          font-weight: 400;
+          text-decoration: none;
+
+
+          &.bold {
+            font-weight: 700;
+          }
+        }
+      }
+
+      > .search > .search-icon {
+        width: 1.3rem;
+        cursor: pointer;
+      }
+
+      > .cart > .cart-icon {
+        width: 1.4rem;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+#main {
+  width: 100vw;
+  padding-top: 6rem;
+  flex: 1;
+
+  > .banner {
+    width: 100%;
+    height: 30rem;
+    overflow: hidden;
+
+    > .banner-image {
+      width: 100%;
+      height: 100%;
+      object-position: center;
+      object-fit: cover;
+    }
+  }
+
+  > .main-container {
+    width: 100%;
+    max-width: 80rem;
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 2.5rem;
+
+    > .home-products-title {
+      margin-bottom: 0.7rem;
+
+      > .title-us {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #000000;
+        margin-bottom: 0.15rem;
+      }
+
+      > .title-ko {
+        font-size: 0.9rem;
+        color: #745b39;
+      }
+    }
+
+    > .error-list > .error {
+      text-align: center;
+    }
+
+    > .home-products-list {
+      display: grid;
+      gap: 3rem 0.5rem;
+      grid-template-columns: repeat(5, 1fr);
+
+      > .products-item {
+        @include flex(column, stretch, flex-start, 0.25rem);
+
+        > .product-image {
+          position: relative;
+
+          > .trading {
+            @include flex(row, center, flex-start, 0.25rem);
+            top: 0.625rem;
+            right: 0.625rem;
+            position: absolute;
+            z-index: 1;
+
+            > .text {
+              font-size: 0.75rem;
+              color: #0a0a0a;
+            }
+          }
+
+          > .image {
+            background-color: #eeeeee;
+            border-radius: 0.3rem;
+            width: 14.6rem;
+          }
+        }
+
+        > .product-text {
+          @include flex(column, stretch, flex-start, 0.7rem);
+
+          > .text-container {
+            @include flex(column, stretch, flex-start, 0.15rem);
+
+            > .brand {
+              color: #222222;
+              font-size: 0.8rem;
+              font-weight: 700;
+            }
+
+            > .product-name {
+              color: #0a0a0a;
+              font-size: 0.8rem;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: normal;
+            }
+          }
+
+          > .price {
+            font-size: 0.8rem;
+            font-weight: 700;
+          }
+        }
+      }
+    }
+  }
+}
+
+#footer {
+  width: 100vw;
+
+  > .footer-container {
+    width: 100%;
+    max-width: 80rem;
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 2.5rem;
+    border-top: 0.0625rem solid #eeeeee;
+
+    > .service-area {
+      @include flex(row, flex-start, flex-start, 1rem);
+
+      > .footer-menu {
+        @include flex(row, center, flex-start, 5rem);
+
+        > .menu-box {
+          @include flex(column, flex-start, flex-start, 0.9rem);
+
+          > .menu-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: inherit;
+          }
+
+          > .menu-list {
+            @include flex(column, flex-start, flex-strart, 0.7rem);
+
+            > .menu-item {
+              font-size: 0.8rem;
+              color: #22222280;
+            }
+          }
+        }
+      }
+
+      > .customer-service {
+        @include flex(column, flex-start, flex-start, 0.9rem);
+
+        > .service-title {
+          font-size: 0.9rem;
+          font-weight: 700;
+          color: inherit;
+        }
+
+        > .service-time {
+          @include flex(column, flex-start, flex-start, 0.7rem);
+
+          > .time-term {
+            font-size: 0.8rem;
+            color: #22222280;
+          }
+        }
+
+        > .service-noti {
+          font-size: 0.8rem;
+        }
+      }
+    }
+
+    > .corporation-are {
+      @include flex(column, flex-start, flex-start, 0.5rem);
+      margin-top: 3rem;
+      padding-top: 2rem;
+      box-sizing: border-box;
+      border-top: 0.0625rem solid #eeeeee;
+
+      > .term-list {
+        @include flex(row, flex-start, flex-start, 1.5rem);
+
+        > .term-item {
+          font-size: 0.8rem;
+          font-weight: 400;
+          color: #000000;
+
+          &.bold {
+            font-weight: 700;
+          }
+        }
+      }
+
+      > .business-info {
+        width: 35rem;
+        line-height: 1rem;
+        font-size: 0.7rem;
+        color: #22222280;
+      }
+    }
+
+    > .notice-guarantee {
+      @include flex(column, flex-start, flex-start, 0.2rem);
+      margin-top: 2rem;
+      font-size: 0.7rem;
+
+      > .title {
+        font-weight: 700;
+      }
+
+      > .description {
+        color: #22222280;
+      }
+    }
+
+    > .notice-area {
+      width: 35rem;
+      font-size: 0.7rem;
+      color: #22222280;
+      margin-top: 1rem;
+    }
+  }
+}

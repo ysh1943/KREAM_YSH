@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>KREAM</title>
+    <link rel="shortcut icon" th:href="@{'/assets/images/favicon.ico'}">
+    <link rel="stylesheet" th:href="@{'/home/assets/styles/index.css'}" type="text/css">
+    <link rel="stylesheet" th:href="@{'/assets/styles/common.css'}" type="text/css">
+    <script src="https://kit.fontawesome.com/20d32b3086.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<header id="header">
+    <div class="header-container">
+        <div class="top-inner">
+            <ul class="top-list">
+                <li class="-spring"></li>
+                <li class="top-item">
+                    <a class="top-link" th:if="${user != null && user.isAdmin()}" th:href="@{'/admin'}">관리자 페이지</a>
+                </li>
+                <li class="top-item">
+                    <a class="top-link" th:href="${user == null} ? '/login' : '/my'">마이페이지</a>
+                </li>
+                <li class="top-item">
+                    <a class="top-link" th:href="${user == null} ? '/login' : '/'" th:text="${user == null} ? '로그인' : '로그아웃'"></a>
+                </li>
+            </ul>
+        </div>
+        <div class="main-inner">
+            <a class="logo" th:href="@{'/'}">
+                <img class="logo-icon" alt="logo" src="/assets/images/logo.png">
+            </a>
+            <div class="-spring"></div>
+            <nav class="menu">
+                <ul class="menu-list">
+                    <li class="menu-item">
+                        <a class="menu-link bold" th:href="@{'/'}">HOEM</a>
+                    </li>
+                    <li class="menu-item">
+                        <a class="menu-link" th:href="@{'/shop'}">SHOP</a>
+                    </li>
+                </ul>
+            </nav>
+            <a class="search" th:href="@{'/search'}">
+                <img class="search-icon" alt="search-icon" src="/home/assets/images/search-icon.png">
+            </a>
+            <a class="cart" th:href="${user == null} ? '/login' : '/cart'">
+                <img class="cart-icon" alt="cart-icon" src="/home/assets/images/cart_icon.png">
+            </a>
+        </div>
+    </div>
+</header>
+<main id="main">
+    <div class="banner">
+        <img class="banner-image" alt="banner" src="/home/assets/images/banner_img.png">
+    </div>
+    <div class="main-container">
+        <div class="home-products-title">
+            <div class="title-us">Most Popular</div>
+            <div class="title-ko">인기상품</div>
+        </div>
+        <div class="error-list" th:if="${popularProducts.isEmpty()}">
+            <div class="error">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                인기상품을 불러오는 데 문제가 발생했습니다. 새로 고침해주세요.</div>
+        </div>
+        <ul class="home-products-list" th:if="${!popularProducts.isEmpty()}" th:each="popularProduct : ${popularProducts}">
+            <li class="products-item">
+                <a th:href="@{'/shop?keyword=' + ${popularProduct.getProductName()}}" class="product-image">
+                    <span class="trading">
+                        <span class="text">거래</span>
+                        <span class="text" th:text="${popularProduct.getTransactionCount()}"></span>
+                    </span>
+                    <img class="image" alt="popular-product-image" th:src="${popularProduct.getBase64Image()}">
+                </a>
+                <span class="product-text">
+                    <span class="text-container">
+                        <span class="brand" th:text="${popularProduct.getBrand()}"></span>
+                        <span class="product-name" th:text="${popularProduct.getProductName()}"></span>
+                    </span>
+                    <span class="price" th:text="${#numbers.formatInteger(popularProduct.getLowestPrice(), 0, 'COMMA') + '원'}"></span>
+                </span>
+            </li>
+        </ul>
+    </div>
+    <div class="main-container">
+        <div class="home-products-title">
+            <div class="title-us">New In</div>
+            <div class="title-ko">신규 등록 상품</div>
+        </div>
+        <div class="error-list" th:if="${newProducts.isEmpty()}">
+            <div class="error">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                신규상품을 불러오는 데 문제가 발생했습니다. 새로 고침해주세요.
+            </div>
+        </div>
+        <ul class="home-products-list" th:if="${!newProducts.isEmpty()}" th:each="newProduct : ${newProducts}">
+            <li class="products-item">
+                <a th:href="@{'/shop?keyword=' + ${newProduct.getProductName()}}" class="product-image">
+                    <span class="trading">
+                        <span class="text">거래</span>
+
+                        <span class="text" th:text="${newProduct.getTransactionCount()}"></span>
+                    </span>
+                    <img class="image" alt="new-product-image" th:src="${newProduct.getBase64Image()}">
+                </a>
+                <span class="product-text">
+                    <span class="text-container">
+                        <span class="brand" th:text="${newProduct.getBrand()}"></span>
+                        <span class="product-name" th:text="${newProduct.getProductName()}"></span>
+                    </span>
+                    <span class="price" th:text="${#numbers.formatInteger(newProduct.getLowestPrice(), 0, 'COMMA') + '원'}"></span>
+                </span>
+            </li>
+        </ul>
+    </div>
+</main>
+<footer id="footer">
+    <div class="footer-container">
+        <div class="service-area">
+            <div class="footer-menu">
+                <div class="menu-box">
+                    <span class="menu-title">이용안내</span>
+                    <ul class="menu-list">
+                        <li class="menu-item">검수기준</li>
+                        <li class="menu-item">이용정책</li>
+                        <li class="menu-item">페널티 정책</li>
+                        <li class="menu-item">커뮤니티 가이드라인</li>
+                    </ul>
+                </div>
+                <div class="menu-box">
+                    <span class="menu-title">고객지원</span>
+                    <ul class="menu-list">
+                        <li class="menu-item">공지사항</li>
+                        <li class="menu-item">서비스 소개</li>
+                        <li class="menu-item">스토어 안내</li>
+                        <li class="menu-item">판매자 방문접수</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="-spring"></div>
+            <div class="customer-service">
+                <span class="service-title">고객센터 1588-7813</span>
+                <span class="service-time">
+                    <span class="time-term">운영시간 평일 10:00 - 18:00 (토•일, 공휴일 휴무)</span>
+                    <span class="time-term">점심시간 평일 13:00 - 14:00</span>
+                </span>
+                <span class="service-noti">1:1 문의하기는 앱에서만 가능합니다.</span>
+            </div>
+        </div>
+        <div class="corporation-are">
+            <ul class="term-list">
+                <li class="term-item">회사소개</li>
+                <li class="term-item">인재채용</li>
+                <li class="term-item">제휴제안</li>
+                <li class="term-item">이용약관</li>
+                <li class="term-item bold">개인정보처리방침</li>
+            </ul>
+            <span class="business-info">크림 주식회사 · 대표 김창욱사업자등록번호 : 570-88-01618 사업자정보확인통신판매업 : 제 2021-성남분당C-0093호사업장소재지 : 경기도 성남시 분당구 분당내곡로 131 판교테크원 타워1, 7층호스팅 서비스 : 네이버 클라우드 ㈜</span>
+        </div>
+        <div class="notice-guarantee">
+            <span class="title">신한은행 채무지급보증 안내</span>
+            <span class="description">당사는 고객님의 현금 결제 금액에 대해 신한은행과 채무지급보증 계약을 체결하여 안전거래를 보장하고 있습니다.서비스가입 사실 확인</span>
+        </div>
+        <div class="notice-area">
+            <span class="notice">크림(주)는 통신판매 중개자로서 통신판매의 당사자가 아닙니다. 본 상품은 개별판매자가 등록한 상품으로 상품, 상품정보, 거래에 관한 의무와 책임은 각 판매자에게 있습니다. 단, 이용약관 및 정책, 기타 거래 체결 과정에서 고지하는 내용 등에 따라 검수하고 보증하는 내용에 대한 책임은 크림(주)에 있습니다.</span>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
