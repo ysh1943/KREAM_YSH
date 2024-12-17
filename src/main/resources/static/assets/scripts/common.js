@@ -46,18 +46,18 @@ class Dialog {
             content: content,
             buttons: [
                 {
-                    text: '확인', onclick: ($dialog) => {
-                        Dialog.hide($dialog);
-                        if (typeof onYes === 'function') {
-                            onYes($dialog);
-                        }
-                    }
-                },
-                {
                     text: '취소', onclick: ($dialog) => {
                         Dialog.hide($dialog);
                         if (typeof onNo === 'function') {
                             onNo($dialog);
+                        }
+                    }
+                },
+                {
+                    text: '확인', onclick: ($dialog) => {
+                        Dialog.hide($dialog);
+                        if (typeof onYes === 'function') {
+                            onYes($dialog);
                         }
                     }
                 }

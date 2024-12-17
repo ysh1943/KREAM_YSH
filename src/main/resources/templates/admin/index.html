@@ -11,7 +11,6 @@
     <link rel="stylesheet" type="text/css" th:href="@{'/admin/assets/styles/common.css'}">
     <link rel="stylesheet" type="text/css" th:href="@{'/admin/assets/styles/index.css'}">
     <script defer type="text/javascript" th:src="@{'/assets/scripts/common.js'}"></script>
-    <script defer type="text/javascript" th:src="@{'/admin/assets/scripts/index.js'}"></script>
     <script src="https://kit.fontawesome.com/79ae8a0168.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -19,14 +18,14 @@
     <div class="header-top">
         <div class="main-inner">
             <h1>
-                <a href="#" class="logo">KREAM</a>
+                <a class="logo" th:href="@{'/'}">KREAM</a>
                 <a class="logo" th:href="@{/admin/}">Administrator</a>
             </h1>
         </div>
         <div class="-spring"></div>
         <div class="header-right">
             <nav class="link-container">
-                <a href=""><i class="icon fa-solid fa-arrow-right-from-bracket"></i></a>
+                <a th:href="@{/user/}"><i class="icon fa-solid fa-arrow-right-from-bracket"></i></a>
             </nav>
         </div>
     </div>
@@ -65,7 +64,7 @@
         <div class="table-header">
             <span class="title">최근 회원가입</span>
             <div class="-spring"></div>
-            <a th:href="@{/admin/user}">회원관리 바로가기</a>
+            <a th:href="@{/user/logout}">회원관리 바로가기</a>
         </div>
         <div class="table-main">
             <table>

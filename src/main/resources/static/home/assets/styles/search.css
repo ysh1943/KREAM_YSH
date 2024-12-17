@@ -1,0 +1,289 @@
+#cover {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  display: none;
+  background-color: #ffffff;
+  z-index: 2;
+}
+
+#header {
+  width: 100%;
+}
+#header > .header-top {
+  height: 3rem;
+}
+#header > .header-top > .leave {
+  top: 1rem;
+  right: 1rem;
+  position: absolute;
+  cursor: pointer;
+  z-index: 10;
+}
+#header > .form {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: flex-start;
+  width: 100%;
+  height: 3rem;
+  max-width: 45rem;
+  margin: 0 auto;
+}
+#header > .form > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+#header > .form > .label {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  justify-content: flex-start;
+  width: 45rem;
+  border-bottom: 0.17rem solid #000000;
+  padding-bottom: 1rem;
+  z-index: 10;
+}
+#header > .form > .label > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+#header > .form > .label > .keyword {
+  width: 100%;
+  padding: 0 0.8rem 0 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+#header > .form > .label > .keyword::placeholder {
+  font-size: 1.2rem;
+  font-weight: 300;
+}
+#header > .form > .label > .cancel,
+#header > .form > .label > .search {
+  width: 2rem;
+  user-select: none;
+  pointer-events: none;
+  opacity: 0;
+}
+#header > .form > .label > .cancel:active,
+#header > .form > .label > .search:active {
+  transform: scale(120%);
+}
+#header > .form > .label > .cancel > .icon,
+#header > .form > .label > .search > .icon {
+  cursor: pointer;
+}
+#header > .form > .label > .cancel.-visible,
+#header > .form > .label > .search.-visible {
+  opacity: 1;
+  pointer-events: all;
+}
+#header > .form > .result {
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100vh;
+  display: none;
+  z-index: 10;
+}
+#header > .form > .result > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+#header > .form > .result > .message {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  justify-content: flex-start;
+  margin-top: 1.5rem;
+}
+#header > .form > .result > .message > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+#header > .form > .result > .message > .init {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 0.25rem;
+  justify-content: center;
+}
+#header > .form > .result > .message > .init > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+#header > .form > .result > .message > .loading {
+  display: none;
+}
+@keyframes anim {
+  from {
+    transform: rotateZ(0deg);
+  }
+  to {
+    transform: rotateZ(360deg);
+  }
+}
+#header > .form > .result > .message > .loading > .icon {
+  animation-name: anim;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+#header > .form > .result > .message > .empty {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 0.2rem;
+  justify-content: center;
+  display: none;
+}
+#header > .form > .result > .message > .empty > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+#header > .form > .result > .message > .error {
+  display: none;
+}
+#header > .form > .result > .item {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  justify-content: flex-start;
+}
+#header > .form > .result > .item > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+#header > .form > .result > .item > .text {
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 1.7rem;
+  color: #222222;
+}
+
+#main {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 45rem;
+  margin: 0 auto;
+}
+#main > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+#main > .container {
+  align-items: strect;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: felx-start;
+  margin-top: 1rem;
+}
+#main > .container > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+#main > .container.recent-area {
+  display: none;
+}
+#main > .container > .title-wrap > .title {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+#main > .container > .title-wrap > .sub-title {
+  font-size: 0.7rem;
+  color: #222222;
+  cursor: pointer;
+}
+#main > .container > .list {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  justify-content: flex-start;
+}
+#main > .container > .list > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+#main > .container > .list > .content-item {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 0.2rem;
+  justify-content: flex-start;
+  border: 0.0625rem solid #e0e0e0;
+  border-radius: 1.25rem;
+  box-sizing: border-box;
+  padding: 0.3rem 0.7rem;
+}
+#main > .container > .list > .content-item > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+#main > .container > .list > .content-item.-dark {
+  background-color: rgba(224, 224, 224, 0.5843137255);
+}
+#main > .container > .list > .content-item > .item {
+  font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+#main > .container > .list > .content-item > .item.recommend-text {
+  cursor: default;
+}
+#main > .container > .list > .content-item > .cancel-button > .recent-content-cancel {
+  width: 0.7rem;
+  line-height: 1;
+  cursor: pointer;
+}
+#main > .popular-area > .popular-content-wrap {
+  margin-top: 0.7rem;
+}
+#main > .popular-area > .popular-content-wrap > .ranking {
+  column-count: 2;
+}
+#main > .popular-area > .popular-content-wrap > .ranking > .ranking-item {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 0.25rem;
+  justify-content: flex-start;
+  font-size: 0.8rem;
+  padding: 0.15rem 0 1rem;
+}
+#main > .popular-area > .popular-content-wrap > .ranking > .ranking-item > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+#main > .popular-area > .popular-content-wrap > .ranking > .ranking-item > .number {
+  font-weight: 600;
+}
+#main > .popular-area > .popular-content-wrap > .ranking > .ranking-item > .name {
+  color: #000000;
+  cursor: pointer;
+  width: 10rem;
+  font-weight: 300;
+  user-select: none;
+  text-decoration: none;
+  margin-right: 15rem;
+}
+
+/*# sourceMappingURL=search.css.map */

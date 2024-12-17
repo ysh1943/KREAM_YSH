@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <script defer th:src="@{/assets/user/scripts/my.js}" type="text/javascript"></script>
+</head>
+<div class="dialog" th:with="user = ${session.user}">
+  <h1 class="title">회원 페이지</h1>
+  <span class="text">
+  <span class="bold" th:text="${user.getNickname()}"></span>님 반갑습니다!</span>
+  <span class="text">소셜 로그인: <span class="bold" th:text="${user.getSocialTypeCode() == null ? '일반 계정' : user.getSocialTypeCode()}"></span></span>
+  <span class="text">소셜 식별자: <span class="bold" th:text="${user.getSocialId() == null ? '해당 없음' : user.getSocialId()}"></span></span>
+  <a class="logout-anchor" target="_self" th:href="@{/user/logout}">로그아웃</a>
+  <a class="cancel-anchor" href="#" rel="cancel">탈퇴하기</a>
+</div>
+</html>
