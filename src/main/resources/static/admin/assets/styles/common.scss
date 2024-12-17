@@ -1,0 +1,101 @@
+@charset "UTF-8";
+
+@import "../../../assets/styles/global";
+
+header {
+  border-bottom: 0.8px solid #d3d3d3;
+  background-color: #ffffff;
+
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 9rem;
+  position: fixed;
+  z-index: 10;
+
+  .header-top {
+    @include flex(row, center, flex-start);
+    height: 4rem;
+    box-sizing: border-box;
+    padding: 1rem 1rem 0 1rem;
+
+    > .main-inner > h1 > .logo {
+      color: inherit;
+      font-size: 2rem;
+      font-style: italic;
+      font-weight: 850;
+      text-decoration: none;
+    }
+
+    > .header-right {
+      @include flex(row, center, flex-start, 0.5rem);
+
+      > .link-container > a > .icon {
+        color: #222;
+        font-size: 1.8rem;
+        margin-right: 1rem;
+      }
+    }
+  }
+
+  .header-menu {
+    @include flex(row, center, center);
+    padding: 1.5rem;
+    margin-top: 1rem;
+
+    > .tabs > .tab > .link {
+      font-weight: bold; /* 글씨 두껍게 */
+    }
+
+    > .tabs {
+      @include flex(row, center, center, 6rem);
+
+      > .tab > .link {
+        color: #222;
+        font-size: 1.1rem;
+        text-decoration: none;
+        padding: 1rem 0 1rem 0;
+
+        &:hover {
+          box-sizing: border-box;
+          border-bottom: 2px solid #222;
+          color: #222;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+#main {
+  width: 100%;
+  position: relative;
+  overflow: inherit;
+  z-index: 1;
+
+  > .content {
+    top: 0;
+    left: 0;
+    max-width: 0;
+    max-height: 0;
+    box-sizing: border-box;
+    opacity: 0;
+    overflow: hidden;
+    padding: 1rem;
+    pointer-events: none;
+    position: absolute;
+    transform: scale(95%);
+    transition-duration: 250ms;
+    transition-property: opacity, transform;
+    transition-timing-function: ease;
+
+    &.-visible {
+      max-width: initial;
+      max-height: initial;
+      overflow: initial;
+      opacity: 1;
+      pointer-events: all;
+      transform: scale(100%);
+    }
+  }
+}

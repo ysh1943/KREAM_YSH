@@ -3,6 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kream.kream.mappers.EmailTokenMapper">
+
     <insert id="insertEmailToken"
             parameterType="com.kream.kream.entities.EmailTokenEntity">
         INSERT INTO `kream`.`email_tokens`(`user_email`, `key`, `created_at`, `expires_at`, `is_used`)
@@ -13,9 +14,10 @@
             resultType="com.kream.kream.entities.EmailTokenEntity">
         SELECT `user_email` AS `userEmail`,
                `key`        AS `key`,
-               created_at   AS `createdAt`,
-               expires_at   AS `expiresAt`,
-               is_used      AS `isUsed`
+               `created_at`   AS `createdAt`,
+               `expires_at`   AS `expiresAt`,
+               `is_used`      AS `isUsed`
+
         FROM `kream`.`email_tokens`
         WHERE `user_email` = #{userEmail}
           AND `key` = #{key}
@@ -32,5 +34,4 @@
           AND `key` = #{key}
         LIMIT 1
     </update>
-
 </mapper>

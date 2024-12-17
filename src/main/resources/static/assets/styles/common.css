@@ -44,11 +44,11 @@ ol, ul {
   left: 0;
   width: 100%;
   height: 100%;
-  backdrop-filter: brightness(85%);
+  backdrop-filter: blur(2.5rem);
   background-color: rgba(33, 33, 33, 0.7529411765);
   opacity: 0;
-  position: fixed;
   pointer-events: none;
+  position: fixed;
   transition-duration: 250ms;
   transition-property: opacity;
   transition-timing-function: ease;

@@ -1,6 +1,7 @@
 package com.kream.kream.exceptions;
 
-public class TransactionalException extends RuntimeException{
+
+public class TransactionalException extends RuntimeException {
 
     public TransactionalException() {
         super();

@@ -1,8 +1,11 @@
 package com.kream.kream.entities;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import lombok.*;
+
 
 @Builder
 @Getter
@@ -12,7 +15,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class UserEntity {
     public static final String NAME_SINGULAR = "user";
-
     private int id;
     private String email;
     private String password;
@@ -26,5 +28,4 @@ public class UserEntity {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
-
 }

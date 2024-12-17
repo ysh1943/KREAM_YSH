@@ -23,5 +23,5 @@ public class ProductEntity {
     private String gender;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private LocalDateTime isDeleted;
+    private boolean isDeleted;
 }
