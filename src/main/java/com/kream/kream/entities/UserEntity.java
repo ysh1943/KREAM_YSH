@@ -6,6 +6,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import lombok.*;
 
+
 @Builder
 @Getter
 @Setter
@@ -14,7 +15,6 @@ import lombok.*;
 @NoArgsConstructor
 public class UserEntity {
     public static final String NAME_SINGULAR = "user";
-    
     private int id;
     private String email;
     private String password;

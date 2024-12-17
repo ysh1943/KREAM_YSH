@@ -1,8 +1,13 @@
 @charset "UTF-8";
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
 @import "./global";
+=======
+@import "./global";
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+>>>>>>> dev
 =======
 @import "./global";
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
@@ -19,8 +24,12 @@ body {
   font-weight: 300;
   margin: 0;
 <<<<<<< HEAD
+<<<<<<< HEAD
   overflow: auto;
   overflow-x: hidden;
+=======
+  overflow: hidden auto;
+>>>>>>> dev
 =======
   overflow: hidden auto;
 >>>>>>> dev
@@ -38,7 +47,11 @@ button, input, select, textarea {
 
 h1, h2, h3, h4, h5, h6 {
 <<<<<<< HEAD
+<<<<<<< HEAD
   font-family: inherit;
+=======
+  font: inherit;
+>>>>>>> dev
 =======
   font: inherit;
 >>>>>>> dev
@@ -59,17 +72,23 @@ ol, ul {
   width: 100%;
   height: 100%;
 <<<<<<< HEAD
+<<<<<<< HEAD
   backdrop-filter: blur(2.5rem);
   background-color: #212121c0;
   opacity: 0;
   pointer-events: none;
   position: fixed;
 =======
+=======
+>>>>>>> dev
   backdrop-filter: brightness(85%);
   background-color: #212121c0;
   opacity: 0;
   position: fixed;
   pointer-events: none;
+<<<<<<< HEAD
+>>>>>>> dev
+=======
 >>>>>>> dev
   transition-duration: 250ms;
   transition-property: opacity;
@@ -163,7 +182,11 @@ ol, ul {
     }
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> dev
 =======
 }
 >>>>>>> dev
