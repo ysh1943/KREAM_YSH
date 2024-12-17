@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kream.kream.mappers.SearchMapper">
+
+    <select id="selectKeywordBySearch"
+            resultType="com.kream.kream.dtos.SearchKeywordDTO">
+        SELECT `id` AS  `productId`,
+               IF(`product_name_ko` LIKE CONCAT('%', #{keyword}, '%'), `product_name_ko`, NULL) AS productNameKo,
+               IF(`product_name_en` LIKE CONCAT('%', #{keyword}, '%'), `product_name_en`, NULL) AS productNameEN,
+               IF(`brand` LIKE CONCAT('%', #{keyword}, '%'), `brand`, NULL) AS brand
+        FROM `kream`.`product`
+        WHERE `is_deleted` = 0
+        AND (`product_name_ko` LIKE CONCAT('%', #{keyword}, '%')
+                 OR `product_name_en` LIKE CONCAT('%', #{keyword}, '%')
+                 OR `brand` LIKE CONCAT('%', #{keyword}, '%'))
+    </select>
+</mapper>
