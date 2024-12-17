@@ -1,0 +1,403 @@
+@charset "UTF-8";
+@import "global";
+
+#header {
+  background-color: #ffffff;
+  top: 0;
+
+  width: 100%;
+  height: 6rem;
+  position: sticky;
+  //border-bottom: 0.0625rem solid #a0a0a0;
+  z-index: 9;
+
+  > .header-container {
+    width: 100%;
+    max-width: 80rem;
+    margin: 0 auto;
+
+    > .top-inner {
+      height: 1.5rem;
+
+      > .top-list {
+        @include flex(row, center, flex-start, 1.5rem);
+        box-sizing: border-box;
+        padding: 1rem 1.5rem;
+        font-size: 0.75rem;
+
+        > .top-item > .top-link {
+          color: #745b39;
+          text-decoration: none;
+        }
+      }
+    }
+
+    > .main-inner {
+      @include flex(row, center, flex-start, 1.6rem);
+      height: 4.5rem;
+      box-sizing: border-box;
+      padding: 1.25rem 1.5rem;
+
+      > .logo > .logo-icon {
+        width: 10rem;
+      }
+
+      > .menu > .menu-list {
+        @include flex(row, center, flex-start, 1.6rem);
+
+        > .menu-item > .menu-link {
+          font-size: 1.15rem;
+          text-decoration: none;
+          color: inherit;
+
+          &.bold {
+            font-weight: 700;
+          }
+        }
+      }
+
+      > .search > .search-icon,
+      > .cart > .cart-icon {
+        width: 1.3rem;
+        line-height: 1;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.container {
+  @include flex(column, center, felx-start, 0);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  padding: 0;
+
+  > .content {
+    @include flex(column, center, center, 5rem);
+    top: 0;
+    left: 0;
+    position: relative;
+    height: 754px;
+    padding: 0 40px;
+    margin: 0 auto;
+    max-width: 1280px;
+    width: 100%;
+
+    > .login-area {
+      @include flex(column, center, flex-start, 0.7rem);
+      margin: 0 auto;
+      padding: 60px 0 160px;
+      width: 400px;
+      height: 100%;
+
+      > .login-title {
+        @include flex(column, center, center, 0);
+        background-image: url("https://kream.co.kr/_nuxt/img/login_title.164fc57.png");
+        background-position: center;
+        background-size: 250px 56px;
+        display: block;
+        height: 56px;
+        width: 100%;
+        padding-bottom: 50px;
+        text-align: center;
+        background-repeat: no-repeat;
+      }
+
+      > .--obj-label {
+        @include flex(column, flex-start, center, 0.5rem);
+        width: 100%;
+        height: 80px;
+        padding: 10px 0 14px 0;
+        box-sizing: border-box;
+        position: relative;
+
+        > .item {
+          border-bottom: 1px solid #ebebeb;
+          font-size: 15px;
+          padding: 8px 30px 8px 0;
+          width: 100%;
+          box-sizing: border-box;
+
+          &::placeholder {
+            transition: opacity 0.3s ease;
+          }
+
+          &:focus-within::placeholder {
+            opacity: 0;
+          }
+        }
+
+        > .close {
+          cursor: pointer;
+          margin-top: -12px;
+          position: absolute;
+          right: 0;
+          top: 65%;
+          width: 20px;
+          height: 20px;
+          opacity: 1;
+
+          &.-visible {
+            opacity: 0;
+            pointer-events: none;
+          }
+
+        }
+
+        &.-invalid {
+          $color: #e74c3c;
+
+          > ._text {
+            color: $color;
+          }
+
+          > .item:not(:disabled) {
+            border-color: $color !important;
+            font-size: 15px;
+            letter-spacing: -.15px;
+            line-height: 22px;
+            padding: 8px 0;
+            width: 100%;
+          }
+
+          > ._warning {
+            color: $color;
+            display: block;
+            font-size: 0.8rem;
+          }
+        }
+
+        > ._warning {
+          display: none;
+        }
+      }
+
+      > .login-button {
+        width: 100%;
+        height: 72px;
+        padding-top: 20px;
+
+        > .button {
+          width: 100%;
+          height: 52px;
+          background-color: #222;
+          color: #ffffff;
+          font-weight: 700;
+          border-radius: 0.5rem;
+          cursor: pointer;
+
+        }
+
+      }
+
+      > .look-box {
+        @include flex(row, center, space-evenly, 0.5rem);
+        margin-top: 20px;
+        box-sizing: border-box;
+        width: 100%;
+
+        > .look-list {
+          display: inline-flex;
+          width: 100%;
+          height: 16px;
+          flex-grow: 1;
+
+          & + .look-list:before {
+            background-color: #d3d3d3;
+            content: "";
+            height: 13px;
+            margin-top: 3px;
+            width: 1px;
+            display: inline-block;
+          }
+
+          > .look-link {
+            margin: 0 auto;
+            padding: 0 10px;
+
+            text-decoration: none;
+            color: inherit;
+            box-sizing: border-box;
+
+
+          }
+        }
+      }
+
+      > .social-login {
+        @include flex(column, center, center, 0);
+        margin-top: 40px;
+        width: 100%;
+
+        > .button-container {
+          width: 100%;
+          height: 52px;
+          margin-bottom: 8px;
+          border: 1px solid #d3d3d3;
+          border-radius: 10px;
+
+          > .button {
+            @mixin applyColor($b, $c, $darkenOffset: 5%) {
+              background-color: $b;
+              color: $c;
+
+              &:hover {
+                background-color: darken($b, $darkenOffset);
+              }
+
+              &:active {
+                background-color: darken($b, $darkenOffset * 2);
+              }
+            }
+            @include flex(row, center, center, 0.5rem);
+            height: 100%;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition-duration: 125ms;
+            transition-property: background-color;
+            transition-timing-function: ease;
+            user-select: none;
+
+            &.-color-primary {
+              @include applyColor(#3498db, #ffffff);
+            }
+
+            &.-color-gray {
+              @include applyColor(#9e9e9e, #ffffff);
+            }
+
+            &.-color-kakao {
+              @include applyColor(#fee500, #212121, 2.5%);
+
+            }
+
+            &.-color-naver {
+              @include applyColor(#03c75a, #ffffff, 2.5%);
+            }
+
+            > .image {
+              height: 1rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+#footer {
+  width: 100vw;
+
+  > .footer-container {
+    width: 100%;
+    max-width: 80rem;
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 2.5rem;
+    border-top: 0.0625rem solid #eeeeee;
+
+    > .service-area {
+      @include flex(row, flex-start, flex-start, 1rem);
+
+      > .footer-menu {
+        @include flex(row, center, flex-start, 5rem);
+
+        > .menu-box {
+          @include flex(column, flex-start, flex-start, 0.9rem);
+
+          > .menu-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: inherit;
+          }
+
+          > .menu-list {
+            @include flex(column, flex-start, flex-strart, 0.7rem);
+
+            > .menu-item {
+              font-size: 0.8rem;
+              color: #22222280;
+            }
+          }
+        }
+      }
+
+      > .customer-service {
+        @include flex(column, flex-start, flex-start, 0.9rem);
+
+        > .service-title {
+          font-size: 0.9rem;
+          font-weight: 700;
+          color: inherit;
+        }
+
+        > .service-time {
+          @include flex(column, flex-start, flex-start, 0.7rem);
+
+          > .time-term {
+            font-size: 0.8rem;
+            color: #22222280;
+          }
+        }
+
+        > .service-noti {
+          font-size: 0.8rem;
+        }
+      }
+    }
+
+    > .corporation-are {
+      @include flex(column, flex-start, flex-start, 0.5rem);
+      margin-top: 3rem;
+      padding-top: 2rem;
+      box-sizing: border-box;
+      border-top: 0.0625rem solid #eeeeee;
+
+      > .term-list {
+        @include flex(row, flex-start, flex-start, 1.5rem);
+
+        > .term-item {
+          font-size: 0.8rem;
+          font-weight: 400;
+          color: #000000;
+
+          &.bold {
+            font-weight: 700;
+          }
+        }
+      }
+
+      > .business-info {
+        width: 35rem;
+        line-height: 1rem;
+        font-size: 0.7rem;
+        color: #22222280;
+      }
+    }
+
+    > .notice-guarantee {
+      @include flex(column, flex-start, flex-start, 0.2rem);
+      margin-top: 2rem;
+      font-size: 0.7rem;
+
+      > .title {
+        font-weight: 700;
+      }
+
+      > .description {
+        color: #22222280;
+      }
+    }
+
+    > .notice-area {
+      width: 35rem;
+      font-size: 0.7rem;
+      color: #22222280;
+      margin-top: 1rem;
+    }
+  }
+}

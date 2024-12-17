@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="_isSocialRegister" th:content="${isSocialRegister == null ? 'false' : isSocialRegister}">
+    <title>join</title>
+    <link rel="stylesheet" th:href="@{/assets/user/styles/join.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/assets/user/styles/common.css}" type="text/css">
+    <script defer th:src="@{/assets/user/scripts/join.js}" type="text/javascript"></script>
+    <script th:src="@{/assets/user/scripts/common.js}" type="text/javascript"></script>
+    <script th:if="${isSocialRegister == true}">
+        alert('소셜 계정으로 회원가입을 진행합니다. 아래 항목을 입력해 주세요.');
+    </script>
+</head>
+<body>
+<header id="header">
+    <div class="header-container">
+        <div class="top-inner">
+            <ul class="top-list">
+                <li class="-spring"></li>
+                <li class="top-item">
+                    <a class="top-link" href="/my">마이페이지</a>
+                </li>
+                <li class="top-item">
+                    <a class="top-link" href="/login">로그인</a>
+                </li>
+                <li class="top-item" hidden>
+                    <a class="top-link" href="/">로그 아웃</a>
+                </li>
+            </ul>
+        </div>
+        <div class="main-inner">
+            <a class="logo" href="/">
+                <img alt="logo" class="logo-icon" src="/assets/images/logo.png">
+            </a>
+            <div class="-spring"></div>
+            <nav class="menu">
+                <ul class="menu-list">
+                    <li class="menu-item">
+                        <a class="menu-link bold" href="/">HOME</a>
+                    </li>
+                    <li class="menu-item">
+                        <a class="menu-link" href="/shop">SHOP</a>
+                    </li>
+                </ul>
+            </nav>
+            <button class="search" type="button">
+                <svg class="search-icon" fill-rule="nonzero" height="30px"
+                     viewBox="0,0,256,256" width="30px" xmlns="http://www.w3.org/2000/svg"
+                     xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <g fill="#000000" fill-rule="nonzero" font-family="none" font-size="none" font-weight="none"
+                       stroke="none" stroke-dasharray="" stroke-dashoffset="0" stroke-linecap="butt"
+                       stroke-linejoin="miter" stroke-miterlimit="10" stroke-width="1" style="mix-blend-mode: normal"
+                       text-anchor="none">
+                        <g transform="scale(8.53333,8.53333)">
+                            <path d="M13,3c-5.511,0 -10,4.489 -10,10c0,5.511 4.489,10 10,10c2.39651,0 4.59738,-0.85101 6.32227,-2.26367l5.9707,5.9707c0.25082,0.26124 0.62327,0.36648 0.97371,0.27512c0.35044,-0.09136 0.62411,-0.36503 0.71547,-0.71547c0.09136,-0.35044 -0.01388,-0.72289 -0.27512,-0.97371l-5.9707,-5.9707c1.41266,-1.72488 2.26367,-3.92576 2.26367,-6.32227c0,-5.511 -4.489,-10 -10,-10zM13,5c4.43012,0 8,3.56988 8,8c0,4.43012 -3.56988,8 -8,8c-4.43012,0 -8,-3.56988 -8,-8c0,-4.43012 3.56988,-8 8,-8z"></path>
+                        </g>
+                    </g>
+                </svg>
+            </button>
+            <a class="cart" href="/cart">
+
+                <img alt="bag" height="25" src="/assets/images/icons8-bag-64.png" width="25"/></a>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="content">
+        <form class="register-form" th:classappend="${isSocialRegister == true} ? '-visible'">
+            <h2 class="title" th:text="${isSocialRegister == true ? '소셜 계정 가입' : '회원가입'}"></h2>
+            <input hidden name="socialTypeCode" type="hidden" th:if="${isSocialRegister == true}" th:value="${socialTypeCode}">
+            <input hidden name="socialId" type="hidden" th:if="${isSocialRegister == true}" th:value="${socialId}">
+            <label class="--obj-label" data-id="email">
+                <h3 class="_text">이메일 주소*</h3>
+                <div class="input-item">
+                    <input autocomplete="off" class="item" placeholder="예) kream@kream.co.kr" type="email" name="email">
+                </div>
+                <span class="_warning">올바른 이메일을 입력해 주세요</span>
+            </label>
+            <label class="--obj-label" data-id="password" th:if="${isSocialRegister != true}">
+                <h3 class="_text">비밀번호*</h3>
+                <div class="input-item">
+                    <input autocomplete="off" class="item" placeholder="영문,숫자,특수문자 조합 8-16자" type="password" name="password">
+                </div>
+                <span class="_warning">올바른 비밀번호를 입력해 주세요</span>
+            </label>
+            <label class="--obj-label" th:if="${isSocialRegister != true}">
+                <h3>비밀번호 재입력*</h3>
+                <div class="input-item">
+                    <input autocomplete="off" class="item" placeholder="비밀번호를 재입력 해주세요" type="password" name="passwordCheck">
+                </div>
+            </label>
+            <label class="--obj-label" data-id="nickname">
+                <h3 class="_text">닉네임</h3>
+                <div class="input-item">
+                    <input autocomplete="off" class="item" type="text" name="nickname">
+                </div>
+                <span class="_warning">올바른 닉네임을 입력해 주세요</span>
+            </label>
+            <label class="--obj-label" data-id="contact">
+                <h3 class="_text">전화번호</h3>
+                <div class="input-item">
+                    <input maxlength="11" autocomplete="off" class="item" placeholder="'-'없이 입력" type="text" name="contact">
+                </div>
+                <span class="_warning">올바른 연락처를 입력해 주세요</span>
+            </label>
+
+            <div class="join-terms">
+                <div class="join-terms item">
+                    <input id="all" type="checkbox" name="agree">
+                    <label class="--obj-label" for="all">
+                        <img alt="uncheck" class="square" height="24" src="/assets/images/icons8-square-32.png"
+                             width="24"/>
+                        <img alt="check" class="check" height="24" src="/assets/images/icons8-check-50.png" width="24"/>
+                    </label>
+                    <div class="text">
+                        <div class="title">모두 동의합니다.</div>
+                        <span>선택 동의 항목 포함</span>
+                    </div>
+                </div>
+                <div class="join-terms item">
+                    <input class="agree" id="agree-a" type="checkbox">
+                    <label class="--obj-label" for="agree-a">
+                        <img class="square" height="24" src="/assets/images/icons8-uncheck48.png" width="24"/>
+                        <img class="check" height="24" src="/assets/images/icons8-check-48.png" width="24"/>
+                    </label>
+                    <div class="text">
+                        <div>[필수]만 14세 이상입니다.</div>
+                    </div>
+                </div>
+                <div class="join-terms item">
+                    <input class="agree" id="agree-c" type="checkbox">
+                    <label class="--obj-label" for="agree-c">
+                        <img class="square" height="24" src="/assets/images/icons8-uncheck48.png" width="24"/>
+                        <img class="check" height="24" src="/assets/images/icons8-check-48.png" width="24"/>
+                    </label>
+                    <div class="text">
+                        <div>[필수]이용약관 동의.</div>
+                    </div>
+                </div>
+                <div class="join-terms item">
+                    <input class="agree" id="agree-d" type="checkbox">
+                    <label class="--obj-label" for="agree-d">
+                        <img class="square" height="24" src="/assets/images/icons8-uncheck48.png" width="24"/>
+                        <img class="check" height="24" src="/assets/images/icons8-check-48.png" width="24"/>
+                    </label>
+                    <div class="text">
+                        <div>[필수]개인 정보 수집 및 이용 동의.</div>
+                    </div>
+                </div>
+                <div class="join-terms item">
+                    <input class="agree" id="agree-e" type="checkbox">
+                    <label class="--obj-label" for="agree-e">
+                        <img class="square" height="24" src="/assets/images/icons8-uncheck48.png" width="24"/>
+                        <img class="check" height="24" src="/assets/images/icons8-check-48.png" width="24"/>
+                    </label>
+                    <div class="text">
+                        <div>[필수]개인 정보 수집 및 이용 동의.</div>
+                    </div>
+                </div>
+
+            </div>
+            <span class="-spring"></span>
+            <div class="button-container">
+                <button class="button" type="submit" th:text="${isSocialRegister == true ? '소셜 계정 가입' : '본인 인증하고 가입하기'}"></button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<footer id="footer">
+    <div class="footer-container">
+        <div class="service-area">
+            <div class="footer-menu">
+                <div class="menu-box">
+                    <span class="menu-title">이용안내</span>
+                    <ul class="menu-list">
+                        <li class="menu-item">검수기준</li>
+                        <li class="menu-item">이용정책</li>
+                        <li class="menu-item">페널티 정책</li>
+                        <li class="menu-item">커뮤니티 가이드라인</li>
+                    </ul>
+                </div>
+                <div class="menu-box">
+                    <span class="menu-title">고객지원</span>
+                    <ul class="menu-list">
+                        <li class="menu-item">공지사항</li>
+                        <li class="menu-item">서비스 소개</li>
+                        <li class="menu-item">스토어 안내</li>
+                        <li class="menu-item">판매자 방문접수</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="-spring"></div>
+            <div class="customer-service">
+                <span class="service-title">고객센터 1588-7813</span>
+                <span class="service-time">
+                    <span class="time-term">운영시간 평일 10:00 - 18:00 (토•일, 공휴일 휴무)</span>
+                    <span class="time-term">점심시간 평일 13:00 - 14:00</span>
+                </span>
+                <span class="service-noti">1:1 문의하기는 앱에서만 가능합니다.</span>
+            </div>
+        </div>
+        <div class="corporation-are">
+            <ul class="term-list">
+                <li class="term-item">회사소개</li>
+                <li class="term-item">인재채용</li>
+                <li class="term-item">제휴제안</li>
+                <li class="term-item">이용약관</li>
+                <li class="term-item bold">개인정보처리방침</li>
+            </ul>
+            <span class="business-info">크림 주식회사 · 대표 김창욱사업자등록번호 : 570-88-01618 사업자정보확인통신판매업 : 제 2021-성남분당C-0093호사업장소재지 : 경기도 성남시 분당구 분당내곡로 131 판교테크원 타워1, 7층호스팅 서비스 : 네이버 클라우드 ㈜</span>
+        </div>
+        <div class="notice-guarantee">
+            <span class="title">신한은행 채무지급보증 안내</span>
+            <span class="description">당사는 고객님의 현금 결제 금액에 대해 신한은행과 채무지급보증 계약을 체결하여 안전거래를 보장하고 있습니다.서비스가입 사실 확인</span>
+        </div>
+        <div class="notice-area">
+            <span class="notice">크림(주)는 통신판매 중개자로서 통신판매의 당사자가 아닙니다. 본 상품은 개별판매자가 등록한 상품으로 상품, 상품정보, 거래에 관한 의무와 책임은 각 판매자에게 있습니다. 단, 이용약관 및 정책, 기타 거래 체결 과정에서 고지하는 내용 등에 따라 검수하고 보증하는 내용에 대한 책임은 크림(주)에 있습니다.</span>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
