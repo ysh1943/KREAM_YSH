@@ -26,7 +26,6 @@ public class HomeController {
     public ModelAndView getIndex(@SessionAttribute(value = "user", required = false) UserEntity user) {
         List<PopularProductDTO> popularProducts = this.homeService.getPopularProducts();
         List<NewProductDTO> newProducts = this.homeService.getNewProducts();
-
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("user", user);
         modelAndView.addObject("popularProducts", popularProducts);

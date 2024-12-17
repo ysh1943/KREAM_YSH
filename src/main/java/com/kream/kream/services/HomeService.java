@@ -35,6 +35,7 @@ public class HomeService {
         if (newProducts == null || newProducts.isEmpty()) {
             return new ArrayList<>();
         }
+        System.out.println();
         return newProducts;
     }
     //endregion
