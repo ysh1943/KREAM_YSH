@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>KREAM</title>
+    <link rel="shortcut icon" th:href="@{'/assets/images/favicon.ico'}">
+    <link rel="stylesheet" href="/home/assets/styles/search.css">
+    <link rel="stylesheet" href="/assets/styles/common.css">
+    <script defer src="https://kit.fontawesome.com/20d32b3086.js" crossorigin="anonymous"></script>
+    <script defer src="/home/assets/scripts/search.js" type="text/javascript"></script>
+    <script src="/assets/scripts/common.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="cover"></div>
+<header id="header">
+    <div class="header-top">
+        <button class="leave" type="button">
+            <i class="icon fa-solid fa-arrow-right-from-bracket fa-xl"></i>
+        </button>
+    </div>
+    <form  class="form">
+        <label class="label">
+            <input class="keyword" autofocus autocomplete="off" maxlength="100" minlength="1" placeholder="브랜드,상품"
+                   name="keyword"
+                   type="text">
+            <button class="search" type="submit">
+                <i class="icon fa-solid fa-magnifying-glass"></i>
+            </button>
+            <button class="cancel" type="reset">
+                <i class="icon fa-sharp-duotone fa-solid fa-circle-xmark fa-xl"></i>
+            </button>
+        </label>
+        <span class="result">
+              <span class="message">
+                  <span class="init">
+                      <i class="icon fa-solid fa-magnifying-glass"></i>
+                      <span class="text">검색어를 입력해 주세요.</span>
+                  </span>
+                  <span class="loading">
+                      <i class="icon fa-solid fa-spinner"></i>
+                  </span>
+                  <span class="empty">
+                      <i class="icon fa-regular fa-file"></i>
+                      <span class="text">표시할 검색 결과가 없습니다.</span>
+                  </span>
+                  <span class="error">
+                      <i class="icon fa-solid fa-triangle-exclamation"></i>
+                      <span class="text">검색 도중 오류가 발생하였습니다.</span>
+                  </span>
+              </span>
+              <span class="item"></span>
+        </span>
+    </form>
+</header>
+<main id="main">
+    <div class="recent-area container">
+        <div class="title-wrap ">
+            <span class="title">최근 검색어</span>
+            <button class="sub-title recent-cancel" type="button">지우기</button>
+        </div>
+        <div class="recent-content-wrap list"></div>
+    </div>
+    <div class="recommend-area container">
+        <div class="title-wrap">
+            <span class="title">추천 검색어</span>
+        </div>
+        <div class="recommend-content-wrap list">
+            <div class="content-item -dark">
+                <span class="item recommend-text">나이키 에어포스1</span>
+            </div>
+            <div class="content-item -dark">
+                <span class="item recommend-text">노스페이스</span>
+            </div>
+            <div class="content-item -dark">
+                <span class="item recommend-text">아디다스</span>
+            </div>
+            <div class="content-item -dark">
+                <span class="item recommend-text">나이키</span>
+            </div>
+            <div class="content-item -dark">
+                <span class="item recommend-text">슈프림</span>
+            </div>
+        </div>
+    </div>
+    <div class="popular-area container">
+        <div class="title-wrap">
+            <span class="title">인기 검색어</span>
+        </div>
+        <div class="popular-content-wrap">
+            <ul class="ranking"></ul>
+        </div>
+    </div>
+</main>
+</body>
+</html>

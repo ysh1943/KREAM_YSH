@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kream.kream.mappers.HomeMapper">
+
+    <select id="selectPopularProducts"
+            resultType="com.kream.kream.dtos.PopularProductDTO">
+        SELECT `product`.`product_name_en`             AS productName,
+               `product`.`brand`                       AS brand,
+               COUNT(`order`.`id`)                     AS transactionCount,
+               `image`.`data`                               AS imageData,
+               `image`.`type`                               AS imageType,
+               (SELECT COALESCE(MIN(`seller_bid`.`price`), 0)
+                FROM `kream`.`seller_bid`
+                         INNER JOIN `kream`.`size`
+                                    ON `seller_bid`.`size_id` = `size`.`id`
+                WHERE `size`.`product_id` = `product`.`id`
+                  AND `seller_bid`.`state` = 'BIDDING') AS lowestPrice
+        FROM `kream`.`order`
+                 INNER JOIN `kream`.`buyer_bid`
+                            ON `buyer_bid_id` = `buyer_bid`.`id`
+                 INNER JOIN `kream`.`size`
+                            ON `size_id` = `size`.`id`
+                 INNER JOIN `kream`.`product`
+                            ON `product_id` = `product`.`id`
+                 INNER JOIN `kream`.`image`
+                           ON `product`.`id` = `image`.`product_id`
+                               AND `image`.`is_primary` = 1
+        WHERE `order`.`state` = 'DELIVERED'
+        GROUP BY `product`.`id`
+        ORDER BY transactionCount DESC
+        LIMIT 20
+    </select>
+
+    <select id="selectNewProducts"
+            resultType="com.kream.kream.dtos.NewProductDTO">
+        SELECT `product`.`id`                               AS productId,
+               `product`.`product_name_en`                  AS productName,
+               `product`.`brand`                            AS brand,
+               `image`.`data`                               AS imageData,
+               `image`.`type`                               AS imageType,
+               (SELECT COALESCE(MIN(`seller_bid`.`price`), 0)
+                FROM `kream`.`seller_bid`
+                         INNER JOIN `kream`.`size`
+                                    ON `seller_bid`.`size_id` = `size`.`id`
+                WHERE `size`.`product_id` = `product`.`id`
+                  AND `seller_bid`.`state` = 'BIDDING')     AS lowestPrice,
+               (SELECT COUNT(`order`.`id`)
+                FROM `kream`.`order`
+                         INNER JOIN `kream`.`buyer_bid`
+                                    ON `order`.buyer_bid_id = buyer_bid.id
+                         INNER JOIN `kream`.`size`
+                                    ON buyer_bid.size_id = size.id
+                WHERE `order`.`state` = 'DELIVERED'
+                  AND `size`.`product_id` = `product`.`id`) AS transactionCount
+        FROM `kream`.`product`
+                 INNER JOIN `kream`.`image`
+                            ON `product`.`id` = `image`.`product_id`
+                                AND `image`.`is_primary` = 1
+                 INNER JOIN `kream`.`size`
+                            ON `product`.`id` = `size`.`product_id`
+        WHERE `product`.`is_deleted` = 0
+        ORDER BY `product`.`created_at` DESC
+        LIMIT 20
+    </select>
+</mapper>
