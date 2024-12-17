@@ -51,6 +51,7 @@ public class UserController extends AbstractGeneralController {
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getIndex(@SessionAttribute(value = UserEntity.NAME_SINGULAR, required = false) UserEntity user) {
         ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("user", user);
         if (user == null) { // 세션에 UserEntity 정보가 없을 경우
             modelAndView.setViewName("user/login"); // "user/index" 뷰를 설정
             modelAndView.addObject("kakaoClientId", this.kakaoClientId); // 카카오 클라이언트 ID를 모델에 추가

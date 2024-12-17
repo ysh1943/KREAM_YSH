@@ -1,0 +1,120 @@
+@charset "UTF-8";
+header {
+  border-bottom: 0.8px solid #d3d3d3;
+  background-color: #ffffff;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 9rem;
+  position: fixed;
+  z-index: 10;
+}
+header .header-top {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  justify-content: flex-start;
+  height: 4rem;
+  box-sizing: border-box;
+  padding: 1rem 1rem 0 1rem;
+}
+header .header-top > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+header .header-top > .main-inner > h1 > .logo {
+  color: inherit;
+  font-size: 2rem;
+  font-style: italic;
+  font-weight: 850;
+  text-decoration: none;
+}
+header .header-top > .header-right {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  justify-content: flex-start;
+}
+header .header-top > .header-right > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+header .header-top > .header-right > .link-container > a > .icon {
+  color: #222;
+  font-size: 1.8rem;
+  margin-right: 1rem;
+}
+header .header-menu {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  justify-content: center;
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+header .header-menu > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+header .header-menu > .tabs > .tab > .link {
+  font-weight: bold; /* 글씨 두껍게 */
+}
+header .header-menu > .tabs {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 6rem;
+  justify-content: center;
+}
+header .header-menu > .tabs > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+header .header-menu > .tabs > .tab > .link {
+  color: #222;
+  font-size: 1.1rem;
+  text-decoration: none;
+  padding: 1rem 0 1rem 0;
+}
+header .header-menu > .tabs > .tab > .link:hover {
+  box-sizing: border-box;
+  border-bottom: 2px solid #222;
+  color: #222;
+  cursor: pointer;
+}
+
+#main {
+  width: 100%;
+  position: relative;
+  overflow: inherit;
+  z-index: 1;
+}
+#main > .content {
+  top: 0;
+  left: 0;
+  max-width: 0;
+  max-height: 0;
+  box-sizing: border-box;
+  opacity: 0;
+  overflow: hidden;
+  padding: 1rem;
+  pointer-events: none;
+  position: absolute;
+  transform: scale(95%);
+  transition-duration: 250ms;
+  transition-property: opacity, transform;
+  transition-timing-function: ease;
+}
+#main > .content.-visible {
+  max-width: initial;
+  max-height: initial;
+  overflow: initial;
+  opacity: 1;
+  pointer-events: all;
+  transform: scale(100%);
+}
+
+/*# sourceMappingURL=common.css.map */

@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="_isSocialRegister" th:content="${isSocialRegister == null ? 'false' : isSocialRegister}">
     <title>join</title>
-    <link rel="stylesheet" th:href="@{/assets/user/styles/join.css}" type="text/css">
-    <link rel="stylesheet" th:href="@{/assets/user/styles/common.css}" type="text/css">
-    <script defer th:src="@{/assets/user/scripts/join.js}" type="text/javascript"></script>
-    <script th:src="@{/assets/user/scripts/common.js}" type="text/javascript"></script>
+    <link rel="stylesheet" th:href="@{/user/styles/join.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/user/styles/common.css}" type="text/css">
+    <script defer th:src="@{/user/scripts/join.js}" type="text/javascript"></script>
+    <script th:src="@{/assets/scripts/common.js}" type="text/javascript"></script>
     <script th:if="${isSocialRegister == true}">
         alert('소셜 계정으로 회원가입을 진행합니다. 아래 항목을 입력해 주세요.');
     </script>

@@ -10,5 +10,4 @@ public class KreamApplication {
     public static void main(String[] args) {
         SpringApplication.run(KreamApplication.class, args);
     }
-
 }

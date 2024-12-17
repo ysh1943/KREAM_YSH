@@ -168,7 +168,7 @@ const $cover = document.getElementById('cover');
             }
             $recentArea.style.display = 'flex';
         } else {
-            $recentArea.style.display = 'flex';
+            $recentArea.style.display = 'none';
         }
     };
     xhr.open('GET', '/recent-keyword');
