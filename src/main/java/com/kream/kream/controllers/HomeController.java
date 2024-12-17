@@ -2,6 +2,7 @@ package com.kream.kream.controllers;
 
 import com.kream.kream.dtos.NewProductDTO;
 import com.kream.kream.dtos.PopularProductDTO;
+import com.kream.kream.entities.UserEntity;
 import com.kream.kream.services.HomeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

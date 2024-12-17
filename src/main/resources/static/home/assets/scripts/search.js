@@ -158,16 +158,17 @@ const $cover = document.getElementById('cover');
         if (response.length > 0) {
             for (const keyword of response) {
                 const $contentItem = document.createElement('div');
+                $contentItem.classList.add('content-item');
                 const $item = document.createElement('a');
                 $item.classList.add('item');
                 $item.href = `./shop?keyword=${keyword['keyword']}`;
-                $item.innerText = keyword;
+                $item.innerText = `${keyword['keyword']}`;
                 $contentItem.append($item);
                 $recentContentWrap.append($contentItem);
             }
             $recentArea.style.display = 'flex';
         } else {
-            $recentArea.style.display = 'none';
+            $recentArea.style.display = 'flex';
         }
     };
     xhr.open('GET', '/recent-keyword');

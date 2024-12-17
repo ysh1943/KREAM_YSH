@@ -48,16 +48,16 @@ class Dialog {
                 {
                     text: '취소', onclick: ($dialog) => {
                         Dialog.hide($dialog);
-                        if (typeof onYes === 'function') {
-                            onYes($dialog);
+                        if (typeof onNo === 'function') {
+                            onNo($dialog);
                         }
                     }
                 },
                 {
                     text: '확인', onclick: ($dialog) => {
                         Dialog.hide($dialog);
-                        if (typeof onNo === 'function') {
-                            onNo($dialog);
+                        if (typeof onYes === 'function') {
+                            onYes($dialog);
                         }
                     }
                 }

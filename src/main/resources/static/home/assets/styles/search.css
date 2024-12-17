@@ -240,6 +240,8 @@
   background-color: rgba(224, 224, 224, 0.5843137255);
 }
 #main > .container > .list > .content-item > .item {
+  color: inherit;
+  text-decoration: none;
   font-size: 0.8rem;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -3,6 +3,7 @@ package com.kream.kream.controllers;
 import com.kream.kream.dtos.ResultDto;
 import com.kream.kream.entities.EmailTokenEntity;
 import com.kream.kream.entities.UserEntity;
+import com.kream.kream.results.CommonResult;
 import com.kream.kream.results.Result;
 import com.kream.kream.results.user.HandleKakaoLoginResult;
 import com.kream.kream.results.user.HandleNaverLoginResult;
@@ -157,7 +158,7 @@ public class UserController extends AbstractGeneralController {
     @RequestMapping(value = "/join", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String postJoin(UserEntity user, HttpServletRequest request) throws MessagingException {
-        CommonResult result = this.userService.register(request, user);
+        Result result = this.userService.register(request, user);
         JSONObject response = new JSONObject();
         response.put("result", result.name().toLowerCase());
         return response.toString();

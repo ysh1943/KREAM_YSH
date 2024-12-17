@@ -2,6 +2,7 @@ package com.kream.kream.controllers;
 
 import com.kream.kream.dtos.SearchKeywordDTO;
 import com.kream.kream.entities.PopularKeywordEntity;
+import com.kream.kream.entities.UserEntity;
 import com.kream.kream.repositories.PopularKeywordsRepo;
 import com.kream.kream.repositories.UserRecentKeywordsRepo;
 import com.kream.kream.results.CommonResult;
