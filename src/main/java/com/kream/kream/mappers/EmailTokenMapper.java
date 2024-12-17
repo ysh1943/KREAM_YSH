@@ -1,6 +1,6 @@
 package com.kream.kream.mappers;
 
-import com.kream.kream.entitys.EmailTokenEntity;
+import com.kream.kream.entities.EmailTokenEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

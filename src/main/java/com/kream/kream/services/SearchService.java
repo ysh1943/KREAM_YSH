@@ -2,7 +2,6 @@ package com.kream.kream.services;
 
 import com.kream.kream.dtos.SearchKeywordDTO;
 import com.kream.kream.entities.RecentKeywordEntity;
-import com.kream.kream.entities.UserEntity;
 import com.kream.kream.mappers.SearchMapper;
 import com.kream.kream.repositories.UserRecentKeywordsRepo;
 import com.kream.kream.results.CommonResult;

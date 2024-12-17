@@ -11,7 +11,7 @@
     </delete>
 
     <insert id="insertUser"
-            parameterType="com.kream.kream.entitys.UserEntity">
+            parameterType="com.kream.kream.entities.UserEntity">
         INSERT INTO `kream`.`user`(`email`, `password`, `contact`, `nickname`, `is_admin`, `is_suspended`,
                                    `is_verified`, `social_type_code`, `social_id`, `created_at`, `updated_at`,
                                    deleted_at)
@@ -21,7 +21,7 @@
     </insert>
 
     <select id="selectUserByEmail"
-            resultType="com.kream.kream.entitys.UserEntity">
+            resultType="com.kream.kream.entities.UserEntity">
         SELECT `id`               AS `id`,
                `email`            AS `email`,
                `password`         AS `password`,
@@ -41,7 +41,7 @@
     </select>
 
     <select id="selectUserByContact"
-            resultType="com.kream.kream.entitys.UserEntity">
+            resultType="com.kream.kream.entities.UserEntity">
         SELECT `id`               AS `id`,
                `email`            AS `email`,
                `password`         AS `password`,
@@ -61,7 +61,7 @@
     </select>
 
     <select id="selectUserByNickname"
-            resultType="com.kream.kream.entitys.UserEntity">
+            resultType="com.kream.kream.entities.UserEntity">
         SELECT `id`               AS `id`,
                `email`            AS `email`,
                `password`         AS `password`,
@@ -81,7 +81,7 @@
     </select>
 
     <select id="selectUserBySocialTypeCodeAndSocialId"
-            resultType="com.kream.kream.entitys.UserEntity">
+            resultType="com.kream.kream.entities.UserEntity">
         SELECT `id`               AS `id`,
                `email`            AS `email`,
                `password`         AS `password`,
@@ -102,7 +102,7 @@
     </select>
 
     <update id="updateUser"
-            parameterType="com.kream.kream.entitys.UserEntity">
+            parameterType="com.kream.kream.entities.UserEntity">
         UPDATE `kream`.`user`
         SET `password`         =  #{password},
             `contact`          =  #{contact},

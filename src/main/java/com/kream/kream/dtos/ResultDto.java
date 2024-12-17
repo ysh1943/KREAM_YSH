@@ -1,6 +1,6 @@
 package com.kream.kream.dtos;
 
-import com.kream.kream.result.Result;
+import com.kream.kream.results.Result;
 import lombok.*;
 
 @Builder

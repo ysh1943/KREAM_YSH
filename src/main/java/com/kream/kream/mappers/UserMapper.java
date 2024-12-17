@@ -1,6 +1,6 @@
 package com.kream.kream.mappers;
 
-import com.kream.kream.entitys.UserEntity;
+import com.kream.kream.entities.UserEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

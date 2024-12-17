@@ -1,15 +1,18 @@
 package com.kream.kream.entities;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
+@Builder
 @Getter
 @Setter
-@EqualsAndHashCode(of = {"id"})
+@EqualsAndHashCode(of={"id"})
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserEntity {
+    public static final String NAME_SINGULAR = "user";
+
     private int id;
     private String email;
     private String password;
@@ -23,4 +26,5 @@ public class UserEntity {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
+
 }

@@ -1,4 +1,4 @@
-package com.kream.kream.result;
+package com.kream.kream.results;
 
 public interface Result {
     String NAME = "result";

@@ -1,24 +1,23 @@
 package com.kream.kream.services;
 
 import com.kream.kream.dtos.ResultDto;
-import com.kream.kream.entitys.EmailTokenEntity;
-import com.kream.kream.entitys.UserEntity;
+import com.kream.kream.entities.EmailTokenEntity;
+import com.kream.kream.entities.UserEntity;
 import com.kream.kream.exceptions.TransactionalException;
 import com.kream.kream.mappers.EmailTokenMapper;
 import com.kream.kream.mappers.UserMapper;
 import com.kream.kream.regexes.UserRegex;
-import com.kream.kream.result.CommonResult;
-import com.kream.kream.result.LoginResult;
-import com.kream.kream.result.Result;
-import com.kream.kream.result.enums.SocialTypes;
-import com.kream.kream.result.user.HandleKakaoLoginResult;
-import com.kream.kream.result.user.HandleNaverLoginResult;
-import com.kream.kream.result.user.ValidationEmailTokenResult;
+import com.kream.kream.results.CommonResult;
+import com.kream.kream.results.LoginResult;
+import com.kream.kream.results.Result;
+import com.kream.kream.results.enums.SocialTypes;
+import com.kream.kream.results.user.HandleKakaoLoginResult;
+import com.kream.kream.results.user.HandleNaverLoginResult;
+import com.kream.kream.results.user.ValidationEmailTokenResult;
 import com.kream.kream.utils.CryptoUtils;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.ibatis.transaction.TransactionException;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,6 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
@@ -302,7 +300,7 @@ public class UserService {
     }
 
     @Transactional
-    public CommonResult register(HttpServletRequest request, UserEntity user) throws MessagingException {
+    public Result register(HttpServletRequest request, UserEntity user) throws MessagingException {
         if (user == null ||
                 !UserRegex.checkEmail(user.getEmail()) ||
                 !UserRegex.checkNickname(user.getNickname()) || user.getContact() == null) {
@@ -326,13 +324,13 @@ public class UserService {
             user.setPassword(encoder.encode(user.getPassword()));
         }
         if (this.userMapper.selectUserByEmail(user.getEmail()) != null) {
-            return CommonResult.FAILURE_DUPLICATE_EMAIL; // 이메일 중복
+            return LoginResult.FAILURE_DUPLICATE_EMAIL; // 이메일 중복
         }
         if (this.userMapper.selectUserByContact(user.getContact()) != null) {
-            return CommonResult.FAILURE_DUPLICATE_CONTACT; // 연락처 중복
+            return LoginResult.FAILURE_DUPLICATE_CONTACT; // 연락처 중복
         }
         if (this.userMapper.selectUserByNickname(user.getNickname()) != null) {
-            return CommonResult.FAILURE_DUPLICATE_NICKNAME; // 닉네임 중복
+            return LoginResult.FAILURE_DUPLICATE_NICKNAME; // 닉네임 중복
         }
         user.setCreatedAt(LocalDateTime.now());
 

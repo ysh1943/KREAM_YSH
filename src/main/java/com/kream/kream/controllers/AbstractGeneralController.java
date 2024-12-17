@@ -1,6 +1,6 @@
 package com.kream.kream.controllers;
 
-import com.kream.kream.result.Result;
+import com.kream.kream.results.Result;
 import org.json.JSONObject;
 
 public abstract class AbstractGeneralController {

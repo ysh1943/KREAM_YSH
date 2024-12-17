@@ -1,4 +1,4 @@
-package com.kream.kream.result.enums;
+package com.kream.kream.results.enums;
 
 public interface DefaultEnum {
     String getCode();

@@ -1,17 +1,15 @@
 package com.kream.kream.controllers;
 
 import com.kream.kream.dtos.ResultDto;
-import com.kream.kream.entitys.EmailTokenEntity;
-import com.kream.kream.entitys.UserEntity;
-import com.kream.kream.result.CommonResult;
-import com.kream.kream.result.Result;
-import com.kream.kream.result.user.HandleKakaoLoginResult;
-import com.kream.kream.result.user.HandleNaverLoginResult;
+import com.kream.kream.entities.EmailTokenEntity;
+import com.kream.kream.entities.UserEntity;
+import com.kream.kream.results.Result;
+import com.kream.kream.results.user.HandleKakaoLoginResult;
+import com.kream.kream.results.user.HandleNaverLoginResult;
 import com.kream.kream.services.UserService;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.json.HTTP;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +20,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.http.HttpRequest;
 
 @Controller
 @RequestMapping(value = "/user")

@@ -1,4 +1,4 @@
-package com.kream.kream.entitys;
+package com.kream.kream.entities;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

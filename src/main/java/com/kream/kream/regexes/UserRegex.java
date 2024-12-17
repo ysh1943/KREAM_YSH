@@ -1,6 +1,6 @@
 package com.kream.kream.regexes;
 
-import com.kream.kream.entitys.UserEntity;
+import com.kream.kream.entities.UserEntity;
 
 public class UserRegex {
     public static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]{1,40}@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
