@@ -165,6 +165,8 @@
   position: absolute;
 }
 .main-container #main > .content[rel=product-register] > h1 {
+  font-size: 2rem;
+  font-weight: bold;
   margin: 1rem 2rem;
 }
 .main-container #main > .content[rel=product-register] > form {
