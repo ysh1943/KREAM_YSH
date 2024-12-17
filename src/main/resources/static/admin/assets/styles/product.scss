@@ -29,6 +29,11 @@
       margin-bottom: 1rem;
     }
 
+    > h2 {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
     > ul {
       margin-top: 1.5rem;
 
@@ -59,6 +64,8 @@
       position: absolute;
 
       > h1 {
+        font-size: 2rem;
+        font-weight: bold;
         margin: 1rem 2rem;
       }
 

@@ -38,6 +38,10 @@
   margin-top: 2.3rem;
   margin-bottom: 1rem;
 }
+.main-container #nav > h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
 .main-container #main {
   align-items: flex-start;
   display: flex;
@@ -56,6 +60,8 @@
   position: absolute;
 }
 .main-container #main > .content[rel=user-list] > h1 {
+  font-size: 2rem;
+  font-weight: bold;
   margin: 1rem 2rem;
 }
 .main-container #main > .content[rel=user-list] > .searchForm {

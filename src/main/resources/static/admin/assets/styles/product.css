@@ -38,6 +38,10 @@
   margin-top: 2.3rem;
   margin-bottom: 1rem;
 }
+.main-container #nav > h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
 .main-container #nav > ul {
   margin-top: 1.5rem;
 }
@@ -71,6 +75,8 @@
   position: absolute;
 }
 .main-container #main > .content[rel=product-list] > h1 {
+  font-size: 2rem;
+  font-weight: bold;
   margin: 1rem 2rem;
 }
 .main-container #main > .content[rel=product-list] > .searchForm {

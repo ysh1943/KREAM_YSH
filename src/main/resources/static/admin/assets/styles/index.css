@@ -80,6 +80,7 @@
   flex-shrink: 1;
 }
 #main > .table-container > .table-header > .title {
+  font-weight: bold;
   padding-left: 0.5rem;
 }
 #main > .table-container > .table-header > a {
