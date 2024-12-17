@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>KREAM Administrator</title>
+    <link rel="shortcut icon" th:href="@{'/assets/images/favicon.ico'}">
+    <link rel="stylesheet" type="text/css" th:href="@{'/assets/styles/common.css'}">
+    <link rel="stylesheet" type="text/css" th:href="@{'/admin/assets/styles/common.css'}">
+    <link rel="stylesheet" type="text/css" th:href="@{'/admin/assets/styles/user.css'}">
+    <script defer type="text/javascript" th:src="@{'/assets/scripts/common.js'}"></script>
+    <script src="https://kit.fontawesome.com/79ae8a0168.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<header>
+    <div class="header-top">
+        <div class="main-inner">
+            <h1>
+                <a href="#" class="logo">KREAM</a>
+                <a class="logo" th:href="@{/admin/}">Administrator</a>
+            </h1>
+        </div>
+        <div class="-spring"></div>
+        <div class="header-right">
+            <nav class="link-container">
+                <a href=""><i class="icon fa-solid fa-arrow-right-from-bracket"></i></a>
+            </nav>
+        </div>
+    </div>
+    <nav class="header-menu">
+        <ul class="tabs">
+            <li class="tab"><a class="link" th:href="@{/admin/user}">회원관리</a></li>
+            <li class="tab"><a class="link" th:href="@{/admin/product}">상품관리</a></li>
+            <li class="tab"><a class="link -selected" th:href="@{/admin/order}">주문관리</a></li>
+        </ul>
+    </nav>
+</header>
+</body>
+</html>

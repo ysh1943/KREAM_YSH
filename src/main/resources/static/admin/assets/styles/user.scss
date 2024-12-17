@@ -1,0 +1,114 @@
+@charset "UTF-8";
+
+@import "../../../assets/styles/global";
+
+.header-menu {
+  > .tabs > .tab > .-selected {
+    border-bottom: 2px solid #222;
+    font-weight: 500;
+  }
+}
+
+.main-container {
+  @include flex(row, flex-start, flex-start);
+  width: 100%;
+  box-sizing: border-box;
+  position: absolute;
+  margin-top: 8.5rem;
+  padding: 0;
+
+  #nav {
+    @include flex(column, center, flex-start);
+    width: 8rem;
+    height: 100vh;
+    margin-left: 1.5rem;
+
+    > .icon {
+      font-size: 2rem;
+      margin-top: 2.3rem;
+      margin-bottom: 1rem;
+    }
+  }
+
+  #main {
+    @include flex(row, flex-start, flex-start);
+
+    > .content[rel="user-list"] {
+      width: 100%;
+      box-sizing: border-box;
+      max-width: calc(100% - 5rem);
+      position: absolute;
+
+      > h1 {
+        margin: 1rem 2rem;
+      }
+
+      > .searchForm {
+        @include flex(row, center, flex-start);
+        width: 100%;
+        margin: 1rem 2rem;
+
+        > .filter-label {
+          border: 0.0625rem solid #222;
+          padding: 0.3rem;
+          margin: 0 0.5rem 0 0;
+        }
+
+        > .input-label {
+          border: 0.0625rem solid #222;
+          padding: 0.3rem;
+          margin-right: 0.5rem;
+        }
+
+        > .button {
+          background-color: #222;
+          border-radius: 0.3rem;
+          color: #ffffff;
+          cursor: pointer;
+          padding: 0.4rem 0.6rem;
+          margin-right: 0.5rem;
+        }
+      }
+
+      > table {
+        width: 100%;
+        max-width: 100%;
+        border: 1px solid #ddd;
+        border-collapse: collapse;
+        box-sizing: border-box;
+        table-layout: auto;
+        font-size: 14px;
+
+        position: relative;
+        margin: 1rem 2rem;
+
+        > thead > tr > th {
+          border: 1px solid #ddd;
+          text-align: center;
+          padding: 0.5rem 0.2rem;
+          white-space: nowrap;
+        }
+
+        > tbody > tr > td {
+          border: 1px solid #ddd;
+          text-align: center;
+          padding: 0.25rem;
+          white-space: normal;
+
+          > .suspendSelect {
+            border: 1px solid #ddd;
+            padding: 0.3rem;
+          }
+
+          > button[name="update"] {
+            background-color: #A9A9A9;
+            border-radius: 0.3rem;
+            color: #ffffff;
+            cursor: pointer;
+            padding: 0.4rem 0.6rem;
+          }
+        }
+      }
+    }
+  }
+}

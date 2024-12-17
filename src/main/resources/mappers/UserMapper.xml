@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kream.kream.mappers.UserMapper">
+
+    <select id="selectUser"
+            resultType="com.kream.kream.entities.UserEntity">
+        SELECT `id`               AS `id`,
+               `email`            AS `email`,
+               `password`         AS `password`,
+               `contact`          AS `contact`,
+               `nickname`         AS `nickname`,
+               `is_admin`         AS `isAdmin`,
+               `is_suspended`     AS `isSuspended`,
+               `is_verified`      AS `isVerified`,
+               `social_type_code` AS `socialTypeCode`,
+               `social_id`        AS `socialId`,
+               `created_at`       AS `createdAt`,
+               `updated_at`       AS `updatedAt`,
+               `deleted_at`       AS `deletedAt`
+        FROM `kream`.`user`
+        WHERE `deleted_at` IS NULL
+          AND `is_verified` = true
+        ORDER BY `id` DESC
+    </select>
+
+    <select id="selectUserBySearch"
+            resultType="com.kream.kream.entities.UserEntity">
+        SELECT `id`               AS `id`,
+        `email`            AS `email`,
+        `password`         AS `password`,
+        `contact`          AS `contact`,
+        `nickname`         AS `nickname`,
+        `is_admin`         AS `isAdmin`,
+        `is_suspended`     AS `isSuspended`,
+        `is_verified`      AS `isVerified`,
+        `social_type_code` AS `socialTypeCode`,
+        `social_id`        AS `socialId`,
+        `created_at`       AS `createdAt`,
+        `updated_at`       AS `updatedAt`,
+        `deleted_at`       AS `deletedAt`
+        FROM `kream`.`user`
+        WHERE `deleted_at` IS NULL
+        AND `is_verified` = true
+        <if test="filter.equals('all')">
+            AND (`email` LIKE CONCAT('%', #{keyword}, '%') OR `nickname` LIKE CONCAT('%', #{keyword}, '%') OR `contact` LIKE CONCAT('%', #{keyword}, '%') OR `social_type_code` LIKE CONCAT('%', #{keyword}, '%'))
+            <if test="keyword.equals('정지')">
+                OR is_suspended = true
+            </if>
+            <if test="keyword.equals('활동')">
+                OR is_suspended = false
+            </if>
+        </if>
+        <if test="filter.equals('email')">
+            AND `email` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter.equals('nickname')">
+            AND (`nickname` LIKE CONCAT('%', #{keyword}, '%') OR `product_name_en` LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        <if test="filter.equals('suspended')">
+            <if test="keyword.equals('정지')">
+                AND is_suspended = true
+            </if>
+            <if test="keyword.equals('활동')">
+                AND is_suspended = false
+            </if>
+        </if>
+        ORDER BY `id` DESC
+    </select>
+
+</mapper>

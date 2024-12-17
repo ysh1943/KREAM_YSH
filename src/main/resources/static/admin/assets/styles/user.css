@@ -1,0 +1,127 @@
+.header-menu > .tabs > .tab > .-selected {
+  border-bottom: 2px solid #222;
+  font-weight: 500;
+}
+
+.main-container {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  justify-content: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+  position: absolute;
+  margin-top: 8.5rem;
+  padding: 0;
+}
+.main-container > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+.main-container #nav {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  justify-content: flex-start;
+  width: 8rem;
+  height: 100vh;
+  margin-left: 1.5rem;
+}
+.main-container #nav > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+.main-container #nav > .icon {
+  font-size: 2rem;
+  margin-top: 2.3rem;
+  margin-bottom: 1rem;
+}
+.main-container #main {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  justify-content: flex-start;
+}
+.main-container #main > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+.main-container #main > .content[rel=user-list] {
+  width: 100%;
+  box-sizing: border-box;
+  max-width: calc(100% - 5rem);
+  position: absolute;
+}
+.main-container #main > .content[rel=user-list] > h1 {
+  margin: 1rem 2rem;
+}
+.main-container #main > .content[rel=user-list] > .searchForm {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  justify-content: flex-start;
+  width: 100%;
+  margin: 1rem 2rem;
+}
+.main-container #main > .content[rel=user-list] > .searchForm > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+.main-container #main > .content[rel=user-list] > .searchForm > .filter-label {
+  border: 0.0625rem solid #222;
+  padding: 0.3rem;
+  margin: 0 0.5rem 0 0;
+}
+.main-container #main > .content[rel=user-list] > .searchForm > .input-label {
+  border: 0.0625rem solid #222;
+  padding: 0.3rem;
+  margin-right: 0.5rem;
+}
+.main-container #main > .content[rel=user-list] > .searchForm > .button {
+  background-color: #222;
+  border-radius: 0.3rem;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 0.4rem 0.6rem;
+  margin-right: 0.5rem;
+}
+.main-container #main > .content[rel=user-list] > table {
+  width: 100%;
+  max-width: 100%;
+  border: 1px solid #ddd;
+  border-collapse: collapse;
+  box-sizing: border-box;
+  table-layout: auto;
+  font-size: 14px;
+  position: relative;
+  margin: 1rem 2rem;
+}
+.main-container #main > .content[rel=user-list] > table > thead > tr > th {
+  border: 1px solid #ddd;
+  text-align: center;
+  padding: 0.5rem 0.2rem;
+  white-space: nowrap;
+}
+.main-container #main > .content[rel=user-list] > table > tbody > tr > td {
+  border: 1px solid #ddd;
+  text-align: center;
+  padding: 0.25rem;
+  white-space: normal;
+}
+.main-container #main > .content[rel=user-list] > table > tbody > tr > td > .suspendSelect {
+  border: 1px solid #ddd;
+  padding: 0.3rem;
+}
+.main-container #main > .content[rel=user-list] > table > tbody > tr > td > button[name=update] {
+  background-color: #A9A9A9;
+  border-radius: 0.3rem;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 0.4rem 0.6rem;
+}
+
+/*# sourceMappingURL=user.css.map */

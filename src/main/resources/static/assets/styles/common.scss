@@ -1,0 +1,144 @@
+@charset "UTF-8";
+
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+@import "./global";
+
+body {
+  @include minmaxWidth(100vw);
+  @include minmaxHeight(100vh);
+  background-color: #ffffff;
+  color: #222;
+  cursor: default;
+  font-family: Pretendard Variable, Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica Neue, Apple SD Gothic Neo, Noto Sans KR, Malgun Gothic, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  font-size: 0.9rem;
+  font-weight: 300;
+  margin: 0;
+  overflow: auto;
+  overflow-x: hidden;
+}
+
+button, input, select, textarea {
+  background-color: transparent;
+  border: none;
+  color: inherit;
+  font: inherit;
+  margin: 0;
+  outline: none;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: inherit;
+  margin-block: 0;
+  margin-inline: 0;
+}
+
+ol, ul {
+  list-style-type: none;
+  margin-block: 0;
+  margin-inline: 0;
+  padding-inline: 0;
+}
+
+.---dialog-cover {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(2.5rem);
+  background-color: #212121c0;
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  transition-duration: 250ms;
+  transition-property: opacity;
+  transition-timing-function: ease;
+  z-index: 98;
+
+  &.-visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+.---dialog {
+  @include flex(column, center, flex-start);
+  top: calc(50% + 0.5rem);
+  left: 50%;
+  min-width: 20rem;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  transform: translate(-50%, -50%);
+  transition-duration: 125ms;
+  transition-property: top, opacity;
+  transition-timing-function: ease;
+  z-index: 99;
+
+  &.-visible {
+    top: 50%;
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  > ._title {
+    background-color: #ffffff;
+    border: none;
+    color: #222222;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 2rem 0.875rem 0;
+  }
+
+  > ._content {
+    background-color: #ffffff;
+    border: none;
+    color: #222222;
+    font-size: 0.8rem;
+    margin-bottom: 1.25rem;
+    padding: 0.5rem 2rem 0;
+  }
+
+  > ._button-container {
+    @include flex(row, center, center, 0.8rem);
+    background-color: #ffffff;
+    color: #222222;
+
+    > ._button {
+      $background_color: #ffffff;
+      background-color: $background_color;
+      width: 6rem;
+      border: 0.0625rem solid #c0c0c0;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 0.8rem;
+      margin-bottom: 2rem;
+      padding: 0.7rem 1.4rem;
+      user-select: none;
+
+      &:hover {
+        background-color: darken($background_color, 5%);
+      }
+
+      &:active {
+        background-color: darken($background_color, 10%);
+      }
+
+      + ._button {
+        $background_color: #222222;
+        background-color: $background_color;
+        color: #ffffff;
+
+        &:hover {
+          background-color: lighten($background_color, 5%);
+        }
+
+        &:active {
+          background-color: lighten($background_color, 10%);
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kream.kream.mappers.ProductMapper">
+
+    <insert id="insertProduct"
+            useGeneratedKeys="true"
+            keyColumn="id"
+            keyProperty="id"
+            parameterType="com.kream.kream.entities.ProductEntity">
+        INSERT INTO `kream`.`product` (`id`, `category_detail_id`, `product_name_ko`, `product_name_en`, `model_number`, `release_date`, `color`,
+                                       `brand`, `category`, `gender`, `created_at`, `updated_at`, `is_deleted`)
+        VALUES (#{id}, #{categoryDetailId}, #{productNameKo}, #{productNameEn}, #{modelNumber}, #{releaseDate}, #{color}, #{brand}, #{category}, #{gender}, #{createdAt}, #{updatedAt}, #{isDeleted})
+    </insert>
+
+    <select id="selectProduct"
+            resultType="com.kream.kream.entities.ProductEntity">
+        SELECT `product`.`id`         AS `id`,
+               `category_detail_id`   AS `categoryDetailId`,
+               `product_name_ko`      AS `productNameKo`,
+               `product_name_en`      AS `productNameEn`,
+               `model_number`         AS `modelNumber`,
+               `release_date`         AS `releaseDate`,
+               `color`                AS `color`,
+               `brand`                AS `brand`,
+               `category`             AS `category`,
+               `gender`               AS `gender`,
+               `product`.`created_at` AS `createdAt`,
+               `updated_at`           AS `updatedAt`,
+               `is_deleted`           AS `isDeleted`
+        FROM `kream`.`product`
+        WHERE is_deleted = FALSE
+        ORDER BY `id` DESC
+    </select>
+
+    <select id="selectProductById"
+            resultType="com.kream.kream.entities.ProductEntity">
+        SELECT `id`                 AS `id`,
+               `category_detail_id` AS `categoryDetailId`,
+               `product_name_ko`    AS `productNameKo`,
+               `product_name_en`    AS `productNameEn`,
+               `model_number`       AS `modelNumber`,
+               `release_date`       AS `releaseDate`,
+               `color`              AS `color`,
+               `brand`              AS `brand`,
+               `category`           AS `category`,
+               `gender`             AS `gender`,
+               `created_at`         AS `createdAt`,
+               `updated_at`         AS `updatedAt`,
+               `is_deleted`         AS `isDeleted`
+        FROM `kream`.`product`
+        WHERE `id` = #{id}
+        LIMIT 1
+    </select>
+
+    <select id="selectProductBySearch">
+        SELECT `id`                 AS `id`,
+        `category_detail_id` AS `categoryDetailId`,
+        `product_name_ko`    AS `productNameKo`,
+        `product_name_en`    AS `productNameEn`,
+        `model_number`       AS `modelNumber`,
+        `release_date`       AS `releaseDate`,
+        `color`              AS `color`,
+        `brand`              AS `brand`,
+        `category`           AS `category`,
+        `gender`             AS `gender`,
+        `created_at`         AS `createdAt`,
+        `updated_at`         AS `updatedAt`,
+        `is_deleted`         AS `isDeleted`
+        FROM `kream`.`product`
+        WHERE `is_deleted` = FALSE
+        <if test="filter.equals('all')"> <!-- 참일떄만 붙여준다. -->
+            AND (`model_number` LIKE CONCAT('%', #{keyword}, '%') OR `product_name_ko` LIKE CONCAT('%', #{keyword}, '%') OR `product_name_en` LIKE CONCAT('%', #{keyword}, '%') OR `brand` LIKE CONCAT('%', #{keyword}, '%') OR `category` LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        <if test="filter.equals('modelNum')">
+            AND `model_number` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter.equals('name')">
+            AND (`product_name_ko` LIKE CONCAT('%', #{keyword}, '%') OR `product_name_en` LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        <if test="filter.equals('brand')">
+            AND `brand` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter.equals('category')">
+            AND `category` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        ORDER BY `id` DESC
+    </select>
+
+    <update id="updateProduct">
+        UPDATE `kream`.`product`
+        SET `category_detail_id` = #{product.categoryDetailId},
+            `product_name_ko`    = #{product.productNameKo},
+            `product_name_en`    = #{product.productNameEn},
+            `model_number`       = #{product.modelNumber},
+            `release_date`       = #{product.releaseDate},
+            `color`              = #{product.color},
+            `brand`              = #{product.brand},
+            `category`           = #{product.category},
+            `gender`             = #{product.gender},
+            `created_at`         = #{product.createdAt},
+            `updated_at`         = #{product.updatedAt},
+            `is_deleted`         = #{product.isDeleted}
+        WHERE `id` = #{product.id}
+        LIMIT 1
+    </update>
+
+</mapper>
