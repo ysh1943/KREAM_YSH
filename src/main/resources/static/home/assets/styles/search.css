@@ -171,6 +171,12 @@
   margin-bottom: 1.7rem;
   color: #222222;
 }
+#header > .form > .result > .item > .text:hover {
+  background-color: rgb(249.9, 249.9, 249.9);
+}
+#header > .form > .result > .item > .text:active {
+  background-color: rgb(242.25, 242.25, 242.25);
+}
 
 #main {
   align-items: flex-start;
@@ -231,6 +237,7 @@
   border-radius: 1.25rem;
   box-sizing: border-box;
   padding: 0.3rem 0.7rem;
+  cursor: pointer;
 }
 #main > .container > .list > .content-item > .-spring {
   flex-grow: 1;
@@ -238,6 +245,8 @@
 }
 #main > .container > .list > .content-item.-dark {
   background-color: rgba(224, 224, 224, 0.5843137255);
+  pointer-events: none;
+  user-select: none;
 }
 #main > .container > .list > .content-item > .item {
   color: inherit;

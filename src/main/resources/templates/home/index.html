@@ -66,10 +66,10 @@
                 <i class="fa-solid fa-triangle-exclamation"></i>
                 인기상품을 불러오는 데 문제가 발생했습니다. 새로 고침해주세요.</div>
         </div>
-        <ul class="home-products-list" th:if="${!popularProducts.isEmpty()}" th:each="popularProduct : ${popularProducts}">
-            <li class="products-item">
+        <ul class="home-products-list">
+            <li class="products-item"  th:if="${!popularProducts.isEmpty()}" th:each="popularProduct : ${popularProducts}">
                 <a th:href="@{'/shop?keyword=' + ${popularProduct.getProductName()}}" class="product-image">
-                    <span class="trading">
+                    <span class="trading" th:if="${popularProduct.getTransactionCount() != 0}">
                         <span class="text">거래</span>
                         <span class="text" th:text="${popularProduct.getTransactionCount()}"></span>
                     </span>
@@ -80,7 +80,7 @@
                         <span class="brand" th:text="${popularProduct.getBrand()}"></span>
                         <span class="product-name" th:text="${popularProduct.getProductName()}"></span>
                     </span>
-                    <span class="price" th:text="${#numbers.formatInteger(popularProduct.getLowestPrice(), 0, 'COMMA') + '원'}"></span>
+                    <span class="price" th:text="${popularProduct.getLowestPrice() != null ? #numbers.formatInteger(popularProduct.getLowestPrice(), 0, 'COMMA') + '원' : '-'}"></span>
                 </span>
             </li>
         </ul>
@@ -96,12 +96,11 @@
                 신규상품을 불러오는 데 문제가 발생했습니다. 새로 고침해주세요.
             </div>
         </div>
-        <ul class="home-products-list" th:if="${!newProducts.isEmpty()}" th:each="newProduct : ${newProducts}">
-            <li class="products-item">
+        <ul class="home-products-list">
+            <li class="products-item" th:if="${!newProducts.isEmpty()}" th:each="newProduct : ${newProducts}">
                 <a th:href="@{'/shop?keyword=' + ${newProduct.getProductName()}}" class="product-image">
-                    <span class="trading">
+                    <span class="trading" th:if="${newProduct.getTransactionCount() != 0}">
                         <span class="text">거래</span>
-
                         <span class="text" th:text="${newProduct.getTransactionCount()}"></span>
                     </span>
                     <img class="image" alt="new-product-image" th:src="${newProduct.getBase64Image()}">
@@ -111,7 +110,7 @@
                         <span class="brand" th:text="${newProduct.getBrand()}"></span>
                         <span class="product-name" th:text="${newProduct.getProductName()}"></span>
                     </span>
-                    <span class="price" th:text="${#numbers.formatInteger(newProduct.getLowestPrice(), 0, 'COMMA') + '원'}"></span>
+                    <span class="price" th:text="${newProduct.getLowestPrice() != null ? #numbers.formatInteger(newProduct.getLowestPrice(), 0, 'COMMA') + '원' : '-'}"></span>
                 </span>
             </li>
         </ul>
