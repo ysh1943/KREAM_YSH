@@ -7,6 +7,7 @@ import com.kream.kream.entities.UserEntity;
 import com.kream.kream.exceptions.TransactionalException;
 import com.kream.kream.mappers.*;
 import com.kream.kream.results.CommonResult;
+import com.kream.kream.results.Result;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;

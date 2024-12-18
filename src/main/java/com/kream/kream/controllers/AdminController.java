@@ -29,15 +29,22 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ModelAndView getProduct() {
+    public ModelAndView getProduct(@SessionAttribute(value = "user", required = false) UserEntity user) {
+        if (user == null || !user.isAdmin()) {
+            return new ModelAndView("redirect:/");
+        }
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("admin/index");
         return modelAndView;
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public ModelAndView getUser(@RequestParam(value = "filter", required = false) String filter,
+    public ModelAndView getUser(@SessionAttribute(value = "user", required = false) UserEntity user,
+                                @RequestParam(value = "filter", required = false) String filter,
                                 @RequestParam(value = "keyword", required = false) String keyword) {
+        if (user == null || !user.isAdmin()) {
+            return new ModelAndView("redirect:/");
+        }
         ModelAndView modelAndView = new ModelAndView();
         if (filter == null && keyword == null) {
             UserEntity[] users = this.adminService.selectUser();
@@ -53,8 +60,12 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/product", method = RequestMethod.GET)
-    public ModelAndView getProduct(@RequestParam(value = "filter", required = false) String filter,
+    public ModelAndView getProduct(@SessionAttribute(value = "user", required = false) UserEntity user,
+                                   @RequestParam(value = "filter", required = false) String filter,
                                    @RequestParam(value = "keyword", required = false) String keyword) {
+        if (user == null || !user.isAdmin()) {
+            return new ModelAndView("redirect:/");
+        }
         ModelAndView modelAndView = new ModelAndView();
         if (filter == null && keyword == null) {
             ProductEntity[] products = this.adminService.selectProduct();
@@ -110,7 +121,10 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/order", method = RequestMethod.GET)
-    public ModelAndView getOrder() {
+    public ModelAndView getOrder(@SessionAttribute(value = "user", required = false) UserEntity user) {
+        if (user == null || !user.isAdmin()) {
+            return new ModelAndView("redirect:/");
+        }
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("admin/order");
         return modelAndView;
