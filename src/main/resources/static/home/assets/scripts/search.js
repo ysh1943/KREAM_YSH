@@ -108,7 +108,6 @@ const $cover = document.getElementById('cover');
                             if (keyword['brand'] != null) {
                                 uniqueBrand.add(keyword['brand']);
                                 $item.append(createButton(keyword['brand'], keyword['brand']));
-
                             }
                             if (keyword['productNameEn'] != null) {
                                 $item.append(createButton(keyword['productNameEn'], keyword['productNameEn']));

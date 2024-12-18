@@ -116,14 +116,11 @@ public class UserController extends AbstractGeneralController {
     public ModelAndView getLoginNaver(HttpSession session,
                                       @RequestParam(value = "code", required = false) String code) throws URISyntaxException, IOException, InterruptedException {
         System.out.println("실행은 되었어요~");
-
         // UserService를 사용해 네이버 로그인 처리 로직을 수행
         // 네이버 OAuth에서 전달받은 인증 코드("code")를 사용
         ResultDto<Result, UserEntity> result = this.userService.handleNaverLogin(code);
         System.out.println(result);
         // 응답 데이터를 담을 ModelAndView 객체 생성
-        System.out.println("이건 소셜 타입 코드 :" + result.getPayload().getSocialTypeCode());
-        System.out.println("이건 소셜 아이디 :" + result.getPayload().getSocialId());
         ModelAndView modelAndView = new ModelAndView();
 
         // 처리 결과가 '사용자 미등록'인 경우

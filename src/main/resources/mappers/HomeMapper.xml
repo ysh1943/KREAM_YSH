@@ -11,7 +11,7 @@
                COUNT(`order`.`id`)                     AS transactionCount,
                `image`.`data`                               AS imageData,
                `image`.`type`                               AS imageType,
-               (SELECT COALESCE(MIN(`seller_bid`.`price`), 0)
+               (SELECT MIN(`seller_bid`.`price`)
                 FROM `kream`.`seller_bid`
                          INNER JOIN `kream`.`size`
                                     ON `seller_bid`.`size_id` = `size`.`id`
@@ -40,7 +40,7 @@
                `product`.`brand`                            AS brand,
                `image`.`data`                               AS imageData,
                `image`.`type`                               AS imageType,
-               (SELECT COALESCE(MIN(`seller_bid`.`price`), 0)
+               (SELECT MIN(`seller_bid`.`price`)
                 FROM `kream`.`seller_bid`
                          INNER JOIN `kream`.`size`
                                     ON `seller_bid`.`size_id` = `size`.`id`
@@ -55,11 +55,9 @@
                 WHERE `order`.`state` = 'DELIVERED'
                   AND `size`.`product_id` = `product`.`id`) AS transactionCount
         FROM `kream`.`product`
-                 INNER JOIN `kream`.`image`
+                 LEFT JOIN `kream`.`image`
                             ON `product`.`id` = `image`.`product_id`
                                 AND `image`.`is_primary` = 1
-                 INNER JOIN `kream`.`size`
-                            ON `product`.`id` = `size`.`product_id`
         WHERE `product`.`is_deleted` = 0
         ORDER BY `product`.`created_at` DESC
         LIMIT 20
