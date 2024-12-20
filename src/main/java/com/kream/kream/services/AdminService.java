@@ -7,6 +7,7 @@ import com.kream.kream.entities.UserEntity;
 import com.kream.kream.exceptions.TransactionalException;
 import com.kream.kream.mappers.*;
 import com.kream.kream.results.CommonResult;
+import com.kream.kream.results.Result;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,6 +41,19 @@ public class AdminService {
             keyword = "";
         }
         return this.userMapper.selectUserBySearch(filter, keyword);
+    }
+
+    public CommonResult patchUser(String userEmail, boolean suspend) {
+        UserEntity user = this.userMapper.selectUserByEmail(userEmail);
+        if (user == null || user.getDeletedAt() != null) {
+            return CommonResult.FAILURE;
+        }
+        user.setSuspended(suspend);
+        user.setUpdatedAt(LocalDateTime.now());
+        user.setDeletedAt(null);
+        return this.userMapper.updateUser(user) > 0
+                ? CommonResult.SUCCESS
+                : CommonResult.FAILURE;
     }
 
     public ProductEntity[] selectProduct() {
@@ -95,13 +109,10 @@ public class AdminService {
         return this.categoryDetailMapper.selectByCategoryId(categoryDetailType);
     };
 
-    // UserEntity user 넣어서 관리자 아닐시 null 조건 적어야함.
     public CommonResult addProduct(ProductEntity product, CategoryDetailEntity categoryDetail, MultipartFile[] files) throws IOException {
-//        if (user == null || user.isAdmin == false || user.isSuspended() || user.getDeletedAt() != null) {
-//            return CommonResult.FAILURE_UNSIGNED;
-//        }
         if (product == null ||
                 product.getModelNumber() == null || product.getModelNumber().isEmpty() || product.getModelNumber().length() > 50 ||
+                product.getBaseName() == null || product.getBaseName().isEmpty() || product.getBaseName().length() > 100 ||
                 product.getProductNameKo() == null || product.getProductNameKo().isEmpty() || product.getProductNameKo().length() > 100 ||
                 product.getProductNameEn() == null || product.getProductNameEn().isEmpty() || product.getProductNameEn().length() > 100 || product.getGender() == null || product.getCategory() == null || product.getColor() == null) {
             return CommonResult.FAILURE;
@@ -124,7 +135,7 @@ public class AdminService {
                 MultipartFile file = files[i];
                 ImageEntity image = new ImageEntity();
                 image.setProductId(product.getId());
-                image.setData(file.getBytes()); // 바이 배열로 벼화는 중 예외 발생 가능
+                image.setData(file.getBytes());
                 image.setType(file.getContentType());
                 image.setName(file.getOriginalFilename());
                 image.setCreatedAt(LocalDateTime.now());

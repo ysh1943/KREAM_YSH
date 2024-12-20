@@ -5,6 +5,7 @@ import com.kream.kream.entities.ImageEntity;
 import com.kream.kream.entities.ProductEntity;
 import com.kream.kream.entities.UserEntity;
 import com.kream.kream.results.CommonResult;
+import com.kream.kream.results.Result;
 import com.kream.kream.services.AdminService;
 import org.apache.catalina.User;
 import org.json.JSONObject;
@@ -21,7 +22,7 @@ import java.io.IOException;
 @Controller
 @RequestMapping(value = "/admin")
 public class AdminController {
-    private AdminService adminService;
+    private final AdminService adminService;
 
     @Autowired
     public AdminController(AdminService adminService) {
@@ -29,15 +30,22 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ModelAndView getProduct() {
+    public ModelAndView getIndex(@SessionAttribute(value = "user", required = false) UserEntity user) {
+        if (user == null || !user.isAdmin()) {
+            return new ModelAndView("redirect:/");
+        }
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("admin/index");
         return modelAndView;
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public ModelAndView getUser(@RequestParam(value = "filter", required = false) String filter,
+    public ModelAndView getUser(@SessionAttribute(value = "user", required = false) UserEntity user,
+                                @RequestParam(value = "filter", required = false) String filter,
                                 @RequestParam(value = "keyword", required = false) String keyword) {
+        if (user == null || !user.isAdmin()) {
+            return new ModelAndView("redirect:/");
+        }
         ModelAndView modelAndView = new ModelAndView();
         if (filter == null && keyword == null) {
             UserEntity[] users = this.adminService.selectUser();
@@ -52,9 +60,24 @@ public class AdminController {
         return modelAndView;
     }
 
+    @RequestMapping(value = "/user", method = RequestMethod.PATCH)
+    @ResponseBody
+    public String patchUser(@RequestParam(value = "userEmail") String userEmail,
+                            @RequestParam(value = "suspend") boolean suspend) {
+        System.out.println(userEmail + suspend);
+        CommonResult result = this.adminService.patchUser(userEmail, suspend);
+        JSONObject response = new JSONObject();
+        response.put("result", result.name().toLowerCase());
+        return response.toString();
+    }
+
     @RequestMapping(value = "/product", method = RequestMethod.GET)
-    public ModelAndView getProduct(@RequestParam(value = "filter", required = false) String filter,
+    public ModelAndView getProduct(@SessionAttribute(value = "user", required = false) UserEntity user,
+                                   @RequestParam(value = "filter", required = false) String filter,
                                    @RequestParam(value = "keyword", required = false) String keyword) {
+        if (user == null || !user.isAdmin()) {
+            return new ModelAndView("redirect:/");
+        }
         ModelAndView modelAndView = new ModelAndView();
         if (filter == null && keyword == null) {
             ProductEntity[] products = this.adminService.selectProduct();
@@ -110,7 +133,10 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/order", method = RequestMethod.GET)
-    public ModelAndView getOrder() {
+    public ModelAndView getOrder(@SessionAttribute(value = "user", required = false) UserEntity user) {
+        if (user == null || !user.isAdmin()) {
+            return new ModelAndView("redirect:/");
+        }
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("admin/order");
         return modelAndView;

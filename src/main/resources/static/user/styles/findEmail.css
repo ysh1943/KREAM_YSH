@@ -110,235 +110,204 @@
   flex-grow: 1;
   flex-shrink: 1;
 }
-.container > .content > .login-area {
+<<<<<<< HEAD
+.container > .content > .helf-area {
+=======
+.container > .content > .helf_area {
+>>>>>>> dev
   align-items: center;
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
   justify-content: flex-start;
   margin: 0 auto;
-  padding: 60px 0 160px;
+  padding: 120px 0 160px;
   width: 400px;
   height: 100%;
 }
-.container > .content > .login-area > .-spring {
+<<<<<<< HEAD
+.container > .content > .helf-area > .-spring {
   flex-grow: 1;
   flex-shrink: 1;
 }
-.container > .content > .login-area > .login-title {
+.container > .content > .helf-area > .something {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+.container > .content > .helf-area > .something > .helf-title {
+  font-size: 24px !important;
+  padding-bottom: 0 !important;
+}
+.container > .content > .helf-area > .something > .helf_notice {
+  padding-top: 30px !important;
+  padding-bottom: 0 !important;
+  width: 100%;
+  box-sizing: border-box !important;
+  text-align: center !important;
+  margin: 0 !important;
+}
+.container > .content > .helf-area > .something > .helf_notice > di {
+  box-sizing: border-box;
+  gap: 0.5rem;
+}
+.container > .content > .helf-area > .something > .helf_notice > di > dt {
+  color: rgba(34, 34, 34, 0.5);
+  font-size: 12px;
+  letter-spacing: -0.06px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.container > .content > .helf-area > .something > .helf_notice > di > dt ~ dd {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.09px;
+  padding-top: 8px;
+  margin: 0;
+}
+.container > .content > .helf-area > .something > .success_btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding-top: 56px;
+  width: 100% !important;
+}
+.container > .content > .helf-area > .something > .success_btn > .password_find {
+  align-items: center !important;
+  background-color: #ffffff !important;
+  color: rgba(34, 34, 34, 0.8) !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  justify-content: center !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  border-radius: 12px !important;
+  flex: 1 !important;
+  height: 52px !important;
+  line-height: 52px !important;
+  border: 1px solid #d3d3d3 !important;
+  letter-spacing: -0.16px !important;
+  padding: 0 25px !important;
+  text-decoration: none;
+}
+.container > .content > .helf-area > .something > .success_btn > .loginPage {
+  margin-left: 8px !important;
+  border-radius: 12px !important;
+  flex: 1 !important;
+  height: 52px !important;
+  line-height: 52px !important;
+  background-color: #000000 !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.16px !important;
+  padding: 0 25px !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  justify-content: center !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  text-decoration: none !important;
+}
+.container > .content > .helf-area > div {
+  width: 100%;
+  height: 100%;
+}
+.container > .content > .helf-area > div > .helf-title {
+  border-bottom: 2px solid #000;
+  color: #000;
+  font-size: 32px;
+  letter-spacing: -0.48px;
+  padding-bottom: 35px;
+  text-align: center;
   align-items: center;
   display: flex;
   flex-direction: column;
   gap: 0;
   justify-content: center;
-  background-image: url("https://kream.co.kr/_nuxt/img/login_title.164fc57.png");
   background-position: center;
   background-size: 250px 56px;
   display: block;
   height: 56px;
   width: 100%;
-  padding-bottom: 50px;
-  text-align: center;
   background-repeat: no-repeat;
 }
-.container > .content > .login-area > .login-title > .-spring {
+.container > .content > .helf-area > div > .helf-title > .-spring {
   flex-grow: 1;
   flex-shrink: 1;
 }
-.container > .content > .login-area > .--obj-label {
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  justify-content: center;
-  width: 100%;
-  height: 80px;
-  padding: 10px 0 14px 0;
+.container > .content > .helf-area > div > .helf_notice {
+  padding: 40px 0 30px 0;
+  margin: 0;
+}
+.container > .content > .helf-area > div > .helf_notice > .notice_text {
+  font-size: 14px;
+  letter-spacing: -0.21px;
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
+}
+.container > .content > .helf-area > div > .input_box {
+  padding: 10px 0 14px;
   position: relative;
 }
-.container > .content > .login-area > .--obj-label > .-spring {
-  flex-grow: 1;
-  flex-shrink: 1;
+.container > .content > .helf-area > div > .input_box > .input_title {
+  font-size: 13px;
+  letter-spacing: -0.07px;
+  line-height: 18px;
+  margin: 0;
+  padding: 0;
 }
-.container > .content > .login-area > .--obj-label > .item {
-  border-bottom: 1px solid #ebebeb;
-  font-size: 15px;
-  padding: 8px 30px 8px 0;
-  width: 100%;
+.container > .content > .helf-area > div > .input_box > .--obj-label {
+  position: relative;
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
-.container > .content > .login-area > .--obj-label > .item::placeholder {
-  transition: opacity 0.3s ease;
-}
-.container > .content > .login-area > .--obj-label > .item:focus-within::placeholder {
-  opacity: 0;
-}
-.container > .content > .login-area > .--obj-label > .close {
-  cursor: pointer;
-  margin-top: -12px;
-  position: absolute;
-  right: 0;
-  top: 65%;
-  width: 20px;
-  height: 20px;
-  opacity: 1;
-}
-.container > .content > .login-area > .--obj-label > .close.-visible {
-  opacity: 0;
-  pointer-events: none;
-}
-.container > .content > .login-area > .--obj-label.-invalid > ._text {
-  color: #e74c3c;
-}
-.container > .content > .login-area > .--obj-label.-invalid > .item:not(:disabled) {
-  border-color: #e74c3c !important;
+.container > .content > .helf-area > div > .input_box > .--obj-label > .item {
+  border-bottom: 1px solid #ebebeb;
   font-size: 15px;
   letter-spacing: -0.15px;
   line-height: 22px;
   padding: 8px 0;
   width: 100%;
 }
-.container > .content > .login-area > .--obj-label.-invalid > ._warning {
-  color: #e74c3c;
-  display: block;
-  font-size: 0.8rem;
+.container > .content > .helf-area > div > .input_box > .--obj-label > .item:focus-within {
+  border-bottom: 2px solid #000000;
 }
-.container > .content > .login-area > .--obj-label > ._warning {
-  display: none;
-}
-.container > .content > .login-area > .login-button {
+.container > .content > .helf-area > div > .helf_btn_box {
   width: 100%;
-  height: 72px;
-  padding-top: 20px;
+  padding-top: 44px;
+  margin: 0;
 }
-.container > .content > .login-area > .login-button > .button {
-  width: 100%;
-  height: 52px;
-  background-color: #222;
-  color: #ffffff;
-  font-weight: 700;
-  border-radius: 0.5rem;
-  cursor: pointer;
-}
-.container > .content > .login-area > .look-box {
+.container > .content > .helf-area > div > .helf_btn_box > .button {
   align-items: center;
   display: flex;
   flex-direction: row;
-  gap: 0.5rem;
-  justify-content: space-evenly;
-  margin-top: 20px;
-  box-sizing: border-box;
-  width: 100%;
-}
-.container > .content > .login-area > .look-box > .-spring {
-  flex-grow: 1;
-  flex-shrink: 1;
-}
-.container > .content > .login-area > .look-box > .look-list {
-  display: inline-flex;
-  width: 100%;
-  height: 16px;
-  flex-grow: 1;
-}
-.container > .content > .login-area > .look-box > .look-list + .look-list:before {
-  background-color: #d3d3d3;
-  content: "";
-  height: 13px;
-  margin-top: 3px;
-  width: 1px;
-  display: inline-block;
-}
-.container > .content > .login-area > .look-box > .look-list > .look-link {
-  margin: 0 auto;
-  padding: 0 10px;
-  text-decoration: none;
-  color: inherit;
-  box-sizing: border-box;
-}
-.container > .content > .login-area > .social-login {
-  align-items: center;
-  display: flex;
-  flex-direction: column;
   gap: 0;
   justify-content: center;
-  margin-top: 40px;
-  width: 100%;
-}
-.container > .content > .login-area > .social-login > .-spring {
-  flex-grow: 1;
-  flex-shrink: 1;
-}
-.container > .content > .login-area > .social-login > .button-container {
+  border-radius: 10px;
   width: 100%;
   height: 52px;
-  margin-bottom: 8px;
-  border: 1px solid #d3d3d3;
-  border-radius: 10px;
-}
-.container > .content > .login-area > .social-login > .button-container > .button {
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  gap: 0.5rem;
-  justify-content: center;
-  height: 100%;
-  border-radius: 0.25rem;
-  cursor: pointer;
-  text-align: center;
+  font-weight: 400;
+  background-color: rgba(34, 34, 34, 0.2);
+  color: #ffffff;
+  vertical-align: middle;
   text-decoration: none;
-  transition-duration: 125ms;
-  transition-property: background-color;
-  transition-timing-function: ease;
-  user-select: none;
+  cursor: pointer;
 }
-.container > .content > .login-area > .social-login > .button-container > .button > .-spring {
+.container > .content > .helf-area > div > .helf_btn_box > .button > .-spring {
   flex-grow: 1;
   flex-shrink: 1;
 }
-.container > .content > .login-area > .social-login > .button-container > .button.-color-primary {
-  background-color: #3498db;
-  color: #ffffff;
+=======
+.container > .content > .helf_area > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
 }
-.container > .content > .login-area > .social-login > .button-container > .button.-color-primary:hover {
-  background-color: rgb(36.9790794979, 139.6987447699, 208.5209205021);
-}
-.container > .content > .login-area > .social-login > .button-container > .button.-color-primary:active {
-  background-color: rgb(33.1380753138, 125.1882845188, 186.8619246862);
-}
-.container > .content > .login-area > .social-login > .button-container > .button.-color-gray {
-  background-color: #9e9e9e;
-  color: #ffffff;
-}
-.container > .content > .login-area > .social-login > .button-container > .button.-color-gray:hover {
-  background-color: rgb(145.25, 145.25, 145.25);
-}
-.container > .content > .login-area > .social-login > .button-container > .button.-color-gray:active {
-  background-color: rgb(132.5, 132.5, 132.5);
-}
-.container > .content > .login-area > .social-login > .button-container > .button.-color-kakao {
-  background-color: #fee500;
-  color: #212121;
-}
-.container > .content > .login-area > .social-login > .button-container > .button.-color-kakao:hover {
-  background-color: rgb(241.25, 217.5049212598, 0);
-}
-.container > .content > .login-area > .social-login > .button-container > .button.-color-kakao:active {
-  background-color: rgb(228.5, 206.0098425197, 0);
-}
-.container > .content > .login-area > .social-login > .button-container > .button.-color-naver {
-  background-color: #03c75a;
-  color: #ffffff;
-}
-.container > .content > .login-area > .social-login > .button-container > .button.-color-naver:hover {
-  background-color: rgb(2.8106435644, 186.4393564356, 84.3193069307);
-}
-.container > .content > .login-area > .social-login > .button-container > .button.-color-naver:active {
-  background-color: rgb(2.6212871287, 173.8787128713, 78.6386138614);
-}
-.container > .content > .login-area > .social-login > .button-container > .button > .image {
-  height: 1rem;
-}
+>>>>>>> dev
 
 #footer {
   width: 100vw;

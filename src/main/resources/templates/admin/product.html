@@ -19,7 +19,7 @@
     <div class="header-top">
         <div class="main-inner">
             <h1>
-                <a href="#" class="logo">KREAM</a>
+                <a th:href="@{./}" class="logo">KREAM</a>
                 <a class="logo" th:href="@{/admin/}">Administrator</a>
             </h1>
         </div>
@@ -129,6 +129,13 @@
                         </td>
                     </tr>
                     <tr>
+                        <th>기본 상품명</th>
+                        <td>
+                            <input required autocomplete="off" class="_input" maxlength="100"
+                                   minlength="1" name="baseName" type="text">
+                        </td>
+                    </tr>
+                    <tr>
                         <th>상품명 (KO)</th>
                         <td>
                             <input required autocomplete="off" class="_input" maxlength="100"
@@ -172,10 +179,10 @@
                         <td>
                             <select name="category">
                                 <option value="" disabled selected>옵션을 선택하세요</option>
-                                <option>상의</option>
-                                <option>하의</option>
-                                <option>신발</option>
-                                <option>패션잡화</option>
+                                <option value="top">상의</option>
+                                <option value="bottom">하의</option>
+                                <option value="shoes">신발</option>
+                                <option value="accessories">패션잡화</option>
                             </select>
                         </td>
                     </tr>

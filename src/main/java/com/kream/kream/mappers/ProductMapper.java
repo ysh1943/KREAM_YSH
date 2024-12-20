@@ -1,8 +1,12 @@
 package com.kream.kream.mappers;
 
+import com.kream.kream.dtos.ProductDTO;
+import com.kream.kream.dtos.SimilarProductImageDTO;
 import com.kream.kream.entities.ProductEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 @Mapper
 public interface ProductMapper {
@@ -16,4 +20,12 @@ public interface ProductMapper {
                                           @Param("keyword") String keyword);
 
     int updateProduct(@Param("product") ProductEntity product);
+
+    SimilarProductImageDTO[] selectProductImagesByBaseName(@Param("baseName") String baseName);
+
+    List<ProductDTO> selectNewProducts();
+
+    List<ProductDTO> selectPopularProducts();
+
+    List<ProductDTO> selectPopularProductsByFilter(String filter);
 }

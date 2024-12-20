@@ -77,42 +77,48 @@
         }
       }
 
-      > table {
-        width: 100%;
-        max-width: 100%;
-        border: 1px solid #ddd;
-        border-collapse: collapse;
-        box-sizing: border-box;
-        table-layout: auto;
-        font-size: 14px;
-
-        position: relative;
-        margin: 1rem 2rem;
-
-        > thead > tr > th {
+      > .tableForm {
+        > table {
+          width: 100%;
+          max-width: 100%;
           border: 1px solid #ddd;
-          text-align: center;
-          padding: 0.5rem 0.2rem;
-          white-space: nowrap;
-        }
+          border-collapse: collapse;
+          box-sizing: border-box;
+          table-layout: auto;
+          font-size: 14px;
 
-        > tbody > tr > td {
-          border: 1px solid #ddd;
-          text-align: center;
-          padding: 0.25rem;
-          white-space: normal;
+          position: relative;
+          margin: 1rem 2rem;
 
-          > .suspendSelect {
+          > thead > tr > th {
             border: 1px solid #ddd;
-            padding: 0.3rem;
+            text-align: center;
+            padding: 0.5rem 0.2rem;
+            white-space: nowrap;
           }
 
-          > button[name="update"] {
-            background-color: #A9A9A9;
-            border-radius: 0.3rem;
-            color: #ffffff;
-            cursor: pointer;
-            padding: 0.4rem 0.6rem;
+          > tbody > tr > td {
+            border: 1px solid #ddd;
+            text-align: center;
+            padding: 0.25rem;
+            white-space: normal;
+
+            > span {
+              padding-right: 0.5rem;
+            }
+
+            > .suspendSelect {
+              border: 1px solid #ddd;
+              padding: 0.3rem;
+            }
+
+            > button[name="update"] {
+              background-color: #A9A9A9;
+              border-radius: 0.3rem;
+              color: #ffffff;
+              cursor: pointer;
+              padding: 0.4rem 0.6rem;
+            }
           }
         }
       }
