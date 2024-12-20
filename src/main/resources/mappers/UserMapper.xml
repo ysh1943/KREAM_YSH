@@ -44,7 +44,6 @@
 
     <select id="selectUserBySearch"
             resultType="com.kream.kream.entities.UserEntity">
-<<<<<<< HEAD
         SELECT  `id`                        AS `id`,
                 `email`                     AS `email`,
                 `password`                  AS `password`,
@@ -59,21 +58,6 @@
                 `created_at`                AS `createdAt`,
                 `updated_at`                AS `updatedAt`,
                 `deleted_at`                AS `deletedAt`
-=======
-        SELECT  `id`               AS `id`,
-                `email`            AS `email`,
-                `password`         AS `password`,
-                `contact`          AS `contact`,
-                `nickname`         AS `nickname`,
-                `is_admin`         AS `isAdmin`,
-                `is_suspended`     AS `isSuspended`,
-                `is_verified`      AS `isVerified`,
-                `social_type_code` AS `socialTypeCode`,
-                `social_id`        AS `socialId`,
-                `created_at`       AS `createdAt`,
-                `updated_at`       AS `updatedAt`,
-                `deleted_at`       AS `deletedAt`
->>>>>>> dev
         FROM `kream`.`user`
         WHERE `is_verified` = true
             AND `deleted_at` IS NULL

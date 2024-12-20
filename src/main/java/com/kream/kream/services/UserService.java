@@ -14,6 +14,7 @@ import com.kream.kream.results.enums.SocialTypes;
 import com.kream.kream.results.user.HandleKakaoLoginResult;
 import com.kream.kream.results.user.HandleNaverLoginResult;
 import com.kream.kream.results.user.ValidationEmailTokenResult;
+import com.kream.kream.secureRandom.PasswordUtil;
 import com.kream.kream.utils.CryptoUtils;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -289,6 +290,10 @@ public class UserService {
             return LoginResult.FAILURE_SUSPENDED;
         }
 
+        if (dbUSer.getTemporaryPassword() != null && dbUSer.getTemporaryPassword().isBefore(LocalDateTime.now())) {
+            return CommonResult.EXPIRED_PASSWORD;
+        }
+
         user.setPassword(dbUSer.getPassword());
         user.setNickname(dbUSer.getNickname());
         user.setContact(dbUSer.getContact());
@@ -296,6 +301,7 @@ public class UserService {
         user.setAdmin(dbUSer.isAdmin());
         user.setSuspended(dbUSer.isSuspended());
         user.setVerified(dbUSer.isVerified());
+        user.setTemporaryPassword(dbUSer.getTemporaryPassword());
         return CommonResult.SUCCESS;
     }
 
@@ -356,7 +362,7 @@ public class UserService {
             if (this.emailTokenMapper.insertEmailToken(emailToken) == 0) {
                 throw new TransactionalException(); // 삽입 실패 시 트랜잭션 롤백
             }
-            String validationLink = String.format("%s://%s:%d/user/validate-email-token?userEmail=%s&key=%s",
+            String validationLink = String.format("%s://%s:%d/validate-email-token?userEmail=%s&key=%s",
                     request.getScheme(),
                     request.getServerName(),
                     request.getServerPort(),
@@ -399,6 +405,61 @@ public class UserService {
         }
         UserEntity user = this.userMapper.selectUserByEmail(emailToken.getUserEmail()); // 사용자 가져오기
         user.setVerified(true); // 사용자에 대해 인증처리 된 것으로 수정
+
+        if (this.userMapper.updateUser(user) == 0) {
+            throw new TransactionalException();
+        }
+
+        return CommonResult.SUCCESS;
+    }
+
+    public Result recoverEmail(UserEntity user) {
+        if (user == null ||
+                user.getContact() == null || user.getContact().length() != 11) {
+            return CommonResult.FAILURE;
+        }
+
+        UserEntity dbUser = this.userMapper.selectUserByContact(user.getContact());
+        if (dbUser == null || dbUser.getDeletedAt() != null) {
+            return CommonResult.FAILURE;
+        }
+
+        user.setEmail(dbUser.getEmail());
+        return CommonResult.SUCCESS;
+    }
+
+    @Transactional
+    public Result provokeRecoverPassword(HttpServletRequest request, String email, String contact) throws MessagingException {
+        if (email == null || email.length() < 8 || email.length() >= 50 ||
+                contact == null || contact.length() != 11) {
+            return CommonResult.FAILURE;
+        }
+
+        UserEntity user = this.userMapper.selectUserByEmail(email);
+        if (user == null || user.getDeletedAt() != null) { // 유저가 없거나 탈퇴한 유저인 경우
+            return CommonResult.FAILURE; // 실패 상태 반환
+        }
+
+        // 임시 비밀번호 생성
+        String tempPassword = PasswordUtil.generateTemporaryPassword(12);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        System.out.println("임시 비밀번호: " + tempPassword);
+
+        LocalDateTime expiryTime = LocalDateTime.now().plusHours(1);
+        user.setTemporaryPassword(expiryTime);
+
+        // 이메일 메시지 구성
+        MimeMessage mimeMessage = this.mailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+        mimeMessageHelper.setFrom("yangsehun1943@gmail.com"); // 발신자 이메일 설정
+        mimeMessageHelper.setTo(user.getEmail()); // 수신자 이메일 설정
+        mimeMessageHelper.setSubject("KreamProject 임시 비밀번호"); // 이메일 제목 설정
+        mimeMessageHelper.setText("임시 비밀번호는 다음과 같습니다:\n" + tempPassword + "\n로그인 후 반드시 비밀번호를 변경해 주세요. 임시 비밀번호는 " + expiryTime + "까지 유효합니다."); // 본문을 HTML 형식으로 설정
+        this.mailSender.send(mimeMessage); // 이메일 전송
+
+        // 임시 비번 hash
+        String hashedPassword = encoder.encode(tempPassword);
+        user.setPassword(hashedPassword);
 
         if (this.userMapper.updateUser(user) == 0) {
             throw new TransactionalException();

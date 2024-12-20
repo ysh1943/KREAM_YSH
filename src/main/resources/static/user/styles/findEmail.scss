@@ -85,18 +85,13 @@
     max-width: 1280px;
     width: 100%;
 
-<<<<<<< HEAD
     > .helf-area {
-=======
-    > .helf_area {
->>>>>>> dev
       @include flex(column, center, flex-start, 0.7rem);
       margin: 0 auto;
       padding: 120px 0 160px;
       width: 400px;
       height: 100%;
 
-<<<<<<< HEAD
       > .something {
         display: flex;
         flex-direction: column;
@@ -282,9 +277,6 @@
           }
         }
       }
-=======
-
->>>>>>> dev
     }
   }
 }

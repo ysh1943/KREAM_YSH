@@ -110,11 +110,7 @@
   flex-grow: 1;
   flex-shrink: 1;
 }
-<<<<<<< HEAD
 .container > .content > .helf-area {
-=======
-.container > .content > .helf_area {
->>>>>>> dev
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -125,7 +121,6 @@
   width: 400px;
   height: 100%;
 }
-<<<<<<< HEAD
 .container > .content > .helf-area > .-spring {
   flex-grow: 1;
   flex-shrink: 1;
@@ -302,12 +297,6 @@
   flex-grow: 1;
   flex-shrink: 1;
 }
-=======
-.container > .content > .helf_area > .-spring {
-  flex-grow: 1;
-  flex-shrink: 1;
-}
->>>>>>> dev
 
 #footer {
   width: 100vw;
