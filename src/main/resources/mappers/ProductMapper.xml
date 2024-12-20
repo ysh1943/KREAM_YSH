@@ -169,4 +169,6 @@
         ORDER BY `product`.`created_at` DESC
         LIMIT 20
     </select>
+
+    <select id="selectProductImagesByBaseName"></select>
 </mapper>
