@@ -19,7 +19,7 @@
     <div class="header-top">
         <div class="main-inner">
             <h1>
-                <a class="logo" th:href="@{../}">KREAM</a>
+                <a th:href="@{./}" class="logo">KREAM</a>
                 <a class="logo" th:href="@{/admin/}">Administrator</a>
             </h1>
         </div>
@@ -91,8 +91,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="product : ${products}" th:data-id="${product.getId()}"
-                    th:data-deleted="${product.isDeleted()}">
+                <tr th:each="product : ${products}" th:data-id="${product.getId()}" th:data-deleted="${product.isDeleted()}">
                     <td>
                         <!-- 상품별 선택 체크박스 -->
                         <input type="checkbox" name="check" th:value="${product.getId()}">
@@ -105,11 +104,8 @@
                     <td th:text="${product.getProductNameKo()}"></td>
                     <td th:text="${product.getProductNameEn()}"></td>
                     <td th:text="${product.getBrand()}"></td>
+                    <td th:text="${product.getCategory()}"></td>
                     <td th:if="${product.getCategory() == ''}">-</td>
-                    <td th:if="${product.getCategory() == 'top'}">상의</td>
-                    <td th:if="${product.getCategory() == 'bottom'}">하의</td>
-                    <td th:if="${product.getCategory() == 'shoes'}">신발</td>
-                    <td th:if="${product.getCategory() == 'accessories'}">패션잡화</td>
                     <td th:if="${product.getReleaseDate() == null}">-</td>
                     <td th:if="${product.getReleaseDate() != null}"
                         th:text="${product.getReleaseDate()}"></td>

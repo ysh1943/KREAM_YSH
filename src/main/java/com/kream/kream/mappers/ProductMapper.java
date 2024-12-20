@@ -26,4 +26,6 @@ public interface ProductMapper {
     List<ProductDTO> selectNewProducts();
 
     List<ProductDTO> selectPopularProducts();
+
+    List<ProductDTO> selectPopularProductsByFilter(String filter);
 }
