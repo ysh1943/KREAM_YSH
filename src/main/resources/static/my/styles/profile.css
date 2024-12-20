@@ -1,3 +1,4 @@
+@charset "UTF-8";
 #header {
   background-color: #ffffff;
   top: 0;
@@ -92,16 +93,16 @@
   flex-shrink: 1;
 }
 .container > .content {
-  align-items: center;
+  align-items: flex-start;
   display: flex;
-  flex-direction: column;
-  gap: 5rem;
-  justify-content: center;
+  flex-direction: row;
+  gap: 0;
+  justify-content: flex-start;
   top: 0;
   left: 0;
   position: relative;
   height: 754px;
-  padding: 0 40px;
+  padding: 40px 40px 160px 40px;
   margin: 0 auto;
   max-width: 1280px;
   width: 100%;
@@ -110,192 +111,241 @@
   flex-grow: 1;
   flex-shrink: 1;
 }
-.container > .content > .helf-area {
+.container > .content > .snb_area {
   align-items: center;
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
+  gap: 0;
   justify-content: flex-start;
-  margin: 0 auto;
-  padding: 120px 0 160px;
-  width: 400px;
+  margin-right: 20px;
+  width: 180px;
   height: 100%;
+  padding: 0;
+  box-sizing: border-box;
 }
-.container > .content > .helf-area > .-spring {
+.container > .content > .snb_area > .-spring {
   flex-grow: 1;
   flex-shrink: 1;
 }
-.container > .content > .helf-area > .something {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-}
-.container > .content > .helf-area > .something > .helf-title {
-  font-size: 24px !important;
-  padding-bottom: 0 !important;
-}
-.container > .content > .helf-area > .something > .helf_notice {
-  padding-top: 30px !important;
-  padding-bottom: 0 !important;
+.container > .content > .snb_area > .nuxt-link-active {
+  text-decoration: none;
+  color: inherit;
   width: 100%;
-  box-sizing: border-box !important;
-  text-align: center !important;
-  margin: 0 !important;
 }
-.container > .content > .helf-area > .something > .helf_notice > di {
+.container > .content > .snb_area > .nuxt-link-active > .title {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.15px;
+  line-height: 29px;
+  padding-bottom: 30px;
+  margin: 0;
   box-sizing: border-box;
-  gap: 0.5rem;
 }
-.container > .content > .helf-area > .something > .helf_notice > di > dt {
-  color: rgba(34, 34, 34, 0.5);
-  font-size: 12px;
-  letter-spacing: -0.06px;
+.container > .content > .snb_area > .snb {
+  box-sizing: border-box;
+  width: 100%;
+}
+.container > .content > .snb_area > .snb > .snb_list {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-.container > .content > .helf-area > .something > .helf_notice > di > dt ~ dd {
+.container > .content > .snb_area > .snb > .snb_list:nth-child(2) {
+  margin-top: 40px;
+}
+.container > .content > .snb_area > .snb > .snb_list > .snb_title {
+  display: inline-block;
   font-size: 18px;
   font-weight: 700;
-  letter-spacing: -0.09px;
-  padding-top: 8px;
-  margin: 0;
-}
-.container > .content > .helf-area > .something > .success_btn {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  padding-top: 56px;
-  width: 100% !important;
-}
-.container > .content > .helf-area > .something > .success_btn > .password_find {
-  align-items: center !important;
-  background-color: #ffffff !important;
-  color: rgba(34, 34, 34, 0.8) !important;
-  cursor: pointer !important;
-  display: inline-flex !important;
-  justify-content: center !important;
-  text-align: center !important;
-  vertical-align: middle !important;
-  border-radius: 12px !important;
-  flex: 1 !important;
-  height: 52px !important;
-  line-height: 52px !important;
-  border: 1px solid #d3d3d3 !important;
-  letter-spacing: -0.16px !important;
-  padding: 0 25px !important;
-  text-decoration: none;
-}
-.container > .content > .helf-area > .something > .success_btn > .loginPage {
-  margin-left: 8px !important;
-  border-radius: 12px !important;
-  flex: 1 !important;
-  height: 52px !important;
-  line-height: 52px !important;
-  background-color: #000000 !important;
-  color: #fff !important;
-  font-weight: 700 !important;
-  letter-spacing: -0.16px !important;
-  padding: 0 25px !important;
-  cursor: pointer !important;
-  display: inline-flex !important;
-  justify-content: center !important;
-  text-align: center !important;
-  vertical-align: middle !important;
-  text-decoration: none !important;
-}
-.container > .content > .helf-area > div {
-  width: 100%;
-  height: 100%;
-}
-.container > .content > .helf-area > div > .helf-title {
-  border-bottom: 2px solid #000;
-  color: #000;
-  font-size: 32px;
-  letter-spacing: -0.48px;
-  padding-bottom: 35px;
-  text-align: center;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  justify-content: center;
-  background-position: center;
-  background-size: 250px 56px;
-  display: block;
-  height: 56px;
-  width: 100%;
-  background-repeat: no-repeat;
-}
-.container > .content > .helf-area > div > .helf-title > .-spring {
-  flex-grow: 1;
-  flex-shrink: 1;
-}
-.container > .content > .helf-area > div > .helf_notice {
-  padding: 40px 0 30px 0;
-  margin: 0;
-}
-.container > .content > .helf-area > div > .helf_notice > .notice_text {
-  font-size: 14px;
-  letter-spacing: -0.21px;
-  margin: 0;
-  padding: 0;
+  letter-spacing: -0.27px;
+  line-height: 22px;
+  margin-bottom: 12px;
+  vertical-align: top;
   box-sizing: border-box;
 }
-.container > .content > .helf-area > div > .input_box {
-  padding: 10px 0 14px;
-  position: relative;
-}
-.container > .content > .helf-area > div > .input_box > .input_title {
-  font-size: 13px;
-  letter-spacing: -0.07px;
-  line-height: 18px;
-  margin: 0;
-  padding: 0;
-}
-.container > .content > .helf-area > div > .input_box > .--obj-label {
-  position: relative;
-  margin: 0;
-  padding: 0;
+.container > .content > .snb_area > .snb > .snb_list > .snb_menu {
+  list-style-type: none;
   box-sizing: border-box;
+  gap: 1rem;
 }
-.container > .content > .helf-area > div > .input_box > .--obj-label > .item {
-  border-bottom: 1px solid #ebebeb;
+.container > .content > .snb_area > .snb > .snb_list > .snb_menu > .menu_item {
+  box-sizing: border-box;
+  width: 100%;
+}
+.container > .content > .snb_area > .snb > .snb_list > .snb_menu > .menu_item:nth-child(n+2) {
+  margin-top: 12px;
+}
+.container > .content > .snb_area > .snb > .snb_list > .snb_menu > .menu_item > .menu_link {
+  color: rgba(34, 34, 34, 0.5);
   font-size: 15px;
   letter-spacing: -0.15px;
-  line-height: 22px;
-  padding: 8px 0;
-  width: 100%;
+  line-height: 18px;
+  text-decoration: none;
 }
-.container > .content > .helf-area > div > .input_box > .--obj-label > .item:focus-within {
-  border-bottom: 2px solid #000000;
+.container > .content > .snb_area > .snb > .snb_list > .snb_menu > .menu_item > .menu_link.requestPage {
+  color: #222;
+  font-weight: 700;
 }
-.container > .content > .helf-area > div > .helf_btn_box {
-  width: 100%;
-  padding-top: 44px;
+.container > .content > .content_area {
+  flex: 1;
+}
+.container > .content > .content_area > .my_profile {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-.container > .content > .helf-area > div > .helf_btn_box > .button {
+.container > .content > .content_area > .my_profile > .content_title {
+  border-bottom: 3px solid #222222;
+  padding-bottom: 16px;
+  box-sizing: border-box;
+}
+.container > .content > .content_area > .my_profile > .content_title > .title {
+  font-size: 24px;
+  letter-spacing: -0.36px;
+}
+.container > .content > .content_area > .my_profile > .content_title > .title > h3 {
+  font-size: inherit;
+  line-height: 29px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.container > .content > .content_area > .my_profile > .profile_info {
+  max-width: 480px;
+  padding-top: 38px;
+  margin: 0;
+  box-sizing: border-box;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group {
+  padding-top: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group:nth-child(n+2) {
+  padding-top: 58px;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > h4 {
+  font-size: 18px;
+  letter-spacing: -0.27px;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .unit {
+  border-bottom: 1px solid #ebebeb;
+  display: flex;
+  flex-direction: column;
+  padding: 25px 0 12px;
+  position: relative;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .unit > .title {
+  color: rgba(34, 34, 34, 0.5);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: -0.07px;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .unit > .unit_content {
   align-items: center;
   display: flex;
-  flex-direction: row;
-  gap: 0;
   justify-content: center;
-  border-radius: 10px;
   width: 100%;
-  height: 52px;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .unit > .unit_content > .desc {
+  flex: 1;
+  font-size: 16px;
+  letter-spacing: -0.16px;
+  overflow: hidden;
+  padding-bottom: 8px;
+  padding-top: 8px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .unit > .unit_content > .button {
+  position: absolute;
+  right: 0;
+  border: 1px solid #d3d3d3;
+  color: rgba(34, 34, 34, 0.8);
+  border-radius: 10px;
+  font-size: 12px;
+  height: 34px;
+  letter-spacing: -0.06px;
+  padding: 0 14px;
+  align-items: center;
+  background-color: #ffffff;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  text-align: center;
+  vertical-align: middle;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group .modify {
+  padding-top: 23px;
+  margin: 0;
+  box-sizing: border-box;
+  display: none;
+  /* 자식 요소들 스타일 */
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group .modify > .title {
+  color: #222222;
+  padding-bottom: 22px;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group .modify > .input_box {
+  padding: 10px 0 14px;
+  position: relative;
+  box-sizing: border-box;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group .modify > .input_box > .input_title {
+  font-size: 13px;
+  letter-spacing: -0.7px;
+  line-height: 18px;
+  box-sizing: border-box;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group .modify > .input_box > .input_item {
+  width: 100%;
+  box-sizing: border-box;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group .modify > .input_box > .input_item > .text {
+  font-size: 15px;
+  letter-spacing: -0.15px;
+  padding-bottom: 7px;
+  padding-top: 7px;
+  background-color: transparent;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  resize: none;
+  box-sizing: border-box;
+  border-bottom: 1px solid #ebebeb;
+  width: 100%;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group .modify > .modify_btn {
+  font-size: 0;
+  padding-top: 28px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group .modify > .modify_btn > .button {
+  padding: 0 38px;
+  height: 42px;
+  letter-spacing: -0.14px;
+  cursor: pointer;
+  vertical-align: middle;
+  border-radius: 10px;
+  font-size: 14px;
   font-weight: 400;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group .modify > .modify_btn > .button.cancel {
+  background-color: #ffffff;
+  border: 1px solid #d3d3d3;
+  color: rgba(34, 34, 34, 0.8);
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group .modify > .modify_btn > .button.enter {
+  margin-left: 8px;
   background-color: rgba(34, 34, 34, 0.2);
   color: #ffffff;
-  vertical-align: middle;
-  text-decoration: none;
   cursor: pointer;
 }
-.container > .content > .helf-area > div > .helf_btn_box > .button > .-spring {
-  flex-grow: 1;
-  flex-shrink: 1;
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group .modify.-visible {
+  display: block;
 }
 
 #footer {
@@ -462,4 +512,4 @@
   margin-top: 1rem;
 }
 
-/*# sourceMappingURL=findEmail.css.map */
+/*# sourceMappingURL=profile.css.map */

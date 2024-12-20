@@ -1,8 +1,7 @@
 package com.kream.kream.services;
 
-import com.kream.kream.dtos.NewProductDTO;
-import com.kream.kream.dtos.PopularProductDTO;
-import com.kream.kream.mappers.HomeMapper;
+import com.kream.kream.dtos.ProductDTO;
+import com.kream.kream.mappers.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,18 +10,18 @@ import java.util.List;
 
 @Service
 public class HomeService {
-    public final HomeMapper homeMapper;
+    public final ProductMapper productMapper;
 
     @Autowired
-    public HomeService(HomeMapper homeMapper) {
-        this.homeMapper = homeMapper;
+    public HomeService(ProductMapper productMapper1) {
+        this.productMapper = productMapper1;
     }
 
     //region 홈페이지 상품 나열
 
     // 인기 상품
-    public List<PopularProductDTO> getPopularProducts() {
-        List<PopularProductDTO> popularProducts = this.homeMapper.selectPopularProducts();
+    public List<ProductDTO> getPopularProducts() {
+        List<ProductDTO> popularProducts = this.productMapper.selectPopularProducts();
         if (popularProducts == null || popularProducts.isEmpty()) {
             return new ArrayList<>();
         }
@@ -30,8 +29,8 @@ public class HomeService {
     }
 
     // 신규 상품
-    public List<NewProductDTO> getNewProducts() {
-        List<NewProductDTO> newProducts = this.homeMapper.selectNewProducts();
+    public List<ProductDTO> getNewProducts() {
+        List<ProductDTO> newProducts = this.productMapper.selectNewProducts();
         if (newProducts == null || newProducts.isEmpty()) {
             return new ArrayList<>();
         }

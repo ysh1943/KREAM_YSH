@@ -13,28 +13,29 @@
     <insert id="insertUser"
             parameterType="com.kream.kream.entities.UserEntity">
         INSERT INTO `kream`.`user`(`email`, `password`, `contact`, `nickname`, `is_admin`, `is_suspended`,
-                                   `is_verified`, `social_type_code`, `social_id`, `created_at`, `updated_at`,
+                                   `is_verified`, `temporary_password_expiry`,`social_type_code`, `social_id`, `created_at`, `updated_at`,
                                    deleted_at)
-        VALUES (#{email}, #{password}, #{contact}, #{nickname}, #{isAdmin}, #{isSuspended}, #{isVerified},
+        VALUES (#{email}, #{password}, #{contact}, #{nickname}, #{isAdmin}, #{isSuspended}, #{isVerified},#{temporaryPassword},
                 #{socialTypeCode}, #{socialId}, #{createdAt},
                 #{updatedAt}, #{deletedAt})
     </insert>
     
     <select id="selectUser"
             resultType="com.kream.kream.entities.UserEntity">
-        SELECT `id`               AS `id`,
-               `email`            AS `email`,
-               `password`         AS `password`,
-               `contact`          AS `contact`,
-               `nickname`         AS `nickname`,
-               `is_admin`         AS `isAdmin`,
-               `is_suspended`     AS `isSuspended`,
-               `is_verified`      AS `isVerified`,
-               `social_type_code` AS `socialTypeCode`,
-               `social_id`        AS `socialId`,
-               `created_at`       AS `createdAt`,
-               `updated_at`       AS `updatedAt`,
-               `deleted_at`       AS `deletedAt`
+        SELECT `id`                        AS `id`,
+               `email`                     AS `email`,
+               `password`                  AS `password`,
+               `contact`                   AS `contact`,
+               `nickname`                  AS `nickname`,
+               `is_admin`                  AS `isAdmin`,
+               `is_suspended`              AS `isSuspended`,
+               `is_verified`               AS `isVerified`,
+               `temporary_password_expiry` AS `temporaryPassword`,
+               `social_type_code`          AS `socialTypeCode`,
+               `social_id`                 AS `socialId`,
+               `created_at`                AS `createdAt`,
+               `updated_at`                AS `updatedAt`,
+               `deleted_at`                AS `deletedAt`
         FROM `kream`.`user`
         WHERE `deleted_at` IS NULL
           AND `is_verified` = true
@@ -43,19 +44,20 @@
 
     <select id="selectUserBySearch"
             resultType="com.kream.kream.entities.UserEntity">
-        SELECT `id`               AS `id`,
-        `email`            AS `email`,
-        `password`         AS `password`,
-        `contact`          AS `contact`,
-        `nickname`         AS `nickname`,
-        `is_admin`         AS `isAdmin`,
-        `is_suspended`     AS `isSuspended`,
-        `is_verified`      AS `isVerified`,
-        `social_type_code` AS `socialTypeCode`,
-        `social_id`        AS `socialId`,
-        `created_at`       AS `createdAt`,
-        `updated_at`       AS `updatedAt`,
-        `deleted_at`       AS `deletedAt`
+        SELECT  `id`                        AS `id`,
+                `email`                     AS `email`,
+                `password`                  AS `password`,
+                `contact`                   AS `contact`,
+                `nickname`                  AS `nickname`,
+                `is_admin`                  AS `isAdmin`,
+                `is_suspended`              AS `isSuspended`,
+                `is_verified`               AS `isVerified`,
+                `temporary_password_expiry` AS `temporaryPassword`,
+                `social_type_code`          AS `socialTypeCode`,
+                `social_id`                 AS `socialId`,
+                `created_at`                AS `createdAt`,
+                `updated_at`                AS `updatedAt`,
+                `deleted_at`                AS `deletedAt`
         FROM `kream`.`user`
         WHERE `deleted_at` IS NULL
         AND `is_verified` = true
@@ -87,19 +89,20 @@
     
     <select id="selectUserByEmail"
             resultType="com.kream.kream.entities.UserEntity">
-        SELECT `id`               AS `id`,
-               `email`            AS `email`,
-               `password`         AS `password`,
-               `contact`          AS `contact`,
-               `nickname`         AS `nickname`,
-               `is_admin`         AS `isAdmin`,
-               `is_suspended`     AS `isSuspended`,
-               `is_verified`      AS `isVerified`,
-               `social_type_code` AS `socialTypeCode`,
-               `social_id`        AS `socialId`,
-               `created_at`       AS `createdAt`,
-               `updated_at`       AS `updatedAt`,
-               `deleted_at`       AS `deletedAt`
+        SELECT `id`                        AS `id`,
+               `email`                     AS `email`,
+               `password`                  AS `password`,
+               `contact`                   AS `contact`,
+               `nickname`                  AS `nickname`,
+               `is_admin`                  AS `isAdmin`,
+               `is_suspended`              AS `isSuspended`,
+               `is_verified`               AS `isVerified`,
+               `temporary_password_expiry` AS `temporaryPassword`,
+               `social_type_code`          AS `socialTypeCode`,
+               `social_id`                 AS `socialId`,
+               `created_at`                AS `createdAt`,
+               `updated_at`                AS `updatedAt`,
+               `deleted_at`                AS `deletedAt`
         FROM `kream`.`user`
         WHERE `email` = #{email}
         LIMIT 1
@@ -147,19 +150,20 @@
 
     <select id="selectUserBySocialTypeCodeAndSocialId"
             resultType="com.kream.kream.entities.UserEntity">
-        SELECT `id`               AS `id`,
-               `email`            AS `email`,
-               `password`         AS `password`,
-               `contact`          AS `contact`,
-               `nickname`         AS `nickname`,
-               `is_admin`         AS `isAdmin`,
-               `is_suspended`     AS `isSuspended`,
-               `is_verified`      AS `isVerified`,
-               `social_type_code` AS `socialTypeCode`,
-               `social_id`        AS `socialId`,
-               `created_at`       AS `createdAt`,
-               `updated_at`       AS `updatedAt`,
-               `deleted_at`       AS `deletedAt`
+        SELECT `id`                        AS `id`,
+               `email`                     AS `email`,
+               `password`                  AS `password`,
+               `contact`                   AS `contact`,
+               `nickname`                  AS `nickname`,
+               `is_admin`                  AS `isAdmin`,
+               `is_suspended`              AS `isSuspended`,
+               `is_verified`               AS `isVerified`,
+               `temporary_password_expiry` AS `temporaryPassword`,
+               `social_type_code`          AS `socialTypeCode`,
+               `social_id`                 AS `socialId`,
+               `created_at`                AS `createdAt`,
+               `updated_at`                AS `updatedAt`,
+               `deleted_at`                AS `deletedAt`
         FROM `kream`.`user`
         WHERE `social_type_code` = #{socialTypeCode}
           AND `social_id` = #{socialId}
@@ -169,17 +173,18 @@
     <update id="updateUser"
             parameterType="com.kream.kream.entities.UserEntity">
         UPDATE `kream`.`user`
-        SET `password`         =  #{password},
-            `contact`          =  #{contact},
-            `nickname`         =  #{nickname},
-            `is_admin`         =  #{isAdmin},
-            `is_suspended`     =  #{isSuspended},
-            `is_verified`      =  #{isVerified},
-            `social_type_code` =  #{socialTypeCode},
-            `social_id`        =  #{socialId},
-            `created_at`       =  #{createdAt},
-            `updated_at`       =  #{updatedAt},
-            `deleted_at`       =  #{deletedAt}
+        SET `password`                  = #{password},
+            `contact`                   = #{contact},
+            `nickname`                  = #{nickname},
+            `is_admin`                  = #{isAdmin},
+            `is_suspended`              = #{isSuspended},
+            `is_verified`               = #{isVerified},
+            `temporary_password_expiry` = #{temporaryPassword},
+            `social_type_code`          = #{socialTypeCode},
+            `social_id`                 = #{socialId},
+            `created_at`                = #{createdAt},
+            `updated_at`                = #{updatedAt},
+            `deleted_at`                = #{deletedAt}
         WHERE `id` = #{id}
           AND `email` = #{email}
         LIMIT 1

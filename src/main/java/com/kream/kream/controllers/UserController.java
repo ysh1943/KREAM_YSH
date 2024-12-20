@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 @Controller
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/")
 public class UserController extends AbstractGeneralController {
     private final UserService userService;
 
@@ -48,20 +48,35 @@ public class UserController extends AbstractGeneralController {
         this.userService = userService;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+
+    // 로그인 view
+    @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getIndex(@SessionAttribute(value = UserEntity.NAME_SINGULAR, required = false) UserEntity user) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("user", user);
         if (user == null) { // 세션에 UserEntity 정보가 없을 경우
-            modelAndView.setViewName("user/login"); // "user/index" 뷰를 설정
+            modelAndView.setViewName("/login"); // "user/index" 뷰를 설정
             modelAndView.addObject("kakaoClientId", this.kakaoClientId); // 카카오 클라이언트 ID를 모델에 추가
             modelAndView.addObject("kakaoRedirectUri", this.kakaoRedirectUri); // 카카오 리다이렉트 URI를 모델에 추가
             modelAndView.addObject("naverClientId", this.naverClientId); // 네이버 클라이언트 ID를 모델에 추가
             modelAndView.addObject("naverRedirectUri", this.naverRedirectUri); // 네이버 리다이렉트 URI를 모델에 추가
         } else { // 세션에 UserEntity 정보가 있는 경우
-            modelAndView.setViewName("redirect:/user/my"); // "redirect:/user/my"로 리다이렉트
+            modelAndView.setViewName("redirect:/"); // "redirect:/user/my"로 리다이렉트
         }
         return modelAndView; // ModelAndView 객체 반환
+    }
+
+    // 로그인 JSON
+    @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String getLogin(HttpSession session, UserEntity user) {
+        Result result = this.userService.login(user);
+        if (result == CommonResult.SUCCESS) {
+            session.setAttribute("user", user); // 로그인 성공 시 세션에 사용자 정보를 저장
+        }
+        JSONObject response = new JSONObject();
+        response.put(Result.NAME, result.nameToLower());
+        return response.toString();
     }
 
     // 삭제
@@ -81,18 +96,6 @@ public class UserController extends AbstractGeneralController {
         return this.generateRestResponse(result).toString();
     }
 
-    // 마이 페이지
-    @RequestMapping(value = "/my", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
-    public ModelAndView getMy(@SessionAttribute(value = UserEntity.NAME_SINGULAR, required = false) UserEntity user) {
-        ModelAndView modelAndView = new ModelAndView();
-        if (user == null) {
-            modelAndView.setViewName("redirect:/user/");
-        } else {
-            modelAndView.setViewName("user/my");
-        }
-        return modelAndView;
-    }
-
     @RequestMapping(value = "/login/kakao", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getLoginKakao(HttpSession session,
                                       @RequestParam(value = "code", required = false) String code) throws URISyntaxException, IOException, InterruptedException {
@@ -102,10 +105,10 @@ public class UserController extends AbstractGeneralController {
             modelAndView.addObject("socialTypeCode", result.getPayload().getSocialTypeCode());
             modelAndView.addObject("socialId", result.getPayload().getSocialId());
             modelAndView.addObject("isSocialRegister", true);
-            modelAndView.setViewName("user/join");
+            modelAndView.setViewName("/join");
         } else if (result.getResult() == CommonResult.SUCCESS) {
             session.setAttribute(UserEntity.NAME_SINGULAR, result.getPayload());
-            modelAndView.setViewName("redirect:/user/my");
+            modelAndView.setViewName("redirect:/my");
         } else {
             modelAndView.setViewName("redirect:https://kauth.kakao.com/oauth/authorize?response_type");
         }
@@ -122,8 +125,6 @@ public class UserController extends AbstractGeneralController {
         System.out.println(result);
         // 응답 데이터를 담을 ModelAndView 객체 생성
         ModelAndView modelAndView = new ModelAndView();
-        System.out.println("이건 소셜 타입 코드 :" + result.getPayload().getSocialTypeCode());
-        System.out.println("이건 소셜 아이디 :" + result.getPayload().getSocialId());
 
         // 처리 결과가 '사용자 미등록'인 경우
         if (result.getResult() == HandleNaverLoginResult.FAILURE_NOT_REGISTERED) {
@@ -131,14 +132,14 @@ public class UserController extends AbstractGeneralController {
             modelAndView.addObject("socialTypeCode", result.getPayload().getSocialTypeCode()); // 소셜 타입 코드
             modelAndView.addObject("socialId", result.getPayload().getSocialId()); // 소셜 사용자 ID
             modelAndView.addObject("isSocialRegister", true); // 소셜 회원가입 플래그
-            modelAndView.setViewName("user/join"); // 다시 "user/login" 뷰로 이동
+            modelAndView.setViewName("/join"); // 다시 "user/login" 뷰로 이동
             System.out.println("이건 소셜 타입 코드 :" + result.getPayload().getSocialTypeCode());
             System.out.println("이건 소셜 아이디 :" + result.getPayload().getSocialId());
 
             // 처리 결과가 '성공'인 경우
         } else if (result.getResult() == CommonResult.SUCCESS) {
             session.setAttribute(UserEntity.NAME_SINGULAR, result.getPayload()); // 사용자 정보를 세션에 저장
-            modelAndView.setViewName("redirect:/user/my"); // 사용자의 마이페이지로 리다이렉트
+            modelAndView.setViewName("redirect:/my/profile"); // 사용자의 마이페이지로 리다이렉트
 
             // 그 외 실패 처리
         } else {
@@ -154,7 +155,7 @@ public class UserController extends AbstractGeneralController {
     @ResponseBody
     public ModelAndView getJoin() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("/user/join");
+        modelAndView.setViewName("/join");
         return modelAndView;
     }
 
@@ -167,22 +168,10 @@ public class UserController extends AbstractGeneralController {
         return response.toString();
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public String getLogin(HttpSession session, UserEntity user)  {
-        Result result = this.userService.login(user);
-        if (result == CommonResult.SUCCESS) {
-            session.setAttribute("user", user); // 로그인 성공 시 세션에 사용자 정보를 저장
-        }
-        JSONObject response = new JSONObject();
-        response.put(Result.NAME, result.nameToLower());
-        return response.toString();
-    }
-
     @RequestMapping(value = "logout", method = RequestMethod.GET)
     public ModelAndView logout(HttpSession session) {
         session.setAttribute(UserEntity.NAME_SINGULAR, null);
-        return new ModelAndView("redirect:/user/");
+        return new ModelAndView("redirect:/login");
     }
 
     @RequestMapping(value = "/validate-email-token", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
@@ -190,7 +179,46 @@ public class UserController extends AbstractGeneralController {
         Result result = this.userService.validateEmailToken(emailToken);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject(Result.NAME, result.nameToLower());
-        modelAndView.setViewName("user/validateEmailToken");
+        modelAndView.setViewName("/user/validateEmailToken");
         return modelAndView;
+    }
+
+    @RequestMapping(value = "/findEmail", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+    @ResponseBody
+    public ModelAndView getFindEmail() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("/findEmail");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/findEmail", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String postFindEmail(UserEntity user) {
+        Result result = this.userService.recoverEmail(user);
+        JSONObject response = new JSONObject();
+        response.put(Result.NAME, result.nameToLower());
+        if (result == CommonResult.SUCCESS) {
+            response.put("email", user.getEmail());
+        }
+        return response.toString();
+    }
+
+    @RequestMapping(value = "/findpassword", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+    @ResponseBody
+    public ModelAndView getFindpassword() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("/findpassword");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/find-password", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String postFindpassword(HttpServletRequest request,
+                                   @RequestParam(value = "email", required = false) String email,
+                                   @RequestParam(value = "contact", required = false) String contact) throws MessagingException {
+        Result result = this.userService.provokeRecoverPassword(request, email, contact);
+        JSONObject response = new JSONObject();
+        response.put(Result.NAME, result.nameToLower());
+        return response.toString();
     }
 }
