@@ -91,7 +91,8 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="product : ${products}" th:data-id="${product.getId()}" th:data-deleted="${product.isDeleted()}">
+                <tr th:each="product : ${products}" th:data-id="${product.getId()}"
+                    th:data-deleted="${product.isDeleted()}">
                     <td>
                         <!-- 상품별 선택 체크박스 -->
                         <input type="checkbox" name="check" th:value="${product.getId()}">
@@ -104,8 +105,11 @@
                     <td th:text="${product.getProductNameKo()}"></td>
                     <td th:text="${product.getProductNameEn()}"></td>
                     <td th:text="${product.getBrand()}"></td>
-                    <td th:text="${product.getCategory()}"></td>
                     <td th:if="${product.getCategory() == ''}">-</td>
+                    <td th:if="${product.getCategory() == 'top'}">상의</td>
+                    <td th:if="${product.getCategory() == 'bottom'}">하의</td>
+                    <td th:if="${product.getCategory() == 'shoes'}">신발</td>
+                    <td th:if="${product.getCategory() == 'accessories'}">패션잡화</td>
                     <td th:if="${product.getReleaseDate() == null}">-</td>
                     <td th:if="${product.getReleaseDate() != null}"
                         th:text="${product.getReleaseDate()}"></td>
@@ -126,6 +130,13 @@
                         <td>
                             <input required autocomplete="off" class="_input" maxlength="50"
                                    minlength="1" name="modelNumber" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>기본 상품명</th>
+                        <td>
+                            <input required autocomplete="off" class="_input" maxlength="100"
+                                   minlength="1" name="baseName" type="text">
                         </td>
                     </tr>
                     <tr>
@@ -172,10 +183,10 @@
                         <td>
                             <select name="category">
                                 <option value="" disabled selected>옵션을 선택하세요</option>
-                                <option>상의</option>
-                                <option>하의</option>
-                                <option>신발</option>
-                                <option>패션잡화</option>
+                                <option value="top">상의</option>
+                                <option value="bottom">하의</option>
+                                <option value="shoes">신발</option>
+                                <option value="accessories">패션잡화</option>
                             </select>
                         </td>
                     </tr>

@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class ProductEntity {
     private int id;
     private int categoryDetailId;
+    private String baseName;
     private String productNameKo;
     private String productNameEn;
     private String modelNumber;

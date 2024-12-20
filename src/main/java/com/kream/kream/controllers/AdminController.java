@@ -5,6 +5,7 @@ import com.kream.kream.entities.ImageEntity;
 import com.kream.kream.entities.ProductEntity;
 import com.kream.kream.entities.UserEntity;
 import com.kream.kream.results.CommonResult;
+import com.kream.kream.results.Result;
 import com.kream.kream.services.AdminService;
 import org.apache.catalina.User;
 import org.json.JSONObject;
@@ -29,7 +30,7 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public ModelAndView getProduct(@SessionAttribute(value = "user", required = false) UserEntity user) {
+    public ModelAndView getIndex(@SessionAttribute(value = "user", required = false) UserEntity user) {
         if (user == null || !user.isAdmin()) {
             return new ModelAndView("redirect:/");
         }
@@ -57,6 +58,17 @@ public class AdminController {
         }
         modelAndView.setViewName("admin/user");
         return modelAndView;
+    }
+
+    @RequestMapping(value = "/user", method = RequestMethod.PATCH)
+    @ResponseBody
+    public String patchUser(@RequestParam(value = "userEmail") String userEmail,
+                            @RequestParam(value = "suspend") boolean suspend) {
+        System.out.println(userEmail + suspend);
+        CommonResult result = this.adminService.patchUser(userEmail, suspend);
+        JSONObject response = new JSONObject();
+        response.put("result", result.name().toLowerCase());
+        return response.toString();
     }
 
     @RequestMapping(value = "/product", method = RequestMethod.GET)

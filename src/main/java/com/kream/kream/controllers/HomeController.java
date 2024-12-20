@@ -1,7 +1,6 @@
 package com.kream.kream.controllers;
 
-import com.kream.kream.dtos.NewProductDTO;
-import com.kream.kream.dtos.PopularProductDTO;
+import com.kream.kream.dtos.ProductDTO;
 import com.kream.kream.entities.UserEntity;
 import com.kream.kream.services.HomeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,8 @@ public class HomeController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getIndex(@SessionAttribute(value = "user", required = false) UserEntity user) {
-        List<PopularProductDTO> popularProducts = this.homeService.getPopularProducts();
-        List<NewProductDTO> newProducts = this.homeService.getNewProducts();
+        List<ProductDTO> popularProducts = this.homeService.getPopularProducts();
+        List<ProductDTO> newProducts = this.homeService.getNewProducts();
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("user", user);
         modelAndView.addObject("popularProducts", popularProducts);

@@ -9,17 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class HomeService {
-    public final ProductMapper productMapper;
+public class ShopService {
+    private final ProductMapper productMapper;
 
     @Autowired
-    public HomeService(ProductMapper productMapper) {
+    public ShopService(ProductMapper productMapper) {
         this.productMapper = productMapper;
     }
 
-    //region 홈페이지 상품 나열
-
-    // 인기 상품
     public List<ProductDTO> getPopularProducts() {
         List<ProductDTO> popularProducts = this.productMapper.selectPopularProducts();
         if (popularProducts == null || popularProducts.isEmpty()) {
@@ -28,14 +25,10 @@ public class HomeService {
         return popularProducts;
     }
 
-    // 신규 상품
-    public List<ProductDTO> getNewProducts() {
-        List<ProductDTO> newProducts = this.productMapper.selectNewProducts();
-        if (newProducts == null || newProducts.isEmpty()) {
-            return new ArrayList<>();
-        }
-        System.out.println();
-        return newProducts;
+    public List<ProductDTO> filterPopularProducts(String filter) {
+//        if (filter == null || !filter.equals("all") && !filter.equals("top") && !filter.equals("bottom") && !filter.equals("shoes") && !filter.equals("accessories")) {
+//            filter = "all";
+//        }
+        return this.productMapper.selectPopularProductsByFilter(filter);
     }
-    //endregion
 }

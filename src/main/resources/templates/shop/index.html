@@ -7,9 +7,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>KREAM</title>
     <link rel="shortcut icon" th:href="@{'/assets/images/favicon.ico'}">
-    <link rel="stylesheet" th:href="@{'/home/assets/styles/index.css'}" type="text/css">
     <link rel="stylesheet" th:href="@{'/assets/styles/common.css'}" type="text/css">
-    <script src="https://kit.fontawesome.com/20d32b3086.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" th:href="@{'/shop/assets/styles/index.css'}" type="text/css">
+    <script defer type="text/javascript" th:src="@{'/assets/scripts/common.js'}"></script>
+    <script defer type="text/javascript" th:src="@{'/shop/assets/scripts/index.js'}"></script>
+    <script src="https://kit.fontawesome.com/79ae8a0168.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <header id="header">
@@ -24,7 +26,8 @@
                     <a class="top-link" th:href="${user == null} ? '/user/' : '/my'">마이페이지</a>
                 </li>
                 <li class="top-item">
-                    <a class="top-link" th:href="${user == null} ? '/user/' : '/user/logout'" th:text="${user == null} ? '로그인' : '로그아웃'"></a>
+                    <a class="top-link" th:href="${user == null} ? '/user/' : '/user/logout'"
+                       th:text="${user == null} ? '로그인' : '로그아웃'"></a>
                 </li>
             </ul>
         </div>
@@ -36,10 +39,10 @@
             <nav class="menu">
                 <ul class="menu-list">
                     <li class="menu-item">
-                        <a class="menu-link bold" th:href="@{'/'}">HOME</a>
+                        <a class="menu-link" th:href="@{'/'}">HOME</a>
                     </li>
                     <li class="menu-item">
-                        <a class="menu-link" th:href="@{'/shop'}">SHOP</a>
+                        <a class="menu-link bold" th:href="@{'/shop'}">SHOP</a>
                     </li>
                 </ul>
             </nav>
@@ -52,65 +55,127 @@
         </div>
     </div>
 </header>
+<div class="cover" id="cover"></div>
 <main id="main">
-    <div class="banner">
-        <img class="banner-image" alt="banner" src="/home/assets/images/banner_img.png">
+    <div class="title">
+        <h1>SHOP</h1>
+    </div>
+    <nav class="shop-tab">
+        <form class="nav-form">
+            <ul class="tabs">
+                <li class="tab">
+                    <button type="submit" class="button" name="filter" value="all" th:href="@{/shop}"
+                     th:classappend="${filter == 'all' ? '-selected' : ''}">전체</button>
+                </li>
+                <li class="tab">
+                    <button type="submit" class="button" name="filter" value="top"
+                            th:selected="${filter != null && filter.equals('top')}"
+                            th:classappend="${filter == 'top' ? '-selected' : ''}">상의
+                    </button>
+                </li>
+                <li class="tab">
+                    <button type="submit" class="button" name="filter" value="bottom"
+                            th:selected="${filter != null && filter.equals('bottom')}"
+                            th:classappend="${filter == 'bottom' ? '-selected' : ''}">하의
+                    </button>
+                </li>
+                <li class="tab">
+                    <button type="submit" class="button" name="filter" value="shoes"
+                            th:selected="${filter != null && filter.equals('shoes')}"
+                            th:classappend="${filter == 'shoes' ? '-selected' : ''}">신발
+                    </button>
+                </li>
+                <li class="tab">
+                    <button type="submit" class="button" name="filter" value="accessories"
+                            th:selected="${filter != null && filter.equals('accessories')}"
+                            th:classappend="${filter == 'accessories' ? '-selected' : ''}">패션잡화
+                    </button>
+                </li>
+            </ul>
+        </form>
+    </nav>
+    <div class="filter-container">
+        <ul class="filter-buttons">
+            <li class="filter-button">
+                <button type="button" name="filter" value="all">
+                    <span>카테고리</span>
+                    <i class="fa-solid fa-angle-down"></i>
+                </button>
+            </li>
+            <li class="filter-button">
+                <button type="button" name="filter" value="top">
+                    <span>성별</span>
+                    <i class="fa-solid fa-angle-down"></i>
+                </button>
+            </li>
+            <li class="filter-button">
+                <button type="button" name="filter" value="bottom">
+                    <span>색상</span>
+                    <i class="fa-solid fa-angle-down"></i>
+                </button>
+            </li>
+            <li class="filter-button">
+                <button type="button" name="filter" value="shoes">
+                    <span>브랜드</span>
+                    <i class="fa-solid fa-angle-down"></i>
+                </button>
+            </li>
+            <li class="filter-button">
+                <button type="button" name="filter" value="shoes">
+                    <span>가격대</span>
+                    <i class="fa-solid fa-angle-down"></i>
+                </button>
+            </li>
+        </ul>
+    </div>
+    <div class="sort-container">
+        <div class="-spring"></div>
+        <form class="column">
+            <button type="button" class="sort-title">
+                <span>인기순</span>
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <ul class="sort-list -visible">
+                <li class="sort-item -selected">
+                    <button type="submit" name="sort" value="popular"
+                            th:selected="${sort != null && sort.equals('popular')}">인기순</button>
+                    <div class="-spring"></div>
+                    <i class="icon fa-solid fa-check"></i>
+                </li>
+                <li class="sort-item">
+                    <button type="submit" name="sort" value="newest"
+                            th:selected="${sort != null && sort.equals('newest')}">최신순</button>
+                    <div class="-spring"></div>
+                    <i class="icon fa-solid fa-check"></i>
+                </li>
+            </ul>
+        </form>
     </div>
     <div class="main-container">
-        <div class="home-products-title">
-            <div class="title-us">Most Popular</div>
-            <div class="title-ko">인기상품</div>
-        </div>
-        <div class="error-list" th:if="${popularProducts.isEmpty()}">
-            <div class="error">
+        <div class="error-list">
+            <div class="error" th:if="${popularProducts.isEmpty()}">
                 <i class="fa-solid fa-triangle-exclamation"></i>
-                인기상품을 불러오는 데 문제가 발생했습니다. 새로 고침해주세요.</div>
+                인기상품을 불러오는 데 문제가 발생했습니다. 새로 고침해주세요.
+            </div>
         </div>
-        <ul class="home-products-list">
-            <li class="products-item"  th:if="${!popularProducts.isEmpty()}" th:each="popularProduct : ${popularProducts}">
+        <ul class="shop-products-list">
+            <li class="products-item" th:if="${!popularProducts.isEmpty()}"
+                th:each="popularProduct : ${popularProducts}">
                 <a th:href="@{'/shop?keyword=' + ${popularProduct.getProductName()}}" class="product-image">
                     <span class="trading" th:if="${popularProduct.getTransactionCount() != 0}">
                         <span class="text">거래</span>
                         <span class="text" th:text="${popularProduct.getTransactionCount()}"></span>
                     </span>
-                    <img class="image" alt="popular-product-image" th:src="${popularProduct.getBase64Image()}">
+                    <img class="image" alt="popular-product-image"
+                         th:src="${popularProduct.getBase64Image()}">
                 </a>
                 <span class="product-text">
                     <span class="text-container">
                         <span class="brand" th:text="${popularProduct.getBrand()}"></span>
                         <span class="product-name" th:text="${popularProduct.getProductName()}"></span>
                     </span>
-                    <span class="price" th:text="${popularProduct.getLowestPrice() != null ? #numbers.formatInteger(popularProduct.getLowestPrice(), 0, 'COMMA') + '원' : '-'}"></span>
-                </span>
-            </li>
-        </ul>
-    </div>
-    <div class="main-container">
-        <div class="home-products-title">
-            <div class="title-us">New In</div>
-            <div class="title-ko">신규 등록 상품</div>
-        </div>
-        <div class="error-list" th:if="${newProducts.isEmpty()}">
-            <div class="error">
-                <i class="fa-solid fa-triangle-exclamation"></i>
-                신규상품을 불러오는 데 문제가 발생했습니다. 새로 고침해주세요.
-            </div>
-        </div>
-        <ul class="home-products-list">
-            <li class="products-item" th:if="${!newProducts.isEmpty()}" th:each="newProduct : ${newProducts}">
-                <a th:href="@{'/shop?keyword=' + ${newProduct.getProductName()}}" class="product-image">
-                    <span class="trading" th:if="${newProduct.getTransactionCount() != 0}">
-                        <span class="text">거래</span>
-                        <span class="text" th:text="${newProduct.getTransactionCount()}"></span>
-                    </span>
-                    <img class="image" alt="new-product-image" th:src="${newProduct.getBase64Image()}">
-                </a>
-                <span class="product-text">
-                    <span class="text-container">
-                        <span class="brand" th:text="${newProduct.getBrand()}"></span>
-                        <span class="product-name" th:text="${newProduct.getProductName()}"></span>
-                    </span>
-                    <span class="price" th:text="${newProduct.getLowestPrice() != null ? #numbers.formatInteger(newProduct.getLowestPrice(), 0, 'COMMA') + '원' : '-'}"></span>
+                    <span class="price"
+                          th:text="${popularProduct.getLowestPrice() != null ? #numbers.formatInteger(popularProduct.getLowestPrice(), 0, 'COMMA') + '원' : '-'}"></span>
                 </span>
             </li>
         </ul>
