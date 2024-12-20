@@ -116,7 +116,6 @@
         WHERE `product`.`base_name` = #{baseName}
     </select>
 
-
     <select id="selectPopularProducts"
             resultType="com.kream.kream.dtos.ProductDTO">
         SELECT `product`.`id`              AS productId,
@@ -222,5 +221,4 @@
         ORDER BY transactionCount DESC
         LIMIT 20
     </select>
-
 </mapper>
