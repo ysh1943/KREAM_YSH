@@ -36,36 +36,38 @@
                `updated_at`       AS `updatedAt`,
                `deleted_at`       AS `deletedAt`
         FROM `kream`.`user`
-        WHERE `deleted_at` IS NULL
-          AND `is_verified` = true
+        WHERE `is_verified` = true
+          AND `deleted_at` IS NULL
         ORDER BY `id` DESC
     </select>
 
     <select id="selectUserBySearch"
             resultType="com.kream.kream.entities.UserEntity">
-        SELECT `id`               AS `id`,
-        `email`            AS `email`,
-        `password`         AS `password`,
-        `contact`          AS `contact`,
-        `nickname`         AS `nickname`,
-        `is_admin`         AS `isAdmin`,
-        `is_suspended`     AS `isSuspended`,
-        `is_verified`      AS `isVerified`,
-        `social_type_code` AS `socialTypeCode`,
-        `social_id`        AS `socialId`,
-        `created_at`       AS `createdAt`,
-        `updated_at`       AS `updatedAt`,
-        `deleted_at`       AS `deletedAt`
+        SELECT  `id`               AS `id`,
+                `email`            AS `email`,
+                `password`         AS `password`,
+                `contact`          AS `contact`,
+                `nickname`         AS `nickname`,
+                `is_admin`         AS `isAdmin`,
+                `is_suspended`     AS `isSuspended`,
+                `is_verified`      AS `isVerified`,
+                `social_type_code` AS `socialTypeCode`,
+                `social_id`        AS `socialId`,
+                `created_at`       AS `createdAt`,
+                `updated_at`       AS `updatedAt`,
+                `deleted_at`       AS `deletedAt`
         FROM `kream`.`user`
-        WHERE `deleted_at` IS NULL
-        AND `is_verified` = true
+        WHERE `is_verified` = true
+            AND `deleted_at` IS NULL
         <if test="filter.equals('all')">
             AND (`email` LIKE CONCAT('%', #{keyword}, '%') OR `nickname` LIKE CONCAT('%', #{keyword}, '%') OR `contact` LIKE CONCAT('%', #{keyword}, '%') OR `social_type_code` LIKE CONCAT('%', #{keyword}, '%'))
             <if test="keyword.equals('정지')">
-                OR is_suspended = true
+                OR `is_suspended` = true
+                AND `is_verified` = true
             </if>
             <if test="keyword.equals('활동')">
-                OR is_suspended = false
+                OR `is_suspended` = false
+                AND `is_verified` = true
             </if>
         </if>
         <if test="filter.equals('email')">
@@ -76,10 +78,10 @@
         </if>
         <if test="filter.equals('suspended')">
             <if test="keyword.equals('정지')">
-                AND is_suspended = true
+                AND `is_suspended` = true
             </if>
             <if test="keyword.equals('활동')">
-                AND is_suspended = false
+                AND `is_suspended` = false
             </if>
         </if>
         ORDER BY `id` DESC
@@ -181,7 +183,7 @@
             `updated_at`       =  #{updatedAt},
             `deleted_at`       =  #{deletedAt}
         WHERE `id` = #{id}
-          AND `email` = #{email}
+            AND `email` = #{email}
         LIMIT 1
     </update>
 

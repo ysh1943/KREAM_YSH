@@ -21,6 +21,97 @@ $navItems.forEach(($navItem) => {
     };
 });
 
+//region 상품 목록
+{
+    const $content = $mainContents.find((x) => x.getAttribute('rel') === 'product-list');
+    const $selectAllButton = $content.querySelector(':scope > .searchForm > [name="selectAll"]');
+    const $unselectAllButton = $content.querySelector(':scope > .searchForm > [name="unselectAll"]');
+    const $deleteButton = $content.querySelector(':scope > .searchForm > [name="delete"]');
+    const $table = $content.querySelector(':scope > table');
+    const $tbody = $table.querySelector(':scope > tbody');
+    const $tr = $tbody.querySelector(':scope > tr');
+
+    $selectAllButton.onclick = () => $tbody.querySelectorAll(':scope > tr > td > input[name="check"]').forEach((x) => x.checked = true);
+
+    $unselectAllButton.onclick = () => $tbody.querySelectorAll(':scope > tr > td > input[name="check"]').forEach((x) => x.checked = false);
+
+    const getCheckedTrs = () => Array.from($tbody.querySelectorAll(':scope > tr')).filter(($tr) => $tr.querySelector(':scope > td > input[name="check"]').checked);
+
+    $deleteButton.onclick = () => {
+        const $trs = getCheckedTrs();
+        if ($trs.length === 0) {
+            Dialog.defaultOk('선택 삭제', '삭제할 항목을 한 개 이상 선택해 주세요.');
+            return;
+        }
+        if ($trs.some(($tr) => $tr.dataset['deleted'] === 'true')) {
+            Dialog.defaultOk('선택 삭제', '이미 삭제된 항목이 선택되어 있습니다.<br><br>다시 한 번 확인해 주세요.');
+            return;
+        }
+        Dialog.defaultYesNo('선택 삭제', `정말로 선택한 ${$trs.length.toLocaleString()}개의 상품을 삭제할까요?`, () => {
+            const ids = $trs.map(($tr) => parseInt($tr.dataset['id']));
+            sendDeleteRequest(ids);
+        });
+    };
+
+    const rows = document.querySelectorAll('tr'); // 모든 tr 요소를 선택합니다.
+    rows.forEach(($tr) => {
+        const deleteButton = $tr.querySelector(':scope > td > button[name="delete"]');
+        if (deleteButton) {
+            deleteButton.addEventListener('click', () => {
+                Dialog.defaultYesNo('삭제', `정말로 선택한 상품을 삭제할까요?`, () =>
+                    sendDeleteRequest($tr.dataset['id']));
+            });
+        }
+    });
+
+    const sendDeleteRequest = (ids) => {
+        const xhr = new XMLHttpRequest();
+        const formData = new FormData();
+        const idsArray = Array.isArray(ids) ? ids : [ids];
+
+        idsArray.forEach((id) => formData.append('ids', id.toString()));
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState !== XMLHttpRequest.DONE) {
+                return;
+            }
+            if (xhr.status < 200 || xhr.status >= 300) {
+                Dialog.show({
+                    title: '오류',
+                    content: '요청을 전송하는 도중 오류가 발생하였습니다. 잠시 후 다시 시도해 주세요.',
+                    buttons: [{text: '확인', onclick: ($dialog) => Dialog.hide($dialog)}]
+                });
+                return;
+            }
+            const response = JSON.parse(xhr.responseText);
+            switch (response['result']) {
+                case 'failure':
+                    Dialog.show({
+                        title: '상품 삭제',
+                        content: '알 수 없는 이유로 상품 삭제에 실패하였습니다. 잠시 후 다시 시도해 주세요.',
+                        buttons: [{text: '확인', onclick: ($dialog) => Dialog.hide($dialog)}]
+                    });
+                    break;
+                case 'success':
+                    Dialog.show({
+                        title: '상품 삭제',
+                        content: '상품 삭제가 완료되었습니다.',
+                        buttons: [{text: '확인', onclick: ($dialog) => {
+                                Dialog.hide($dialog);
+                                location.reload();
+                            }}]
+                    });
+                    break;
+                default:
+                    alert('서버가 알 수 없는 응답을 반환하였습니다.');
+                    break;
+            }
+        };
+        xhr.open('DELETE', '/admin/product');
+        xhr.send(formData);
+    };
+}
+//endregion
+
 //region 상품 등록
 {
     const $content = $mainContents.find((x) => x.getAttribute('rel') === 'product-register');
@@ -59,6 +150,7 @@ $navItems.forEach(($navItem) => {
         e.preventDefault();
 
         formData.append('modelNumber', $form['modelNumber'].value);
+        formData.append('baseName', $form['baseName'].value);
         formData.append('productNameKo', $form['productNameKo'].value);
         formData.append('productNameEn', $form['productNameEn'].value);
         formData.append('brand', $form['brand'].value);
@@ -121,90 +213,6 @@ $navItems.forEach(($navItem) => {
             }
         };
         xhr.open('POST', location.href);
-        xhr.send(formData);
-    };
-}
-//endregion
-
-//region 상품 목록
-{
-    const $content = $mainContents.find((x) => x.getAttribute('rel') === 'product-list');
-    const $selectAllButton = $content.querySelector(':scope > .searchForm > [name="selectAll"]');
-    const $unselectAllButton = $content.querySelector(':scope > .searchForm > [name="unselectAll"]');
-    const $deleteButton = $content.querySelector(':scope > .searchForm > [name="delete"]');
-    const $table = $content.querySelector(':scope > table');
-    const $tbody = $table.querySelector(':scope > tbody');
-    const $tr = $tbody.querySelector(':scope > tr');
-
-    $selectAllButton.onclick = () => $tbody.querySelectorAll(':scope > tr > td > input[name="check"]').forEach((x) => x.checked = true);
-
-    $unselectAllButton.onclick = () => $tbody.querySelectorAll(':scope > tr > td > input[name="check"]').forEach((x) => x.checked = false);
-
-    const getCheckedTrs = () => Array.from($tbody.querySelectorAll(':scope > tr')).filter(($tr) => $tr.querySelector(':scope > td > input[name="check"]').checked);
-
-    $deleteButton.onclick = () => {
-        const $trs = getCheckedTrs();
-        if ($trs.length === 0) {
-            Dialog.defaultOk('선택 삭제', '삭제할 항목을 한 개 이상 선택해 주세요.');
-            return;
-        }
-        if ($trs.some(($tr) => $tr.dataset['deleted'] === 'true')) {
-            Dialog.defaultOk('선택 삭제', '이미 삭제된 항목이 선택되어 있습니다.<br><br>다시 한 번 확인해 주세요.');
-            return;
-        }
-        Dialog.defaultYesNo('선택 삭제', `정말로 선택한 ${$trs.length.toLocaleString()}개의 상품을 삭제할까요?`, () => {
-            const ids = $trs.map(($tr) => parseInt($tr.dataset['id']));
-            sendDeleteRequest(ids);
-        });
-    };
-
-    $tbody.querySelector(':scope > tr > td > button[name="delete"]')?.addEventListener('click', () => {
-        Dialog.defaultYesNo('삭제', `정말로 선택한 상품을 삭제할까요?`, () =>
-            sendDeleteRequest($tr.dataset['id']));
-    });
-
-    const sendDeleteRequest = (ids) => {
-        const xhr = new XMLHttpRequest();
-        const formData = new FormData();
-        const idArray = Array.isArray(ids) ? ids : [ids];
-        idArray.forEach((id) => formData.append('ids', id.toString()));
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState !== XMLHttpRequest.DONE) {
-                return;
-            }
-            if (xhr.status < 200 || xhr.status >= 300) {
-                Dialog.show({
-                    title: '오류',
-                    content: '요청을 전송하는 도중 오류가 발생하였습니다. 잠시 후 다시 시도해 주세요.',
-                    buttons: [{text: '확인', onclick: ($dialog) => Dialog.hide($dialog)}]
-                });
-                return;
-            }
-            const response = JSON.parse(xhr.responseText);
-            switch (response['result']) {
-                case 'failure':
-                    Dialog.show({
-                        title: '상품 삭제',
-                        content: '알 수 없는 이유로 상품 삭제에 실패하였습니다. 잠시 후 다시 시도해 주세요.',
-                        buttons: [{text: '확인', onclick: ($dialog) => Dialog.hide($dialog)}]
-                    });
-                    break;
-                case 'success':
-                    Dialog.show({
-                        title: '상품 삭제',
-                        content: '상품 삭제가 완료되었습니다.',
-                        buttons: [{text: '확인', onclick: ($dialog) => {
-                                Dialog.hide($dialog);
-                                location.reload();
-                            }}]
-                    });
-                    break;
-                default:
-                    alert('서버가 알 수 없는 응답을 반환하였습니다.');
-                    break;
-            }
-        };
-        xhr.open('DELETE', '/admin/product');
         xhr.send(formData);
     };
 }

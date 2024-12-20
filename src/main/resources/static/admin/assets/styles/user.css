@@ -95,7 +95,7 @@
   padding: 0.4rem 0.6rem;
   margin-right: 0.5rem;
 }
-.main-container #main > .content[rel=user-list] > table {
+.main-container #main > .content[rel=user-list] > .tableForm > table {
   width: 100%;
   max-width: 100%;
   border: 1px solid #ddd;
@@ -106,23 +106,26 @@
   position: relative;
   margin: 1rem 2rem;
 }
-.main-container #main > .content[rel=user-list] > table > thead > tr > th {
+.main-container #main > .content[rel=user-list] > .tableForm > table > thead > tr > th {
   border: 1px solid #ddd;
   text-align: center;
   padding: 0.5rem 0.2rem;
   white-space: nowrap;
 }
-.main-container #main > .content[rel=user-list] > table > tbody > tr > td {
+.main-container #main > .content[rel=user-list] > .tableForm > table > tbody > tr > td {
   border: 1px solid #ddd;
   text-align: center;
   padding: 0.25rem;
   white-space: normal;
 }
-.main-container #main > .content[rel=user-list] > table > tbody > tr > td > .suspendSelect {
+.main-container #main > .content[rel=user-list] > .tableForm > table > tbody > tr > td > span {
+  padding-right: 0.5rem;
+}
+.main-container #main > .content[rel=user-list] > .tableForm > table > tbody > tr > td > .suspendSelect {
   border: 1px solid #ddd;
   padding: 0.3rem;
 }
-.main-container #main > .content[rel=user-list] > table > tbody > tr > td > button[name=update] {
+.main-container #main > .content[rel=user-list] > .tableForm > table > tbody > tr > td > button[name=update] {
   background-color: #A9A9A9;
   border-radius: 0.3rem;
   color: #ffffff;
