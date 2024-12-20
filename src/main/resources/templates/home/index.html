@@ -36,7 +36,7 @@
             <nav class="menu">
                 <ul class="menu-list">
                     <li class="menu-item">
-                        <a class="menu-link bold" th:href="@{'/'}">HOEM</a>
+                        <a class="menu-link bold" th:href="@{'/'}">HOME</a>
                     </li>
                     <li class="menu-item">
                         <a class="menu-link" th:href="@{'/shop'}">SHOP</a>
@@ -61,14 +61,14 @@
             <div class="title-us">Most Popular</div>
             <div class="title-ko">인기상품</div>
         </div>
-        <div class="error-list" th:if="${popularProducts.isEmpty()}">
+        <div class="error-list" th:if="${popularProducts == null || popularProducts.isEmpty()}">
             <div class="error">
                 <i class="fa-solid fa-triangle-exclamation"></i>
-                인기상품을 불러오는 데 문제가 발생했습니다. 새로 고침해주세요.</div>
+                인기상품을 불러오는 데 문제가 발생했습니다. 관리자에게 문의해 주세요.</div>
         </div>
         <ul class="home-products-list">
-            <li class="products-item"  th:if="${!popularProducts.isEmpty()}" th:each="popularProduct : ${popularProducts}">
-                <a th:href="@{'/shop?keyword=' + ${popularProduct.getProductName()}}" class="product-image">
+            <li class="products-item"  th:if="${popularProducts != null}" th:each="popularProduct : ${popularProducts}">
+                <a th:href="@{'/products?id=' + ${popularProduct.getProductId()}}" class="product-image">
                     <span class="trading" th:if="${popularProduct.getTransactionCount() != 0}">
                         <span class="text">거래</span>
                         <span class="text" th:text="${popularProduct.getTransactionCount()}"></span>
@@ -80,7 +80,7 @@
                         <span class="brand" th:text="${popularProduct.getBrand()}"></span>
                         <span class="product-name" th:text="${popularProduct.getProductName()}"></span>
                     </span>
-                    <span class="price" th:text="${popularProduct.getLowestPrice() != null ? #numbers.formatInteger(popularProduct.getLowestPrice(), 0, 'COMMA') + '원' : '-'}"></span>
+                    <span class="price" th:text="${popularProduct.getLowestPrice() != 0 ? #numbers.formatInteger(popularProduct.getLowestPrice(), 0, 'COMMA') + '원' : '-'}"></span>
                 </span>
             </li>
         </ul>
@@ -90,27 +90,33 @@
             <div class="title-us">New In</div>
             <div class="title-ko">신규 등록 상품</div>
         </div>
+        <div class="error-list" th:if="${newProducts == null}">
+            <div class="error">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                신규상품을 불러오는 데 문제가 발생했습니다. 관리자에게 문의해 주세요.
+            </div>
+        </div>
         <div class="error-list" th:if="${newProducts.isEmpty()}">
             <div class="error">
                 <i class="fa-solid fa-triangle-exclamation"></i>
-                신규상품을 불러오는 데 문제가 발생했습니다. 새로 고침해주세요.
+                신규 등록 상품이 없습니다.
             </div>
         </div>
         <ul class="home-products-list">
-            <li class="products-item" th:if="${!newProducts.isEmpty()}" th:each="newProduct : ${newProducts}">
-                <a th:href="@{'/shop?keyword=' + ${newProduct.getProductName()}}" class="product-image">
+            <li class="products-item" th:if="${newProducts != null}" th:each="newProduct : ${newProducts}">
+                <a th:href="@{'/products?id=' + ${newProduct.getProductId()}}" class="product-image">
                     <span class="trading" th:if="${newProduct.getTransactionCount() != 0}">
                         <span class="text">거래</span>
                         <span class="text" th:text="${newProduct.getTransactionCount()}"></span>
                     </span>
-                    <img class="image" alt="new-product-image" th:src="${newProduct.getBase64Image()}">
+                    <img class="image" alt="new-product-image" th:src="@{${newProduct.getBase64Image()}}">
                 </a>
                 <span class="product-text">
                     <span class="text-container">
                         <span class="brand" th:text="${newProduct.getBrand()}"></span>
                         <span class="product-name" th:text="${newProduct.getProductName()}"></span>
                     </span>
-                    <span class="price" th:text="${newProduct.getLowestPrice() != null ? #numbers.formatInteger(newProduct.getLowestPrice(), 0, 'COMMA') + '원' : '-'}"></span>
+                    <span class="price" th:text="${newProduct.getLowestPrice() != 0 ? #numbers.formatInteger(newProduct.getLowestPrice(), 0, 'COMMA') + '원' : '-'}"></span>
                 </span>
             </li>
         </ul>

@@ -9,15 +9,16 @@
             keyColumn="id"
             keyProperty="id"
             parameterType="com.kream.kream.entities.ProductEntity">
-        INSERT INTO `kream`.`product` (`id`, `category_detail_id`, `product_name_ko`, `product_name_en`, `model_number`, `release_date`, `color`,
+        INSERT INTO `kream`.`product` (`id`, `category_detail_id`, base_name, `product_name_ko`, `product_name_en`, `model_number`, `release_date`, `color`,
                                        `brand`, `category`, `gender`, `created_at`, `updated_at`, `is_deleted`)
-        VALUES (#{id}, #{categoryDetailId}, #{productNameKo}, #{productNameEn}, #{modelNumber}, #{releaseDate}, #{color}, #{brand}, #{category}, #{gender}, #{createdAt}, #{updatedAt}, #{isDeleted})
+        VALUES (#{id}, #{categoryDetailId}, #{baseName}, #{productNameKo}, #{productNameEn}, #{modelNumber}, #{releaseDate}, #{color}, #{brand}, #{category}, #{gender}, #{createdAt}, #{updatedAt}, #{isDeleted})
     </insert>
 
     <select id="selectProduct"
             resultType="com.kream.kream.entities.ProductEntity">
         SELECT `product`.`id`         AS `id`,
                `category_detail_id`   AS `categoryDetailId`,
+               `base_name`            AS `baseName`,
                `product_name_ko`      AS `productNameKo`,
                `product_name_en`      AS `productNameEn`,
                `model_number`         AS `modelNumber`,
@@ -38,6 +39,7 @@
             resultType="com.kream.kream.entities.ProductEntity">
         SELECT `id`                 AS `id`,
                `category_detail_id` AS `categoryDetailId`,
+               `base_name`            AS `baseName`,
                `product_name_ko`    AS `productNameKo`,
                `product_name_en`    AS `productNameEn`,
                `model_number`       AS `modelNumber`,
@@ -51,12 +53,14 @@
                `is_deleted`         AS `isDeleted`
         FROM `kream`.`product`
         WHERE `id` = #{id}
+          AND `is_deleted` = 0
         LIMIT 1
     </select>
 
     <select id="selectProductBySearch">
         SELECT `id`                 AS `id`,
         `category_detail_id` AS `categoryDetailId`,
+        `base_name`            AS `baseName`,
         `product_name_ko`    AS `productNameKo`,
         `product_name_en`    AS `productNameEn`,
         `model_number`       AS `modelNumber`,
@@ -88,9 +92,21 @@
         ORDER BY `id` DESC
     </select>
 
+    <select id="selectProductImagesByBaseName">
+        SELECT `product`.`id` AS productId,
+               `image`.`data` AS imageData,
+               `image`.`type` AS imageType
+        FROM `kream`.`product`
+            LEFT JOIN `kream`.`image`
+                ON `product`.`id` = `image`.`product_id`
+                AND `image`.`is_primary` = 1
+        WHERE `product`.`base_name` = #{baseName}
+    </select>
+
     <update id="updateProduct">
         UPDATE `kream`.`product`
         SET `category_detail_id` = #{product.categoryDetailId},
+            `base_name`          = #{baseName},
             `product_name_ko`    = #{product.productNameKo},
             `product_name_en`    = #{product.productNameEn},
             `model_number`       = #{product.modelNumber},

@@ -28,17 +28,33 @@ public class SearchService {
         if (keyword == null || keyword.length() > 100) {
             keyword = "";
         }
-        List<SearchKeywordDTO> searchKeyword = this.searchMapper.selectKeywordBySearch(keyword);
-        if (searchKeyword == null || searchKeyword.isEmpty()) {
+        List<SearchKeywordDTO> searchKeywords = this.searchMapper.selectKeywordBySearch(keyword);
+        if (searchKeywords == null || searchKeywords.isEmpty()) {
             return new ArrayList<>();
         }
-
-        return searchKeyword;
+        for (SearchKeywordDTO searchKeyword : searchKeywords) {
+            if (searchKeyword == null) {
+                continue;
+            }
+            if (searchKeyword.getProductId() < 1) {
+                searchKeyword.setProductId(1);
+            }
+            if (searchKeyword.getProductNameKo() == null || searchKeyword.getProductNameKo().isEmpty() || searchKeyword.getProductNameKo().length() > 100) {
+                searchKeyword.setProductNameKo(null);
+            }
+            if (searchKeyword.getProductNameEn() == null || searchKeyword.getProductNameEn().isEmpty() || searchKeyword.getProductNameEn().length() > 100) {
+                searchKeyword.setProductNameEn(null);
+            }
+            if (searchKeyword.getBrand() == null || searchKeyword.getBrand().isEmpty() || searchKeyword.getBrand().length() > 50) {
+                searchKeyword.setBrand(null);
+            }
+        }
+        return searchKeywords;
     }
 
     //최신 검색 GET
     public List<String> getRecentKeywords(UserEntity user) {
-        if (user == null || user.isSuspended() || user.getDeletedAt() != null) {
+        if (user == null || user.isSuspended() || !user.isVerified() || user.getDeletedAt() != null) {
             return new ArrayList<>();
         }
         RecentKeywordEntity recentKeyword = this.userRecentKeywordsRepo
@@ -56,7 +72,7 @@ public class SearchService {
         if (user == null) {
             return CommonResult.FAILURE_UNSIGNED;
         }
-        if (user.isSuspended() || user.getDeletedAt() != null) {
+        if (user.isSuspended() || !user.isVerified() || user.getDeletedAt() != null) {
             return CommonResult.FAILURE;
         }
         if (keyword == null || keyword.isEmpty() || keyword.length() > 100) {
@@ -77,7 +93,7 @@ public class SearchService {
 
     //최신 검색 DELETE
     public CommonResult deleteRecentKeywords(UserEntity user) {
-        if (user == null || user.isSuspended() || user.getDeletedAt() != null) {
+        if (user == null || user.isSuspended() || !user.isVerified() || user.getDeletedAt() != null) {
             return CommonResult.FAILURE_UNSIGNED;
         }
         RecentKeywordEntity recentKeyword = this.userRecentKeywordsRepo
@@ -89,6 +105,4 @@ public class SearchService {
         this.userRecentKeywordsRepo.delete(recentKeyword);
         return CommonResult.SUCCESS;
     }
-
-
 }

@@ -192,10 +192,10 @@ const $cover = document.getElementById('cover');
                 }
                 const response = JSON.parse(xhr.responseText);
                 switch (response['result']) {
-                    case 'failure':
-                        Dialog.defaultOk('계정 오류', '해당 계정은 이용이 정지된 상태입니다. 관리자에게 문의해 주세요.', ($dialog) => Dialog.hide($dialog));
-                        break;
                     case 'failure_unsigned':
+                        Dialog.defaultOk('계정 오류', '해당 계정은 이용이 정지된 상태이거나 이메일 인증이 완료되지 않았습니다. 관리자에게 문의해 주세요.', ($dialog) => Dialog.hide($dialog));
+                        break;
+                    case 'failure':
                         Dialog.defaultOk('최근 검색어 삭제', '최근 검색어가 없습니다. 새로고침 후 다시 시도해 주세요.', ($dialog) => Dialog.hide($dialog));
                         break;
                     case 'success':
