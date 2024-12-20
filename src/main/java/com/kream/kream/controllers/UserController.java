@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 @Controller
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/")
 public class UserController extends AbstractGeneralController {
     private final UserService userService;
 
