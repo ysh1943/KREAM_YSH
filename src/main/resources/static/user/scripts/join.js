@@ -88,7 +88,7 @@ $form.onsubmit = (e) => {
             failure_duplicate_nickname: ['회원가입', `입력하신 닉네임${$form['nickname'].value}은 이미 사용중입니다. 다른 닉네임 사용해 주세요`, ($dialog) => Dialog.hide($dialog)],
             success: ['회원가입', '회원가입해 주셔서 감사합니다. 입력하신 이메일로 계정을 인증할 수 있는 링크를 전송하였습니다. 계정 인증 후 로그인할 수 있으며, 해당 링크는 24시간 동안만 유효하니 유의해 주세요', ($dialog) => {
                 Dialog.hide($dialog)
-                location.href = '/user/';
+                location.href = '/login';
             }],
         }[response['result']] || ['오류', '서버가 알 수 없는 응답을 반환하였습니다. 잠시 후 다시 시도해 주세요.', ($dialog) => Dialog.hide($dialog)];
         Dialog.show({
@@ -102,6 +102,6 @@ $form.onsubmit = (e) => {
 
 
     }
-    xhr.open('POST', _isSocialRegister === true ? '../join' : './join');
+    xhr.open('POST', '/join');
     xhr.send(formData);
 }

@@ -23,6 +23,7 @@ public class UserEntity {
     private boolean isAdmin;
     private boolean isSuspended;
     private boolean isVerified;
+    private LocalDateTime temporaryPassword;
     private String socialTypeCode;
     private String socialId;
     private LocalDateTime createdAt;
