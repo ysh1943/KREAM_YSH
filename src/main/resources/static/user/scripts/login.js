@@ -34,7 +34,7 @@ $form.onsubmit = (e) => {
     }
     const xhr = new XMLHttpRequest();
     const url = new URL(location.href);
-    url.pathname = '/user/login';
+    url.pathname = '/login';
     url.searchParams.set('email', $form['email'].value);
     url.searchParams.set('password', $form['password'].value);
     xhr.onreadystatechange = () => {
@@ -63,6 +63,7 @@ $form.onsubmit = (e) => {
                 $form['email'].focus();
                 $form['email'].select();
             }],
+            expired_password: ['로그인', '해당 계정의 임시비밀번호 기간이 만료되었습니다. 재발급 신청하시기 바랍니다.', ($dialog) => Dialog.hide(($dialog))],
             failure_not_verified: ['로그인', `해당 계정의 이메일 인증이 완료되지 않았습니다. 이메일을 확인해 주세요.<br><br>혹시 이메일이 오지 않았다면 인증링크가 포함된 이메일을 <a href="#" target="_blank">다시 전송</a>할 수 있습니다.`, ($dialog) => Dialog.hide($dialog)],
             failure_suspended: ['로그인', '해당 계정은 이용이 정지된 상태입니다. 관리자에게 문의해 주세요', ($dialog) => Dialog.hide(($dialog))],
         }[response['result']] || ['오류', '서버가 알 수 없는 응답을 반환하였습니다. 잠시 후 다시 시도해 주세요', ($dialog) => Dialog.hide(($dialog))];
