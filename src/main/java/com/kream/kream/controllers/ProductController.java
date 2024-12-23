@@ -60,7 +60,7 @@ public class ProductController {
             result.put("sellPrice", size.getSellPrice());
             result.put("buyPrice", size.getBuyPrice());
             result.put("lowestSellPrice", size.getLowestSellPrice());
-            result.put("lowestBuyPrice", size.getLowestBuyPrice());
+            result.put("highestBuyPrice", size.getHighestBuyPrice());
             result.put("nameEn", size.getNameEn());
             result.put("nameKo", size.getNameKo());
             result.put("modelNumber", size.getModelNumber());

@@ -9,7 +9,7 @@
         SELECT `size`.`id`                 AS `sizeId`,
                `size`.`type`               AS `type`,
                MIN(`seller_bid`.`price`)   AS `sellPrice`,
-               MIN(`buyer_bid`.`price`)    AS `buyPrice`,
+               MAX(`buyer_bid`.`price`)    AS `buyPrice`,
                `product`.`product_name_en` AS `nameEn`,
                `product`.`product_name_ko` AS `nameKo`,
                `product`.`model_number`    AS `modelNumber`,
@@ -21,12 +21,12 @@
                                     ON `seller_bid`.`size_id` = `size`.`id`
                 WHERE `size`.`product_id` = `product`.`id`
                   AND `seller_bid`.`state` = 'BIDDING')     AS lowestSellPrice,
-               (SELECT MIN(`buyer_bid`.`price`)
+               (SELECT MAX(`buyer_bid`.`price`)
                 FROM `kream`.`buyer_bid`
                          LEFT JOIN `kream`.`size`
                                     ON `buyer_bid`.`size_id` = `size`.`id`
                 WHERE `size`.`product_id` = `product`.`id`
-                  AND `buyer_bid`.`state` = 'BIDDING')     AS lowestBuyPrice
+                  AND `buyer_bid`.`state` = 'BIDDING')     AS highestBuyPrice
         FROM `kream`.`size`
                  LEFT JOIN `kream`.`seller_bid`
                            ON `size`.`id` = `seller_bid`.`size_id`

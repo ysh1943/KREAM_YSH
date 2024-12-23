@@ -163,7 +163,7 @@
                     <span class="button-title">판매</span>
                     <span class="button-text-container">
                         <span class="button-price-text sell-price-text"
-                              th:text="${sizes[0].getLowestBuyPrice() != 0 ? #numbers.formatInteger(sizes[0].getLowestBuyPrice() , 0 , 'COMMA') + '원' : '-'}"></span>
+                              th:text="${sizes[0].getHighestBuyPrice() != 0 ? #numbers.formatInteger(sizes[0].getHighestBuyPrice() , 0 , 'COMMA') + '원' : '-'}"></span>
                         <span class="button-text">즉시 판매가</span>
                     </span>
                 </button>

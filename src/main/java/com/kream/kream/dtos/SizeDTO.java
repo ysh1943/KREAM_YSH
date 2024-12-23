@@ -15,7 +15,7 @@ public class SizeDTO {
     private int sellPrice;
     private int buyPrice;
     private int lowestSellPrice;
-    private int lowestBuyPrice;
+    private int highestBuyPrice;
     private String nameEn;
     private String nameKo;
     private String modelNumber;
