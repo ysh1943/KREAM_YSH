@@ -2,7 +2,14 @@
 
 @import "../../../assets/styles/global";
 
-.dialog-cover {
+body {
+  &.no-scroll {
+    overflow: hidden;
+  }
+}
+
+
+.cover {
   top: 0;
   left: 0;
   width: 100%;
@@ -24,10 +31,11 @@
 }
 
 .dialog {
+  @include flex(column, stretch, flex-start);
   top: calc(50% + 0.5rem);
   left: 50%;
   width: 30rem;
-  height: 42.5rem;
+  max-height: 42.5rem;
   background-color: #ffffff;
   border-radius: 1rem;
   opacity: 0;
@@ -46,8 +54,9 @@
   }
 
   > .cancel > .icon {
-    top: 1.8rem;
+    top: 0.5rem;
     right: 1rem;
+    width: 2rem;
     position: absolute;
     cursor: pointer;
   }
@@ -62,7 +71,7 @@
       color: #222222;
       font-size: 1.1rem;
       font-weight: 600;
-      padding: 0.2rem 0.875rem 0;
+      padding: 0.7rem 0.875rem 0;
     }
 
     > .sub-title {
@@ -102,15 +111,18 @@
     }
   }
 
-  > .button-container {
+  > .size-container {
     background-color: #ffffff;
+    border-radius: 1rem;
     color: #222222;
     padding: 1rem;
     display: grid;
-    gap: 0.5rem;
+    gap: 0.4rem;
     grid-template-columns: repeat(3, 1fr);
+    overflow-y: auto;
+    flex-grow: 1;
 
-    > .button {
+    > .size-button {
       @include flex(column, center, flex-start, 0.2rem);
       $background_color: #ffffff;
       background-color: $background_color;
@@ -118,7 +130,7 @@
       border-radius: 0.5rem;
       cursor: pointer;
       font-size: 0.8rem;
-      margin-bottom: 2rem;
+      margin-bottom: 0.5rem;
       padding: 0.5rem 0.0625rem;
       user-select: none;
 
@@ -135,13 +147,91 @@
         font-weight: 400;
       }
 
-      > .text {
+      > .price {
         color: #22222280;
       }
     }
   }
-}
 
+  .order {
+    @include flex(column, stretch, flex-start, 0.7rem);
+    background-color: #ffffff;
+    border: 0.0625rem solid #eeeeee;
+    border-radius: 1rem;
+    display: none;
+    box-sizing: border-box;
+    padding: 0.5rem;
+    z-index: 100;
+
+    > .delivery {
+      @include flex(row, center, flex-start, 0.2rem);
+      border: 0.0625rem solid #222222;
+      border-radius: 0.5rem;
+      box-sizing: border-box;
+      padding: 1rem;
+
+      > .text {
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+
+      > .date {
+        color: #22222280;
+        font-size: 0.7rem;
+      }
+
+
+      > .delivery-price {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #ef6253;
+      }
+    }
+
+    > .button-container {
+      display: grid;
+      gap: 0.5rem;
+      grid-template-columns: 1fr 1fr;
+
+      > .button {
+        box-sizing: border-box;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        color: #ffffff;
+        cursor: pointer;
+
+        &.cart {
+          background-color: #222222;
+        }
+
+        &.bid {
+          background-color: #ef6253;
+        }
+      }
+    }
+  }
+
+  > .buy-bid-container {
+    background-color: #ffffff;
+    border: 0.0625rem solid #eeeeee;
+    border-radius: 1rem;
+    display: none;
+    box-sizing: border-box;
+    padding: 0.5rem;
+    z-index: 100;
+
+    > .buy-bid-button {
+      width: 100%;
+      box-sizing: border-box;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      padding: 1rem;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+  }
+}
 
 #header {
   background-color: #ffffff;
@@ -244,7 +334,7 @@
 
         > .image-cover {
           background-color: #eeeeee;
-          border-radius: 0.5rerm;
+
 
           > .image {
             width: 35rem;
@@ -282,17 +372,18 @@
 
         > .similar-image-cover {
           background-color: #eeeeee;
-          border-radius: 0.5rem;
-
-          &.---visible {
-            border: 0.0624rem solid #22222280;
-          }
+          border-radius: 0.5rerm;
 
           > .link > .image {
+            background-color: #eeeeee;
             width: 4.4rem;
-            object-fit: cover;
-            object-position: center;
             cursor: pointer;
+
+
+            &.---visible {
+              border: 0.0624rem solid #22222280;
+              border-radius: 0.5rem;
+            }
           }
         }
       }
@@ -335,7 +426,7 @@
         padding: 0.8rem;
 
         > .size-text {
-          font-weight: 500;
+          font-weight: 700;
         }
       }
 

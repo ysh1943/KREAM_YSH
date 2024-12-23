@@ -11,40 +11,47 @@
     <link rel="stylesheet" th:href="@{'/product-detail/assets/styles/products.css'}" type="text/css">
     <script src="https://kit.fontawesome.com/20d32b3086.js" crossorigin="anonymous"></script>
     <script defer src="/assets/scripts/common.js" type="text/javascript"></script>
-    <script defer th:src="@{/product-detail/assets/scripts/products.js}" type="text/javascript"></script>
+    <script defer th:src="@{'/product-detail/assets/scripts/products.js'}" type="text/javascript"></script>
 </head>
 <body>
-<div class="dialog-cover -visible"></div>
-<div class="dialog -visible">
-    <button class="cancel">
-        <i class="icon fa-solid fa-xmark fa-xl"></i>
-    </button>
-    <div class="title-container">
-        <span class="title">구매하기</span>
-        <span class="sub-title">(가격 단위: 원)</span>
-    </div>
-    <div class="product">
-        <img class="image" src="/home/assets/images/shoes4.png" alt="image">
-        <div class="name-container">
-            <span class="name-en">Nike Air Force 1 '07 Low White</span>
-            <span class="name-ko">나이키 에어포스 1 '07 로우 화이트</span>
-            <span class="model-number">315122-111/CW2288-111</span>
-        </div>
-    </div>
-    <div class="button-container">
-        <button class="button">
-            <span class="size">230</span>
-            <span class="text">구매입찰</span>
-        </button>
-        <button class="button">
-            <span class="size">230</span>
-            <span class="text">구매입찰</span>
-        </button>
-        <button class="button">
-            <span class="size">230</span>
-            <span class="text">구매입찰</span>
-        </button>
-    </div>
+<div class="cover"></div>
+<div class="dialog">
+<!--    <button class="cancel">-->
+<!--        <img class="icon" src="/assets/images/cancel-icon.png" alt="cancel">-->
+<!--    </button>-->
+<!--    <div class="title-container">-->
+<!--        <span class="title">구매하기</span>-->
+<!--        <span class="sub-title">(가격 단위: 원)</span>-->
+<!--    </div>-->
+<!--    <div class="product">-->
+<!--        <img class="image" src="/home/assets/images/shoes4.png" alt="image">-->
+<!--        <div class="name-container">-->
+<!--            <span class="name-en">Nike Air Force 1 '07 Low White</span>-->
+<!--            <span class="name-ko">나이키 에어포스 1 '07 로우 화이트</span>-->
+<!--            <span class="model-number">315122-111/CW2288-111</span>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <div class="size-container">-->
+<!--        <button class="size-button">-->
+<!--            <span class="size">230</span>-->
+<!--            <span class="price">구매입찰</span>-->
+<!--        </button>-->
+<!--    </div>-->
+<!--    <div class="order">-->
+<!--        <div class="delivery">-->
+<!--            <span class="text">일반배송</span>-->
+<!--            <span class="date">5-7일</span>-->
+<!--            <span class="-spring"></span>-->
+<!--            <span class="delivery-price">351,000원</span>-->
+<!--        </div>-->
+<!--        <div class="button-container">-->
+<!--            <button class="cart button" type="button">장바구니 담기</button>-->
+<!--            <button class="bid button" type="button">즉시 구매/ 구매 입찰</button>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <div class="buy-bid-container">-->
+<!--        <button class="buy-bid-button" type="button">구매 입찰하기</button>-->
+<!--    </div>-->
 </div>
 <header id="header">
     <div class="header-container">
@@ -102,10 +109,10 @@
                 </a>
             </div>
             <div class="similar-image-container">
-                <div class="similar-image-cover" th:each="similarImage : ${similarImages}"
-                     th:data-id="${similarImage.getProductId()}">
+                <div class="similar-image-cover" th:each="similarImage : ${similarImages}">
                     <a class="link" th:href="@{'/products?id=' + ${similarImage.getProductId()}}">
-                        <img th:src="${similarImage.getBase64Image()}" alt="product-image" class="image">
+                        <img class="image" th:src="${similarImage.getBase64Image()}" alt="product-image"
+                             th:data-id="${similarImage.getProductId()}">
                     </a>
                 </div>
             </div>
@@ -113,14 +120,15 @@
         <div class="right">
             <div class="price-container">
                 <span class="price-title">즉시 구매가</span>
-                <span class="price-text">36,000원</span>
+                <span class="price-text"
+                      th:text="${sizes[0].getLowestSellPrice() != 0 ? #numbers.formatInteger(sizes[0].getLowestSellPrice() , 0 , 'COMMA') + '원' : '-'}"></span>
             </div>
             <div class="product-name-container">
                 <span class="product-name-en" th:text="${product.getProductNameEn()}"></span>
                 <span class="product-name-ko" th:text="${product.getProductNameKo()}"></span>
             </div>
             <button class="size">
-                <span class="size-text">모든사이즈</span>
+                <span class="size-text" th:text="모든사이즈"></span>
                 <span class="-spring"></span>
                 <i class="fa-solid fa-square-caret-down"></i>
             </button>
@@ -146,14 +154,16 @@
                 <button class="buy button" type="button">
                     <span class="button-title">구매</span>
                     <span class="button-text-container">
-                        <span class="button-price-text">114,000원</span>
+                        <span class="button-price-text buy-price-text"
+                              th:text="${sizes[0].getLowestSellPrice() != 0 ? #numbers.formatInteger(sizes[0].getLowestSellPrice() , 0 , 'COMMA') + '원' : '-'}"></span>
                         <span class="button-text">즉시 구매가</span>
                     </span>
                 </button>
                 <button class="sell button" type="button">
                     <span class="button-title">판매</span>
                     <span class="button-text-container">
-                        <span class="button-price-text">150,000원</span>
+                        <span class="button-price-text sell-price-text"
+                              th:text="${sizes[0].getLowestBuyPrice() != 0 ? #numbers.formatInteger(sizes[0].getLowestBuyPrice() , 0 , 'COMMA') + '원' : '-'}"></span>
                         <span class="button-text">즉시 판매가</span>
                     </span>
                 </button>
@@ -235,7 +245,35 @@
             </div>
         </div>
     </div>
-
+<!--    <div class="main-container">-->
+<!--        <div class="home-products-title">-->
+<!--            <div class="title-us">Most Popular</div>-->
+<!--            <div class="title-ko">인기상품</div>-->
+<!--        </div>-->
+<!--        <div class="error-list" th:if="${product == null || product.isEmpty()}">-->
+<!--            <div class="error">-->
+<!--                <i class="fa-solid fa-triangle-exclamation"></i>-->
+<!--                인기상품을 불러오는 데 문제가 발생했습니다. 관리자에게 문의해 주세요.</div>-->
+<!--        </div>-->
+<!--        <ul class="home-products-list">-->
+<!--            <li class="products-item"  th:if="${product != null}" th:each="popularProduct : ${popularProducts}">-->
+<!--                <a th:href="@{'/products?id=' + ${popularProduct.getProductId()}}" class="product-image">-->
+<!--                    <span class="trading" th:if="${popularProduct.getTransactionCount() != 0}">-->
+<!--                        <span class="text">거래</span>-->
+<!--                        <span class="text" th:text="${popularProduct.getTransactionCount()}"></span>-->
+<!--                    </span>-->
+<!--                    <img class="image" alt="popular-product-image" th:src="${popularProduct.getBase64Image()}">-->
+<!--                </a>-->
+<!--                <span class="product-text">-->
+<!--                    <span class="text-container">-->
+<!--                        <span class="brand" th:text="${popularProduct.getBrand()}"></span>-->
+<!--                        <span class="product-name" th:text="${popularProduct.getProductName()}"></span>-->
+<!--                    </span>-->
+<!--                    <span class="price" th:text="${popularProduct.getLowestPrice() != 0 ? #numbers.formatInteger(popularProduct.getLowestPrice(), 0, 'COMMA') + '원' : '-'}"></span>-->
+<!--                </span>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </div>-->
 </main>
 </body>
 </html>

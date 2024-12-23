@@ -17,6 +17,7 @@
             resultType="com.kream.kream.entities.ProductEntity">
         SELECT `product`.`id`         AS `id`,
                `category_detail_id`   AS `categoryDetailId`,
+               `base_name`            AS `baseName`,
                `product_name_ko`      AS `productNameKo`,
                `product_name_en`      AS `productNameEn`,
                `model_number`         AS `modelNumber`,
@@ -37,6 +38,7 @@
             resultType="com.kream.kream.entities.ProductEntity">
         SELECT `id`                 AS `id`,
                `category_detail_id` AS `categoryDetailId`,
+               `base_name`            AS `baseName`,
                `product_name_ko`    AS `productNameKo`,
                `product_name_en`    AS `productNameEn`,
                `model_number`       AS `modelNumber`,
@@ -56,6 +58,7 @@
     <select id="selectProductBySearch">
         SELECT `id`                 AS `id`,
         `category_detail_id` AS `categoryDetailId`,
+        `base_name`            AS `baseName`,
         `product_name_ko`    AS `productNameKo`,
         `product_name_en`    AS `productNameEn`,
         `model_number`       AS `modelNumber`,
@@ -90,6 +93,7 @@
     <update id="updateProduct">
         UPDATE `kream`.`product`
         SET `category_detail_id` = #{product.categoryDetailId},
+            `base_name`          = #{product.baseName},
             `product_name_ko`    = #{product.productNameKo},
             `product_name_en`    = #{product.productNameEn},
             `model_number`       = #{product.modelNumber},

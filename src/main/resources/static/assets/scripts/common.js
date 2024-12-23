@@ -214,39 +214,41 @@ class Loading {
     }
 }
 
-class sizeDialog {
+class OrderDialog {
     /** @type {HTMLElement} */
     static $cover;
     /** @type {Array<HTMLElement>} */
     static $dialogArray = [];
 
-    /**
-     * @param {string} title
-     * @param {string} content
-     * @param {function(HTMLElement)|undefined} onclick */
-    static defaultOk(title, content, onclick = undefined) {
-        Dialog.show({
-            title: title,
-            content: content,
-            buttons: [{
-                text: '확인', onclick: ($dialog) => {
-                    Dialog.hide($dialog);
-                    if (typeof onclick === 'function') {
-                        onclick($dialog);
-                    }
-                }
-            }]
-        });
-    }
+    // /**
+    //  * @param {string} title
+    //  * @param {string} size
+    //  * @param {string} text
+    //  * @param {function(HTMLElement)|undefined} onclick */
+    // static size(title, size, text, onclick = undefined) {
+    //     OrderDialog.show({
+    //         title: title,
+    //         size: size,
+    //         text: text,
+    //         buttons: [{
+    //              onclick: ($dialog) => {
+    //                 OrderDialog.hide($dialog);
+    //                 if (typeof onclick === 'function') {
+    //                     onclick($dialog);
+    //                 }
+    //             }
+    //         }]
+    //     });
+    // }
 
 
     /**
      * @param {HTMLElement} $dialog
      */
     static hide($dialog) {
-        Dialog.$dialogArray.splice(Dialog.$dialogArray.indexOf($dialog), 1);
-        if (Dialog.$dialogArray.length === 0) {
-            Dialog.$cover.hide();
+        OrderDialog.$dialogArray.splice(OrderDialog.$dialogArray.indexOf($dialog), 1);
+        if (OrderDialog.$dialogArray.length === 0) {
+            OrderDialog.$cover.hide();
         }
         $dialog.hide();
         setTimeout(() => $dialog.remove(), 1000);
@@ -255,50 +257,180 @@ class sizeDialog {
     /**
      * @param {Object} args
      * @param {string} args.title
-     * @param {String} args.subTitle
-     * @param {string} args.content
+     * @param {String} args.src
+     * @param {string} args.nameEn
+     * @param {string} args.nameKo
+     * @param {string} args.modelNumber
+     * @param {string} args.size
+     * @param {string} args.text
      * @param {Array<{string, function}>|undefined} args.buttons
      * @param {number} delay
      * @returns {HTMLElement}
      */
     static show(args, delay = 50) {
-        const $dialog = document.createElement('div');
-        $dialog.classList.add('---dialog');
-        const $title = document.createElement('div');
-        $title.classList.add('_title');
+        const $orderDialog = document.createElement('div');
+        $orderDialog.classList.add('order-dialog');
+        const $cancel = document.createElement('button');
+        $cancel.classList.add('cancel');
+        const $icon = document.createElement('i');
+        $icon.classList.add('icon');
+
+        const $titleContainer = document.createElement('div');
+        $titleContainer.classList.add('title-container');
+        const $title = document.createElement('span');
+        $title.classList.add('title');
         $title.innerText = args.title;
-        const $content = document.createElement('div');
-        $content.classList.add('_content');
-        $content.innerHTML = args.content;
-        $dialog.append($title, $content);
+        const $subTitle = document.createElement('span');
+        $subTitle.classList.add('sub-title');
+        $subTitle.innerText = "(가격 단위: 원)"
+
+        const $product = document.createElement('div');
+        $product.classList.add('product');
+        const $image = document.createElement('img');
+        $image.classList.add('image');
+        $image.src = args.src;
+        $image.alt = "image";
+        const $nameContainer = document.createElement('div');
+        $nameContainer.classList.add('name-container');
+        const $nameEn = document.createElement('span');
+        $nameEn.classList.add('name-en');
+        $nameEn.innerText = args.nameEn;
+        const $nameKo = document.createElement('span');
+        $nameKo.classList.add('name-ko');
+        $nameKo.innerText = args.nameKo;
+        const $modelNumber = document.createElement('span');
+        $modelNumber.classList.add('model-number');
+        $modelNumber.innerText = args.modelNumber
+
+        $cancel.append($icon);
+        $titleContainer.append($title, $subTitle);
+        $nameContainer.append($nameEn, $nameKo, $modelNumber);
+        $product.append($image, $nameContainer);
+        $orderDialog.append($cancel, $titleContainer, $product);
+
         if (args.buttons != null && args.buttons.length > 0) {
             const $buttonContainer = document.createElement('div');
-            $buttonContainer.classList.add('_button-container');
-            $buttonContainer.style.gridTemplateColumns = `repeat(${args.buttons.length}, 1fr)`;
+            $buttonContainer.classList.add('button-container');
+
             for (const button of args.buttons) {
                 const $button = document.createElement('button');
                 $button.classList.add('_button');
                 $button.setAttribute('type', 'button');
-                $button.innerText = button.text;
+                const $size = document.createElement('span');
+                $size.classList.add('size');
+                $size.innerText = args.size;
+                const $text = document.createElement('span');
+                $text.classList.add('text');
+                $text.innerText = args.text;
                 if (typeof button.onclick === 'function') {
-                    $button.onclick = () => button.onclick($dialog);
+                    $button.onclick = () => button.onclick($orderDialog);
                 }
+                $button.append($size);
+                $button.append($text);
                 $buttonContainer.append($button);
             }
-            $dialog.append($buttonContainer);
+            $orderDialog.append($buttonContainer);
         }
-        document.body.prepend($dialog);
-        Dialog.$dialogArray.push($dialog);
-        if (Dialog.$cover == null) {
+        document.body.prepend($orderDialog);
+        OrderDialog.$dialogArray.push($orderDialog);
+        if (OrderDialog.$cover == null) {
             const $cover = document.createElement('div');
-            $cover.classList.add('---dialog-cover');
+            $cover.classList.add('dialog-cover');
             document.body.prepend($cover);
-            Dialog.$cover = $cover;
+            OrderDialog.$cover = $cover;
         }
         setTimeout(() => {
-            $dialog.show();
-            Dialog.$cover.show();
+            $orderDialog.show();
+            OrderDialog.$cover.show();
         }, delay);
-        return $dialog;
+        return $orderDialog;
     }
 }
+
+
+
+// class SizeDialog {
+//     /** @type {HTMLElement} */
+//     static $cover;
+//     /** @type {Array<HTMLElement>} */
+//     static $dialogArray = [];
+//
+//     /**
+//      * @param {HTMLElement} $sizeDialog
+//      */
+//     static hide($sizeDialog) {
+//         SizeDialog.$dialogArray.splice(SizeDialog.$dialogArray.indexOf($sizeDialog), 1);
+//         if (SizeDialog.$dialogArray.length === 0) {
+//             SizeDialog.$cover.hide();
+//         }
+//         $sizeDialog.hide();
+//         setTimeout(() => $sizeDialog.remove(), 1000);
+//     }
+//
+//     /**
+//      * @param {Object} args
+//      * @param {string} args.title
+//      * @param {Array<{size: string, text: string, onclick: function}>|undefined} args.buttons
+//      * @param {number} delay
+//      * @returns {HTMLElement}
+//      */
+//     static show(args, delay = 50) {
+//         const $sizeDialog = document.createElement('div');
+//         $sizeDialog.classList.add('size-dialog');
+//         const $cancel = document.createElement('button');
+//         $cancel.classList.add('cancel');
+//         const $icon = document.createElement('img');
+//         $icon.classList.add('icon');
+//         $icon.src = "/assets/images/cancel-icon.png"
+//         $icon.alt = "cancel"
+//
+//         const $titleContainer = document.createElement('div');
+//         $titleContainer.classList.add('title-container');
+//         const $title = document.createElement('span');
+//         $title.classList.add('title');
+//         $title.innerText = args.title;
+//
+//         $cancel.append($icon);
+//         $titleContainer.append($title);
+//         $sizeDialog.append($cancel);
+//         $sizeDialog.append($titleContainer);
+//
+//         if (args.buttons != null && args.buttons.length > 0) {
+//             const $buttonContainer = document.createElement('div');
+//             $buttonContainer.classList.add('button-container');
+//
+//             for (const button of args.buttons) {
+//                 const $button = document.createElement('button');
+//                 $button.classList.add('button');
+//                 $button.setAttribute('type', 'button');
+//                 const $size = document.createElement('span');
+//                 $size.classList.add('size');
+//                 $size.innerText = button.size;
+//                 const $text = document.createElement('span');
+//                 $text.classList.add('text');
+//                 $text.innerText = button.text;
+//                 if (typeof button.onclick === 'function') {
+//                     $button.onclick = () => button.onclick({size: button.size, text: button.text}, $sizeDialog);
+//                 }
+//
+//                 $button.append($size);
+//                 $button.append($text);
+//                 $buttonContainer.append($button);
+//             }
+//             $sizeDialog.append($buttonContainer);
+//         }
+//         document.body.prepend($sizeDialog);
+//         SizeDialog.$dialogArray.push($sizeDialog);
+//         if (SizeDialog.$cover == null) {
+//             const $cover = document.createElement('div');
+//             $cover.classList.add('dialog-cover');
+//             document.body.prepend($cover);
+//             SizeDialog.$cover = $cover;
+//         }
+//         setTimeout(() => {
+//             $sizeDialog.show();
+//             SizeDialog.$cover.show();
+//         }, delay);
+//         return $sizeDialog;
+//     }
+// }
