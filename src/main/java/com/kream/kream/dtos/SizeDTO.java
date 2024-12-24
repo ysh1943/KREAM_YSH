@@ -9,14 +9,16 @@ import java.util.Base64;
 
 @Getter
 @Setter
-public class ProductDTO {
-    private int productId;
-    private String productNameEn;
-    private String productNameKo;
-    private String brand;
-    private String category;
-    private int lowestPrice;
-    private int transactionCount;
+public class SizeDTO {
+    private int sizeId;
+    private String type;
+    private int sellPrice;
+    private int buyPrice;
+    private int lowestSellPrice;
+    private int highestBuyPrice;
+    private String nameEn;
+    private String nameKo;
+    private String modelNumber;
     private byte[] imageData;
     private String imageType;
 

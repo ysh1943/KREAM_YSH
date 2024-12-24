@@ -1,6 +1,7 @@
 package com.kream.kream.services;
 
 import com.kream.kream.dtos.ProductDTO;
+import com.kream.kream.mappers.OrderMapper;
 import com.kream.kream.mappers.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,14 +12,16 @@ import java.util.List;
 @Service
 public class ShopService {
     private final ProductMapper productMapper;
+    private final OrderMapper orderMapper;
 
     @Autowired
-    public ShopService(ProductMapper productMapper) {
+    public ShopService(ProductMapper productMapper, OrderMapper orderMapper) {
         this.productMapper = productMapper;
+        this.orderMapper = orderMapper;
     }
 
     public List<ProductDTO> getPopularProducts() {
-        List<ProductDTO> popularProducts = this.productMapper.selectPopularProducts();
+        List<ProductDTO> popularProducts = this.orderMapper.selectPopularProducts();
         if (popularProducts == null || popularProducts.isEmpty()) {
             return new ArrayList<>();
         }
