@@ -78,7 +78,7 @@
                 <span class="product-text">
                     <span class="text-container">
                         <span class="brand" th:text="${popularProduct.getBrand()}"></span>
-                        <span class="product-name" th:text="${popularProduct.getProductName()}"></span>
+                        <span class="product-name" th:text="${popularProduct.getProductNameEn()}"></span>
                     </span>
                     <span class="price" th:text="${popularProduct.getLowestPrice() != 0 ? #numbers.formatInteger(popularProduct.getLowestPrice(), 0, 'COMMA') + '원' : '-'}"></span>
                 </span>
@@ -114,7 +114,7 @@
                 <span class="product-text">
                     <span class="text-container">
                         <span class="brand" th:text="${newProduct.getBrand()}"></span>
-                        <span class="product-name" th:text="${newProduct.getProductName()}"></span>
+                        <span class="product-name" th:text="${newProduct.getProductNameEn()}"></span>
                     </span>
                     <span class="price" th:text="${newProduct.getLowestPrice() != 0 ? #numbers.formatInteger(newProduct.getLowestPrice(), 0, 'COMMA') + '원' : '-'}"></span>
                 </span>
