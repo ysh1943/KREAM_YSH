@@ -581,27 +581,40 @@ body {
 
           > .table {
             width: 100%;
+            table-layout: fixed;
+
 
             > .thead > .tr {
-              @include flex(row, center, flex-start, 3.5em);
-              border-bottom: 0.0625rem solid #2222221a;
-              box-sizing: border-box;
-              padding-bottom: 0.5rem;
 
               > .th {
+                border-bottom: 0.0625rem solid #2222221a;
+                box-sizing: border-box;
+                padding-bottom: 0.5rem;
+                width: 60%;
+                text-align: left;
                 color: #22222280;
-                font-size: 0.7rem;
+                font-size: 0.8rem;
+
+                &:not(:first-of-type) {
+                  width: 20%;
+                  text-align: right;
+                }
               }
             }
 
             > .tbody > .tr {
-              @include flex(row, center, flex-start, 2em);
-              box-sizing: border-box;
-              padding-top: 0.5rem;
 
               > .td {
-                font-size: 0.8rem;
+                width: 60%;
+                box-sizing: border-box;
+                padding-top: 0.3rem;
+                font-size: 0.9rem;
                 font-weight: 400;
+
+                &:not(:first-of-type) {
+                  width: 20%;
+                  text-align: right;
+                }
               }
             }
           }

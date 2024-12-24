@@ -11,7 +11,8 @@ import java.util.Base64;
 @Setter
 public class ProductDTO {
     private int productId;
-    private String productName;
+    private String productNameEn;
+    private String productNameKo;
     private String brand;
     private String category;
     private int lowestPrice;

@@ -1,7 +1,6 @@
 package com.kream.kream.controllers;
 
-import com.kream.kream.dtos.SimilarProductImageDTO;
-import com.kream.kream.dtos.SizeDTO;
+import com.kream.kream.dtos.*;
 import com.kream.kream.entities.ImageEntity;
 import com.kream.kream.entities.ProductEntity;
 import com.kream.kream.entities.UserEntity;
@@ -38,6 +37,8 @@ public class ProductController {
             SimilarProductImageDTO[] similarImages = this.productService.getImageByBaseName(product.getBaseName());
             ImageEntity[] images = this.productService.getImageById(id);
             List<SizeDTO> sizes = this.productService.getSizeByProductId(id);
+            List<OrderChartDTO> orderCharts = this.productService.getOrderChartByProductId(id);
+            modelAndView.addObject("orderCharts", orderCharts);
             modelAndView.addObject("sizes", sizes);
             modelAndView.addObject("similarImages", similarImages);
             modelAndView.addObject("user", user);
@@ -65,6 +66,52 @@ public class ProductController {
             result.put("nameKo", size.getNameKo());
             result.put("modelNumber", size.getModelNumber());
             result.put("base64Image", size.getBase64Image());
+            response.put(result);
+        }
+        return response.toString();
+    }
+
+    @RequestMapping(value = "/products-order-chart", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String getOrderChat(@RequestParam(value = "id", required = false) Integer id) {
+        List<OrderChartDTO> orderCharts = this.productService.getOrderChartByProductId(id);
+        JSONArray response = new JSONArray();
+        for (OrderChartDTO orderChart : orderCharts) {
+            JSONObject result = new JSONObject();
+            result.put("orderId", orderChart.getOrderId());
+            result.put("sizeType", orderChart.getSizeType());
+            result.put("orderPrice", orderChart.getOrderPrice());
+            result.put("orderDate", orderChart.getOrderDate());
+            response.put(result);
+        }
+        return response.toString();
+    }
+
+    @RequestMapping(value = "/products-sell-chart", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String getSellBidChart(@RequestParam(value = "id", required = false) Integer id) {
+        List<SellBidChartDTO> sellBidCharts = this.productService.getSellBidChartByProductId(id);
+        JSONArray response = new JSONArray();
+        for (SellBidChartDTO sellBidChart : sellBidCharts) {
+            JSONObject result = new JSONObject();
+            result.put("sizeType", sellBidChart.getSizeType());
+            result.put("sellPrice", sellBidChart.getSellPrice());
+            result.put("sellCount", sellBidChart.getSellCount());
+            response.put(result);
+        }
+        return response.toString();
+    }
+
+    @RequestMapping(value = "/products-buy-chart", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String getBuyBidChart(@RequestParam(value = "id", required = false) Integer id) {
+        List<BuyBidChartDTO> buyBidCharts = this.productService.getBuyBidChartByProductId(id);
+        JSONArray response = new JSONArray();
+        for (BuyBidChartDTO buyBidChart : buyBidCharts) {
+            JSONObject result = new JSONObject();
+            result.put("sizeType", buyBidChart.getSizeType());
+            result.put("buyPrice", buyBidChart.getBuyPrice());
+            result.put("buyCount", buyBidChart.getBuyCount());
             response.put(result);
         }
         return response.toString();

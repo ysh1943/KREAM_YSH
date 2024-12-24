@@ -51,7 +51,6 @@ const $dialog = document.querySelector('.dialog');
     const $sizeText = $size.querySelector(':scope > .size-text');
 
     let isProcessing = false;
-
     $size.onclick = (e) => {
         e.preventDefault();
 
@@ -184,8 +183,10 @@ const $dialog = document.querySelector('.dialog');
 //region order-button
 {
     const $orderButton = $main.querySelectorAll(':scope > .product-container > .right > .button-container > .button');
+    const $sizeText = $main.querySelector(':scope > .product-container > .right > .size > .size-text');
 
     let isProcessing = false;
+    let activeSizeButton = null;
     $orderButton.forEach(($orderButton) => {
         $orderButton.onclick = (e) => {
             e.preventDefault();
@@ -274,6 +275,18 @@ const $dialog = document.querySelector('.dialog');
                     $sizeButton.append($size, $price);
                     $SizeContainer.append($sizeButton);
 
+                    if ($sizeText.innerText === item['type']) {
+                        $sizeButton.style.border = "0.0625rem solid #222222";
+                        $size.style.fontWeight = '700';
+                        $price.style.fontWeight = '700';
+                        activeSizeButton = $sizeButton;
+
+                        setTimeout(() => {
+                            $sizeButton.click();
+                        }, 0);
+                    }
+
+
                     $sizeButton.onclick = () => {
                         const $resetOrder = $dialog.querySelector('.order');
                         const $resetBuyBidContainer = $dialog.querySelector('.buy-bid-container');
@@ -283,6 +296,18 @@ const $dialog = document.querySelector('.dialog');
                         if ($resetBuyBidContainer) {
                             $resetBuyBidContainer.remove();
                         }
+
+                        if (activeSizeButton) {
+                            activeSizeButton.style.border = "";
+                            activeSizeButton.querySelector('.size').style.fontWeight = '400';
+                            activeSizeButton.querySelector('.price').style.fontWeight = '400';
+                        }
+
+                        $sizeButton.style.border = "0.0625rem solid #222222";
+                        $size.style.fontWeight = '700';
+                        $price.style.fontWeight = '700';
+
+                        activeSizeButton = $sizeButton;
 
                         const $order = document.createElement('div');
                         $order.classList.add('order');
@@ -379,6 +404,109 @@ const $dialog = document.querySelector('.dialog');
 }
 //endregion
 
+//region chart
+{
+    const $chartButton = $main.querySelectorAll(':scope > .product-container > .right > .detail-item-charts > .bids-container > .container-title > .button');
+    const $table = $main.querySelector(':scope > .product-container > .right > .detail-item-charts > .bids-container > .table');
+    const $tbody = $table.querySelector(':scope > .tbody');
+    const $thead = $table.querySelector(':scope> .thead');
+
+    const url = new URL(location.href);
+    const productId = url.searchParams.get('id');
+
+    $chartButton.forEach(($charButton) => {
+        $charButton.onclick = () => {
+
+
+            $chartButton.forEach(button => {
+                button.style.backgroundColor = '';
+            });
+
+
+            $charButton.style.backgroundColor = '#ffffff';
+
+            $tbody.innerHTML = '';
+
+            let urlPath = '';
+            let $tr = '';
+
+            if ($charButton.dataset.id === 'order') {
+                urlPath = './products-order-chart';
+                $tr = new DOMParser().parseFromString( `
+                <table>
+                <thead>
+                <tr class="tr">
+                    <th class="th">옵션</th>
+                    <th class="th -spring"></th>
+                    <th class="th">거래가</th>
+                    <th class="th">거래일</th>
+                </tr>
+                </thead>
+                </table>`, 'text/html').querySelector('tr');
+            } else if ($charButton.dataset.id === 'sell') {
+                urlPath = './products-sell-chart';
+                $tr = new DOMParser().parseFromString( `
+                <table>
+                <thead>
+                <tr class="tr">
+                    <th class="th">옵션</th>
+                    <th class="th -spring"></th>
+                    <th class="th">판매 희망가</th>
+                    <th class="th">수량</th>
+                </tr>
+                </thead>
+                </table>`, 'text/html').querySelector('tr');
+            } else if ($charButton.dataset.id === 'buy') {
+                urlPath = './products-buy-chart';
+                $tr = new DOMParser().parseFromString( `
+                <table>
+                <thead>
+                <tr class="tr">
+                    <th class="th">옵션</th>
+                    <th class="th -spring"></th>
+                    <th class="th">구매 희망가</th>
+                    <th class="th">수량</th>
+                </tr>
+                </thead>
+                </table>`, 'text/html').querySelector('tr');
+            }
+            $thead.innerHTML = '';
+            $thead.append($tr);
+
+            if (urlPath) {
+                const xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = () => {
+                    if (xhr.readyState !== XMLHttpRequest.DONE) {
+                        return;
+                    }
+                    if (xhr.status < 200 || xhr.status >= 300) {
+                        Dialog.defaultOk('오류', '요청을 전송하는 도중 오류가 발생하였습니다. 잠시 후 다시 시도해 주세요.', ($dialog) => Dialog.hide($dialog));
+                        return;
+                    }
+
+                    const response = JSON.parse(xhr.responseText);
+                    for (const item of response) {
+                        const $tr = new DOMParser().parseFromString( `
+                     <table>
+                     <tbody>
+                        <tr class="tr bid">
+                            <td class="td">${item['sizeType']}</td>
+                            <td class="td -spring"></td>
+                            <td class="td">${item[$charButton.dataset.id === 'order' ? 'orderPrice' : $charButton.dataset.id  === 'sell' ? 'sellPrice' : 'buyPrice'].toLocaleString() + '원'}</td>
+                            <td class="td">${$charButton.dataset.id  === 'order' ? item['orderDate'] : item[$charButton.dataset.id  === 'sell' ? 'sellCount' : 'buyCount']}</td>
+                        </tr>
+                        </tbody>
+                     </table>`, 'text/html').querySelector('tr');
+                        $tbody.append($tr);
+                    }
+                };
+                xhr.open('GET', `${urlPath}?id=${productId}`);
+                xhr.send();
+            }
+        };
+    });
+}
+//endregion
 
 
 
