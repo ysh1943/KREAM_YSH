@@ -431,7 +431,7 @@ const $dialog = document.querySelector('.dialog');
             let $tr = '';
 
             if ($charButton.dataset.id === 'order') {
-                urlPath = './products-order-chart';
+                urlPath = './product-order-chart';
                 $tr = new DOMParser().parseFromString( `
                 <table>
                 <thead>
@@ -444,7 +444,7 @@ const $dialog = document.querySelector('.dialog');
                 </thead>
                 </table>`, 'text/html').querySelector('tr');
             } else if ($charButton.dataset.id === 'sell') {
-                urlPath = './products-sell-chart';
+                urlPath = './product-sell-chart';
                 $tr = new DOMParser().parseFromString( `
                 <table>
                 <thead>
@@ -457,7 +457,7 @@ const $dialog = document.querySelector('.dialog');
                 </thead>
                 </table>`, 'text/html').querySelector('tr');
             } else if ($charButton.dataset.id === 'buy') {
-                urlPath = './products-buy-chart';
+                urlPath = './product-buy-chart';
                 $tr = new DOMParser().parseFromString( `
                 <table>
                 <thead>

@@ -26,7 +26,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @RequestMapping(value = "/products", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+    @RequestMapping(value = "/product", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getProducts(@SessionAttribute(value = "user", required = false) UserEntity user,
                                     @RequestParam(value = "id", required = false) Integer id) {
         ModelAndView modelAndView = new ModelAndView();
@@ -44,12 +44,12 @@ public class ProductController {
             modelAndView.addObject("user", user);
             modelAndView.addObject("images", images);
             modelAndView.addObject("product", product);
-            modelAndView.setViewName("product-detail/products");
+            modelAndView.setViewName("product/product");
         }
         return modelAndView;
     }
 
-    @RequestMapping(value = "/products",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/product",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getSizeByProduct(@RequestParam(value = "id", required = false) Integer id) throws IOException {
         List<SizeDTO> sizes = this.productService.getSizeByProductId(id);
@@ -71,7 +71,7 @@ public class ProductController {
         return response.toString();
     }
 
-    @RequestMapping(value = "/products-order-chart", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/product-order-chart", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getOrderChat(@RequestParam(value = "id", required = false) Integer id) {
         List<OrderChartDTO> orderCharts = this.productService.getOrderChartByProductId(id);
@@ -87,7 +87,7 @@ public class ProductController {
         return response.toString();
     }
 
-    @RequestMapping(value = "/products-sell-chart", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/product-sell-chart", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getSellBidChart(@RequestParam(value = "id", required = false) Integer id) {
         List<SellBidChartDTO> sellBidCharts = this.productService.getSellBidChartByProductId(id);
@@ -102,7 +102,7 @@ public class ProductController {
         return response.toString();
     }
 
-    @RequestMapping(value = "/products-buy-chart", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/product-buy-chart", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getBuyBidChart(@RequestParam(value = "id", required = false) Integer id) {
         List<BuyBidChartDTO> buyBidCharts = this.productService.getBuyBidChartByProductId(id);
