@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+          name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <title>KREAM</title>
+    <link rel="stylesheet" th:href="@{/user/styles/common.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/my/styles/buying.css}" type="text/css">
+    <script defer th:src="@{/assets/scripts/common.js}" type="text/javascript"></script>
+    <script defer th:src="@{/my/scripts/buying.js}" type="text/javascript"></script>
+</head>
+<body>
+<header id="header">
+    <div class="header-container">
+        <div class="top-inner">
+            <ul class="top-list">
+                <li class="-spring"></li>
+                <li class="top-item">
+                    <a class="top-link" th:href="@{'/admin/'}"
+                       th:if="${session.user != null && session.user.isAdmin()}">관리자 페이지</a>
+                </li>
+                <li class="top-item">
+                    <a class="top-link" th:href="${session.user == null} ? '/login' : '/my'">마이페이지</a>
+                </li>
+                <li class="top-item">
+                    <a class="top-link" th:href="${session.user == null} ? '/login' : '/logout'"
+                       th:text="${session.user == null} ? '로그인' : '로그아웃'"></a>
+                </li>
+            </ul>
+        </div>
+        <div class="main-inner">
+            <a class="logo" th:href="@{'/'}">
+                <img alt="logo" class="logo-icon" src="/assets/images/logo.png">
+            </a>
+            <div class="-spring"></div>
+            <nav class="menu">
+                <ul class="menu-list">
+                    <li class="menu-item">
+                        <a class="menu-link bold" th:href="@{'/'}">HOEM</a>
+                    </li>
+                    <li class="menu-item">
+                        <a class="menu-link" th:href="@{'/shop'}">SHOP</a>
+                    </li>
+                </ul>
+            </nav>
+            <a class="search" th:href="@{'/search'}">
+                <img alt="search-icon" class="search-icon" src="/home/assets/images/search-icon.png">
+            </a>
+            <a class="cart" th:href="${session.user == null} ? '/login' : '/cart'">
+                <img alt="cart-icon" class="cart-icon" src="/home/assets/images/cart_icon.png">
+            </a>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="content">
+        <div class="snb_area">
+            <a class="nuxt-link-active" href="/my/">
+                <h2 class="title">마이 페이지</h2>
+            </a>
+            <nav class="snb">
+                <div class="snb_list">
+                    <strong class="snb_title">쇼핑정보</strong>
+                    <ul class="snb_menu">
+                        <li class="menu_item">
+                            <a class="menu_link requestPage" href="/my/buying">구매 내역</a>
+                        </li>
+                        <li class="menu_item">
+                            <a class="menu_link" href="/my/selling">판매 내역</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="snb_list">
+                    <strong class="snb_title">내 정보</strong>
+                    <ul class="snb_menu">
+                        <li class="menu_item">
+                            <a class="menu_link" href="/my/profile">로그인 정보</a>
+                        </li>
+                        <li class="menu_item">
+                            <a class="menu_link" href="/my/address">주소록</a>
+                        </li>
+                        <li class="menu_item">
+                            <a class="menu_link" href="/my/account">판매 정산 계좌</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <div class="content_area">
+            <div class="my_Buying">
+                <div class="content_title">
+                    <div class="title">
+                        <h3>구매 내역</h3>
+                    </div>
+                </div>
+                <div class="content_list">
+                    <div class="bidding-header">
+                        <div class="bidding">
+                            <div class="purchase_list">
+                                <div class="tab_item tab_on">
+                                    <a href="#" class="tab_link">
+                                        <di class="tab_box">
+                                            <dt class="title">구매입찰</dt>
+                                            <dd class="count">1</dd>
+                                        </di>
+                                    </a>
+                                </div>
+                                <div class="tab_item">
+                                    <a href="#" class="tab_link">
+                                        <di class="tab_box">
+                                            <dt class="title">진행중</dt>
+                                            <dd class="count">0</dd>
+                                        </di>
+                                    </a>
+                                </div>
+                                <div class="tab_item">
+                                    <a href="#" class="tab_link">
+                                        <di class="tab_box">
+                                            <dt class="title">종료</dt>
+                                            <dd class="count">0</dd>
+                                        </di>
+                                    </a>
+                                </div>
+
+
+                            </div>
+                            <div class="purchase_head"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -16,5 +16,6 @@ public class AccountEntity {
     private String accountNumber;
     private String accountOwner;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private boolean isDeleted;
 }

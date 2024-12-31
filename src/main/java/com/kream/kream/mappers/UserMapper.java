@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface UserMapper {
 
+    int selectUserCount();
+
     UserEntity[] selectUser();
 
     UserEntity[] selectUserBySearch(@Param("filter") String filter,
@@ -16,6 +18,8 @@ public interface UserMapper {
     int deleteUserByEmail(@Param("email") String email);
 
     int insertUser(UserEntity user);
+
+    UserEntity selectUserById(@Param("id") int id);
 
     UserEntity selectUserByEmail(@Param("email") String email);
 

@@ -26,7 +26,7 @@
         <div class="-spring"></div>
         <div class="header-right">
             <nav class="link-container">
-                <a th:href="@{/user/logout}"><i class="icon fa-solid fa-arrow-right-from-bracket"></i></a>
+                <a th:href="@{/logout}"><i class="icon fa-solid fa-arrow-right-from-bracket"></i></a>
             </nav>
         </div>
     </div>
@@ -73,7 +73,7 @@
                         <th>닉네임</th>
                         <th>거래량</th>
                         <th>가입일시</th>
-                        <th>계정 상태</th>
+                        <th style="width: 10rem;">계정 상태</th>
                         <th style="width: 4rem;">관리</th>
                     </tr>
                     </thead>
@@ -87,7 +87,7 @@
                         <td th:text="${user.getContact()}"></td>
                         <td th:text="${user.getNickname()}"></td>
                         <td>-</td>
-                        <td th:text="${#temporals.format(user.getCreatedAt(), 'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td th:text="${#temporals.format(user.getCreatedAt(), 'yyyy-MM-dd')}"></td>
                         <td class="suspendTd">
                             <span th:if="${user.isSuspended() == false}">활동</span>
                             <span th:if="${user.isSuspended() == true}">정지</span>

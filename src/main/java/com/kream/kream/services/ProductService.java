@@ -61,7 +61,7 @@ public class ProductService {
         if (id == null || id < 1) {
             return new ArrayList<>();
         }
-        return this.orderMapper.selectOrderById(id);
+        return this.orderMapper.selectOrderByProductId(id);
    }
 
    public List<SellBidChartDTO> getSellBidChartByProductId(Integer id) {

@@ -1,18 +1,33 @@
 <!doctype html>
+<<<<<<< HEAD
+<html lang="ko">
+<head>
+  <script defer th:src="@{/user/scripts/my.js}" type="text/javascript"></script>
+</head>
+<div class="dialog" th:with="user = ${session.user}">
+  <h1 class="title">회원 페이지</h1>
+  <span class="text">
+  <span class="bold" th:text="${user.getNickname()}"></span>님 반갑습니다!</span>
+  <span class="text">소셜 로그인: <span class="bold" th:text="${user.getSocialTypeCode() == null ? '일반 계정' : user.getSocialTypeCode()}"></span></span>
+  <span class="text">소셜 식별자: <span class="bold" th:text="${user.getSocialId() == null ? '해당 없음' : user.getSocialId()}"></span></span>
+  <a class="logout-anchor" target="_self" th:href="@{/user/logout}">로그아웃</a>
+  <a class="cancel-anchor" href="#" rel="cancel">탈퇴하기</a>
+</div>
+=======
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
           name="viewport">
     <meta content="ie=edge" http-equiv="X-UA-Compatible">
-    <title>login</title>
+    <title>Kream</title>
     <link rel="stylesheet" th:href="@{/my/styles/profile.css}" type="text/css">
     <link rel="stylesheet" th:href="@{/user/styles/common.css}" type="text/css">
     <script defer th:src="@{/my/scripts/profile.js}" type="text/javascript"></script>
     <script defer th:src="@{/assets/scripts/common.js}" type="text/javascript"></script>
 
 </head>
-<body th:if="${session.user != null}">
+<body>
 <header id="header">
     <div class="header-container">
         <div class="top-inner">
@@ -55,10 +70,11 @@
         </div>
     </div>
 </header>
+
 <div class="container">
     <div class="content">
         <div class="snb_area">
-            <a class="nuxt-link-active" href="#">
+            <a class="nuxt-link-active" href="/my/">
                 <h2 class="title">마이 페이지</h2>
             </a>
             <nav class="snb">
@@ -66,13 +82,10 @@
                     <strong class="snb_title">쇼핑정보</strong>
                     <ul class="snb_menu">
                         <li class="menu_item">
-                            <a class="menu_link" href="#">구매 내역</a>
+                            <a class="menu_link" href="/my/buying">구매 내역</a>
                         </li>
                         <li class="menu_item">
-                            <a class="menu_link" href="#">판매 내역</a>
-                        </li>
-                        <li class="menu_item">
-                            <a class="menu_link" href="#">관심</a>
+                            <a class="menu_link" href="/my/selling">판매 내역</a>
                         </li>
                     </ul>
                 </div>
@@ -80,16 +93,13 @@
                     <strong class="snb_title">내 정보</strong>
                     <ul class="snb_menu">
                         <li class="menu_item">
-                            <a class="menu_link requestPage" href="#">로그인 정보</a>
+                            <a class="menu_link requestPage" href="/my/profile">로그인 정보</a>
                         </li>
                         <li class="menu_item">
-                            <a class="menu_link" href="#">프로필 관리</a>
+                            <a class="menu_link" href="/my/address">주소록</a>
                         </li>
                         <li class="menu_item">
-                            <a class="menu_link" href="#">주소록</a>
-                        </li>
-                        <li class="menu_item">
-                            <a class="menu_link" href="#">결제 정보</a>
+                            <a class="menu_link" href="/my/account">판매 정산 계좌</a>
                         </li>
                     </ul>
                 </div>
@@ -108,29 +118,30 @@
                         <div class="unit">
                             <h5 class="title">이메일 주소</h5>
                             <div class="unit_content">
-                                <p class="desc email"></p>
-
+                                <p class="desc email" th:text="${user.getEmail()}"></p>
                             </div>
                         </div>
                         <div class="unit">
                             <h5 class="title">비밀번호</h5>
                             <div class="unit_content">
-                                <p class="desc password"></p>
+                                <p class="desc password" th:text="${user.getPassword()}"></p>
                                 <button class="button password" type="button">변경</button>
                             </div>
                         </div>
                         <form class="modify">
+                            <input type="hidden" name="email" th:value="${user.getEmail()}">
                             <h5 class="title">비밀번호 변경</h5>
                             <div class="input_box">
                                 <h6 class="input_title">이전 비밀번호</h6>
-                                <label class="input_item" data-id="oldPassword">
-                                    <input name="oldPassword" class="text" placeholder="영문, 숫자, 특수문자 조합 8-16자" type="password">
+                                <label class="input_item" data-id="password">
+                                    <input name="password" class="text" placeholder="영문, 숫자, 특수문자 조합 8-16자" type="password">
                                 </label>
                             </div>
                             <div class="input_box">
-                                <h6 class="input_title">새 비밀번호</h6>
-                                <label class="input_item" data-id="password">
-                                    <input name="password" class="text" placeholder="영문, 숫자, 특수문자 조합 8-16자" type="password">
+                                <h6 class="input_title _text">새 비밀번호</h6>
+                                <label class="input_item --obj-label" data-id="newPassword">
+                                    <input name="newPassword" class="text" placeholder="영문, 숫자, 특수문자 조합 8-16자" type="password">
+                                    <span class="_warning"></span>
                                 </label>
                             </div>
                             <div class="modify_btn">
@@ -144,7 +155,7 @@
                         <div class="unit">
                             <h5 class="title">휴대폰 번호</h5>
                             <div class="unit_content">
-                                <p class="desc password"></p>
+                                <p class="desc password" th:text="${user.getContact()}"></p>
                                 <button class="button" type="button">변경</button>
                             </div>
                         </div>
@@ -152,7 +163,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 
@@ -209,4 +219,5 @@
     </div>
 </footer>
 </body>
+>>>>>>> 94151e72259af2a048aa91a4d94dbab6e9b2e62c
 </html>
