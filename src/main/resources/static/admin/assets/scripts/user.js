@@ -30,6 +30,7 @@ const sendPatchRequest = (email, suspend) => {
         if (xhr.readyState !== XMLHttpRequest.DONE) {
             return;
         }
+        Loading.hide();
         if (xhr.status < 200 || xhr.status >= 300) {
             Dialog.show({
                 title: '오류',
@@ -64,5 +65,6 @@ const sendPatchRequest = (email, suspend) => {
     };
     xhr.open('PATCH', '/admin/user');
     xhr.send(formData);
+    Loading.show(0);
 };
 

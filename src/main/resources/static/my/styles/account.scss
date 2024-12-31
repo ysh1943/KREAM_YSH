@@ -1,0 +1,527 @@
+@charset "UTF-8";
+@import "../../user/styles/global";
+
+#header {
+  background-color: #ffffff;
+  top: 0;
+
+  width: 100%;
+  height: 6rem;
+  position: sticky;
+  //border-bottom: 0.0625rem solid #a0a0a0;
+  z-index: 9;
+
+  > .header-container {
+    width: 100%;
+    max-width: 80rem;
+    margin: 0 auto;
+
+    > .top-inner {
+      height: 1.5rem;
+
+      > .top-list {
+        @include flex(row, center, flex-start, 1.5rem);
+        box-sizing: border-box;
+        padding: 1rem 1.5rem;
+        font-size: 0.75rem;
+
+        > .top-item > .top-link {
+          color: #745b39;
+          text-decoration: none;
+        }
+      }
+    }
+
+    > .main-inner {
+      @include flex(row, center, flex-start, 1.6rem);
+      height: 4.5rem;
+      box-sizing: border-box;
+      padding: 1.25rem 1.5rem;
+
+      > .logo > .logo-icon {
+        width: 10rem;
+      }
+
+      > .menu > .menu-list {
+        @include flex(row, center, flex-start, 1.6rem);
+
+        > .menu-item > .menu-link {
+          font-size: 1.15rem;
+          text-decoration: none;
+          color: inherit;
+
+          &.bold {
+            font-weight: 700;
+          }
+        }
+      }
+
+      > .search > .search-icon,
+      > .cart > .cart-icon {
+        width: 1.3rem;
+        line-height: 1;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+
+.container {
+  @include flex(column, center, felx-start, 0);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  padding: 0;
+
+  > .content {
+    @include flex(row, flex-start, flex-start,);
+    top: 0;
+    left: 0;
+    position: relative;
+    height: 454px;
+    padding: 40px 40px 160px 40px;
+    margin: 0 auto;
+    max-width: 1280px;
+    width: 100%;
+
+    > .snb_area {
+      @include flex(column, center, flex-start,);
+      margin-right: 20px;
+      width: 180px;
+      height: 100%;
+      padding: 0;
+      box-sizing: border-box;
+
+      > .nuxt-link-active {
+        text-decoration: none;
+        color: inherit;
+        width: 100%;
+
+        > .title {
+          font-size: 24px;
+          font-weight: 700;
+          letter-spacing: -.15px;
+          line-height: 29px;
+          padding-bottom: 30px;
+          margin: 0;
+          box-sizing: border-box;
+
+        }
+      }
+
+      > .snb {
+        box-sizing: border-box;
+        width: 100%;
+
+        > .snb_list {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+
+          &:nth-child(2) {
+            margin-top: 40px;
+          }
+
+          > .snb_title {
+            display: inline-block;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -.27px;
+            line-height: 22px;
+            margin-bottom: 12px;
+            vertical-align: top;
+            box-sizing: border-box;
+          }
+
+          > .snb_menu {
+            list-style-type: none;
+            box-sizing: border-box;
+            gap: 1rem;
+
+            > .menu_item {
+              box-sizing: border-box;
+              width: 100%;
+
+              &:nth-child(n+2) {
+                margin-top: 12px;
+              }
+
+              > .menu_link {
+                color: rgba(34, 34, 34, .5);
+                font-size: 15px;
+                letter-spacing: -.15px;
+                line-height: 18px;
+                text-decoration: none;
+
+                &.requestPage {
+                  color: #222;
+                  font-weight: 700;
+                }
+
+
+              }
+            }
+          }
+        }
+      }
+    }
+
+    > .content_area {
+      flex: 1;
+
+      > .my_profile {
+        margin: 0;
+        padding-top: 20px;
+        box-sizing: border-box;
+        width: 480px;
+
+        > .content_title {
+          padding-bottom: 16px;
+          box-sizing: border-box;
+
+          > .title {
+            font-size: 24px;
+            letter-spacing: -.36px;
+
+            > h3 {
+              font-size: inherit;
+              line-height: 29px;
+              box-sizing: border-box;
+              margin: 0;
+              padding: 0;
+
+            }
+          }
+        }
+
+        > .registered {
+          @include flex(row, center, center);
+          background-color: #fafafa;
+          border: 1px solid #ebebeb;
+          border-radius: 10px;
+          box-sizing: border-box;
+          justify-content: space-between;
+          margin-top: 21px;
+          overflow: hidden;
+          padding: 15px 15px 16px;
+
+          > .box {
+            margin: 0;
+            padding: 0;
+
+            > .box_title {
+              font-size: 12px;
+              font-weight: 700;
+              letter-spacing: -.5px;
+              line-height: 14px;
+              margin-bottom: 5px;
+              box-sizing: border-box;
+
+
+            }
+          }
+
+          > .delete {
+            color: #909090;
+            cursor: pointer;
+            font-size: 14px;
+            height: 17px;
+            margin-left: 10px;
+            width: 25px;
+            box-sizing: border-box;
+          }
+        }
+
+        > .accountregistration {
+          margin: 0;
+          box-sizing: border-box;
+
+          > .input_box {
+            position: relative;
+            padding: 16px 0 14px 0;
+            margin: 0;
+            box-sizing: border-box;
+            width: 480px;
+
+            > .input_title {
+              line-height: 14px;
+              font-size: 13px;
+              letter-spacing: -.7px;
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+
+            }
+
+            > .--obj-label {
+              position: relative;
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+
+              > .input_txt {
+                padding: 6px 0 7px 0;
+                border-bottom: 1px solid #ebebeb;
+                font-size: 15px;
+                letter-spacing: -.15px;
+                line-height: 22px;
+                width: 100%;
+                background-color: transparent;
+
+              }
+
+              > .btn {
+                @include flex(row, center, center,);
+                background-color: #ffffff;
+                cursor: pointer;
+                vertical-align: middle;
+                outline: none;
+                box-sizing: border-box;
+                line-height: 0;
+                margin-top: -12px;
+                position: absolute;
+                right: 0;
+                top: 50%;
+
+                > .image {
+                  box-sizing: border-box;
+                  cursor: pointer;
+                  text-align: center;
+
+                }
+              }
+
+              > .layerDropdown {
+                top: 25px;
+                background-color: #ffffff;
+                border: 1px solid #ebebeb;
+                position: absolute;
+                bottom: auto;
+                left: 0;
+                z-index: 10;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                display: none;
+
+                > .layer-background {
+                  bottom: 0;
+                  height: 100%;
+                  left: 0;
+                  position: absolute;
+                  right: 0;
+                  top: 0;
+                  width: 100%;
+                  margin: 0;
+                  padding: 0;
+                  box-sizing: border-box;
+
+                }
+
+                > .layer_container {
+                  box-shadow: none;
+                  left: auto;
+                  position: relative;
+                  top: auto;
+                  transform: none;
+                  width: 100%;
+                  overflow: hidden;
+                  margin: 0;
+                  padding: 0;
+
+                  > .layer_content {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+
+                    > .drop_list {
+                      max-height: 240px;
+                      overflow-y: auto;
+                      box-sizing: border-box;
+
+                      > .drop_item {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+
+                        > .drop_link {
+                          color: rgba(34, 34, 34, .8);
+                          display: block;
+                          font-size: 13px;
+                          letter-spacing: -.07px;
+                          padding: 11px 50px 10px 16px;
+                          position: relative;
+
+                          text-decoration: none;
+                          box-sizing: border-box;
+
+                        }
+                      }
+                    }
+                  }
+                }
+
+                &.-visible {
+                  display: block;
+                }
+              }
+
+              &.-invalid {
+                $color: #e74c3c;
+
+                > ._warning {
+                  color: #e74c3c;
+                  display: block;
+                  font-size: 0.8rem;
+                }
+              }
+            }
+          }
+
+          > .registrationbtn {
+            @include flex(row, center, center);
+            padding-top: 20px;
+            box-sizing: border-box;
+            width: 480px;
+
+
+            > .button {
+              border-radius: 10px;
+              width: 102px;
+              background-color: rgba(34, 34, 34, .2);
+              color: #ffffff;
+              font-weight: 400;
+              height: 42px;
+              cursor: pointer;
+            }
+
+            > .modifybtn {
+              border-radius: 10px;
+              width: 102px;
+              background-color: rgba(34, 34, 34, .2);
+              color: #ffffff;
+              font-weight: 400;
+              height: 42px;
+              cursor: pointer;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+#footer {
+  width: 100vw;
+
+  > .footer-container {
+    width: 100%;
+    max-width: 80rem;
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 2.5rem;
+    border-top: 0.0625rem solid #eeeeee;
+
+    > .service-area {
+      @include flex(row, flex-start, flex-start, 1rem);
+
+      > .footer-menu {
+        @include flex(row, center, flex-start, 5rem);
+
+        > .menu-box {
+          @include flex(column, flex-start, flex-start, 0.9rem);
+
+          > .menu-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: inherit;
+          }
+
+          > .menu-list {
+            @include flex(column, flex-start, flex-strart, 0.7rem);
+
+            > .menu-item {
+              font-size: 0.8rem;
+              color: #22222280;
+            }
+          }
+        }
+      }
+
+      > .customer-service {
+        @include flex(column, flex-start, flex-start, 0.9rem);
+
+        > .service-title {
+          font-size: 0.9rem;
+          font-weight: 700;
+          color: inherit;
+        }
+
+        > .service-time {
+          @include flex(column, flex-start, flex-start, 0.7rem);
+
+          > .time-term {
+            font-size: 0.8rem;
+            color: #22222280;
+          }
+        }
+
+        > .service-noti {
+          font-size: 0.8rem;
+        }
+      }
+    }
+
+    > .corporation-are {
+      @include flex(column, flex-start, flex-start, 0.5rem);
+      margin-top: 3rem;
+      padding-top: 2rem;
+      box-sizing: border-box;
+      border-top: 0.0625rem solid #eeeeee;
+
+      > .term-list {
+        @include flex(row, flex-start, flex-start, 1.5rem);
+
+        > .term-item {
+          font-size: 0.8rem;
+          font-weight: 400;
+          color: #000000;
+
+          &.bold {
+            font-weight: 700;
+          }
+        }
+      }
+
+      > .business-info {
+        width: 35rem;
+        line-height: 1rem;
+        font-size: 0.7rem;
+        color: #22222280;
+      }
+    }
+
+    > .notice-guarantee {
+      @include flex(column, flex-start, flex-start, 0.2rem);
+      margin-top: 2rem;
+      font-size: 0.7rem;
+
+      > .title {
+        font-weight: 700;
+      }
+
+      > .description {
+        color: #22222280;
+      }
+    }
+
+    > .notice-area {
+      width: 35rem;
+      font-size: 0.7rem;
+      color: #22222280;
+      margin-top: 1rem;
+    }
+  }
+}

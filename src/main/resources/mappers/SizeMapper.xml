@@ -45,6 +45,14 @@
         WHERE `size`.`product_id` = #{id}
         GROUP BY `size`.`type`
     </select>
+    <insert id="insertSize"
+            useGeneratedKeys="true"
+            keyColumn="id"
+            keyProperty="id"
+            parameterType="com.kream.kream.entities.SizeEntity">
+        INSERT INTO `kream`.`size` (`id`, `product_id`, `type`)
+        VALUES (#{id}, #{productId}, #{type})
+    </insert>
 
     <select id="selectSellBidChartByProductId" resultType="com.kream.kream.dtos.SellBidChartDTO">
         SELECT `size`.`type`        AS `sizeType`,

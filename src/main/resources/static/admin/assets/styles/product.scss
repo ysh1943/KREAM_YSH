@@ -101,6 +101,11 @@
           color: #ffffff;
           cursor: pointer;
           padding: 0.4rem 0.6rem;
+
+          &:hover {
+            background-color: #222;
+            color: #ffffff;
+          }
         }
       }
 
@@ -119,6 +124,7 @@
 
         > thead > tr > th {
           border: 1px solid #ddd;
+          font-weight: 800;
           text-align: center;
           padding: 0.5rem 0.2rem;
           white-space: nowrap;
@@ -140,6 +146,7 @@
 
         > tbody > tr > td {
           border: 1px solid #ddd;
+          font-weight: 400;
           text-align: center;
           padding: 0.25rem;
           white-space: normal;
@@ -150,6 +157,11 @@
             color: #ffffff;
             cursor: pointer;
             padding: 0.4rem 0.6rem;
+
+            &:hover {
+              background-color: #222;
+              color: #ffffff;
+            }
           }
         }
       }
@@ -203,6 +215,122 @@
             border: 1px solid #ddd;
             padding: 0.3rem;
             margin: 0.3rem;
+          }
+        }
+
+        tr > .size-box {
+          @include flex(row, flex-start, flex-start);
+          border: none;
+          width: 20rem;
+          height: 10rem;
+          padding: 0.5rem;
+
+          > .clothes-container {
+            @include flex(column, flex-start, flex-start);
+
+            > .title {
+              font-size: 1rem;
+              font-weight: 500;
+              padding: 0.5rem;
+            }
+
+            > .size-container {
+              display: grid;
+              grid-template-columns: repeat(3, 1fr); /* 1줄에 3개씩 */
+              gap: 10px;
+              padding: 0.5rem;
+
+              > .check {
+                @include flex(column, center, center);
+                width: 5rem;
+                height: 2rem;
+                border: #222 solid 1px;
+                border-radius: 0.3rem;
+                background-color: #ffffff;
+
+                > input {
+                  display: none;
+                }
+
+                > input:checked + ._box {
+                  color: white;
+                }
+              }
+            }
+          }
+
+          > .line {
+            height: 8rem;
+            margin: 0.7rem 3rem;
+            border: #ddd solid 1px;
+          }
+
+          > .shoes-container {
+            @include flex(column, flex-start, flex-start);
+
+            > .title {
+              font-size: 1rem;
+              font-weight: 500;
+              padding: 0.5rem;
+            }
+
+            > .size-container {
+              display: grid;
+              grid-template-columns: repeat(5, 1fr); /* 1줄에 3개씩 */
+              gap: 10px;
+              padding: 0.5rem;
+
+              > .check {
+                @include flex(column, center, center);
+                width: 5rem;
+                height: 2rem;
+                border: #222 solid 1px;
+                border-radius: 0.3rem;
+                background-color: #ffffff;
+
+                > input {
+                  display: none;
+                }
+
+                > input:checked + ._box {
+                  color: white;
+                }
+              }
+            }
+          }
+
+          > .oneSize-container {
+            @include flex(column, flex-start, flex-start);
+
+            > .title {
+              font-size: 1rem;
+              font-weight: 500;
+              padding: 0.5rem;
+            }
+
+            > .size-container {
+              display: grid;
+              grid-template-columns: repeat(5, 1fr); /* 1줄에 3개씩 */
+              gap: 10px;
+              padding: 0.5rem;
+
+              > .check {
+                @include flex(column, center, center);
+                width: 5rem;
+                height: 2rem;
+                border: #222 solid 1px;
+                border-radius: 0.3rem;
+                background-color: #ffffff;
+
+                > input {
+                  display: none;
+                }
+
+                > input:checked + ._box {
+                  color: white;
+                }
+              }
+            }
           }
         }
 

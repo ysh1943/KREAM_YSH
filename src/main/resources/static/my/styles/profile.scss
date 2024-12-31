@@ -66,7 +66,6 @@
   }
 }
 
-
 .container {
   @include flex(column, center, felx-start, 0);
   background-position: center;
@@ -243,6 +242,7 @@
                   overflow: hidden;
                   padding-bottom: 8px;
                   padding-top: 8px;
+                  margin: 0;
                   text-overflow: ellipsis;
                   white-space: nowrap;
                 }
@@ -311,7 +311,35 @@
                     border-bottom: 1px solid #ebebeb;
                     width: 100%;
                   }
+
+                  &.--obj-label {
+                    @include flex(column, flex-start, center);
+                    padding: 10px 0 0 0;
+                    width: 100%;
+
+                    &.-invalid {
+                      $color: #e74c3c;
+
+                      > .text:not(:disabled) {
+                        border-color: $color !important;
+                        font-size: 15px;
+                        letter-spacing: -.15px;
+                        line-height: 22px;
+                        padding: 8px 0;
+                        width: 100%;
+                      }
+
+                      > ._warning {
+                        color: #e74c3c;
+                        display: block;
+                        font-size: 0.8rem;
+                      }
+                    }
+                  }
+
                 }
+
+
               }
 
               > .modify_btn {
