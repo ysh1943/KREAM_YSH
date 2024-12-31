@@ -19,6 +19,8 @@ public interface UserMapper {
 
     int insertUser(UserEntity user);
 
+    UserEntity selectUserById(@Param("id") int id);
+
     UserEntity selectUserByEmail(@Param("email") String email);
 
     UserEntity selectUserByContact(@Param("contact") String contact);

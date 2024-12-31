@@ -12,6 +12,9 @@
     </delete>
 
     <insert id="insertUser"
+            useGeneratedKeys="true"
+            keyColumn="id"
+            keyProperty="id"
             parameterType="com.kream.kream.entities.UserEntity">
         INSERT INTO `kream`.`user`(`email`, `password`, `contact`, `nickname`, `is_admin`, `is_suspended`,
                                    `is_verified`, `temporary_password_expiry`,`social_type_code`, `social_id`, `created_at`, `updated_at`,
@@ -21,11 +24,35 @@
                 #{updatedAt}, #{deletedAt})
     </insert>
 
+
+    <select id="selectUserById"
+            resultType="com.kream.kream.entities.UserEntity">
+        SELECT `id`                        AS `id`,
+               `email`                     AS `email`,
+               `password`                  AS `password`,
+               `contact`                   AS `contact`,
+               `nickname`                  AS `nickname`,
+               `is_admin`                  AS `isAdmin`,
+               `is_suspended`              AS `isSuspended`,
+               `is_verified`               AS `isVerified`,
+               `temporary_password_expiry` AS `temporaryPassword`,
+               `social_type_code`          AS `socialTypeCode`,
+               `social_id`                 AS `socialId`,
+               `created_at`                AS `createdAt`,
+               `updated_at`                AS `updatedAt`,
+               `deleted_at`                AS `deletedAt`
+        FROM `kream`.`user`
+        WHERE `id` = #{id}
+          AND `is_verified` = true
+          AND `deleted_at` IS NULL
+        ORDER BY `id` DESC
+
     <select id="selectUserCount" resultType="int">
         SELECT COUNT(*)
         FROM `kream`.`user`
         WHERE `deleted_at` IS NULL
           AND `is_verified` = 1
+
     </select>
     
     <select id="selectUser"
