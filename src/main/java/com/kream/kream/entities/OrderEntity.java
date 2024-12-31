@@ -22,23 +22,16 @@ public class OrderEntity {
         CANCELED,
     }
 
-    public enum PaymentState {
-        PENDING,
-        PAID,
-        FAILED,
-        REFUNDED,
-    }
     private int id;
     private int userId;
-    private int sellerBidId;
-    private int buyerBidId;
+    private String type;
+    private Integer sellerBidId;
+    private Integer buyerBidId;
+    private int price;
     private int addressId;
-    private int cardId;
     private String state;
-    private String paymentState;
     private String deliveryNote;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
-
 }

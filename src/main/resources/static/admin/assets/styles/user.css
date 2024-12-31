@@ -108,12 +108,14 @@
 }
 .main-container #main > .content[rel=user-list] > .tableForm > table > thead > tr > th {
   border: 1px solid #ddd;
+  font-weight: 800;
   text-align: center;
   padding: 0.5rem 0.2rem;
   white-space: nowrap;
 }
 .main-container #main > .content[rel=user-list] > .tableForm > table > tbody > tr > td {
   border: 1px solid #ddd;
+  font-weight: 400;
   text-align: center;
   padding: 0.25rem;
   white-space: normal;
@@ -131,6 +133,10 @@
   color: #ffffff;
   cursor: pointer;
   padding: 0.4rem 0.6rem;
+}
+.main-container #main > .content[rel=user-list] > .tableForm > table > tbody > tr > td > button[name=update]:hover {
+  background-color: #222;
+  color: #ffffff;
 }
 
 /*# sourceMappingURL=user.css.map */

@@ -10,11 +10,13 @@ import java.util.Base64;
 
 @Getter
 @Setter
-public class ProductDTO {
+public class ShopProductDTO {
     private int productId;
     private String productNameEn;
     private String productNameKo;
     private String brand;
+    private String gender;
+    private String color;
     private String category;
     private String categoryDetail;
     private LocalDate releaseDate;

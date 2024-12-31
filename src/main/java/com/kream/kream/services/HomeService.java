@@ -51,8 +51,8 @@ public class HomeService {
             if (product.getProductId() < 1) {
                 product.setProductId(1);
             }
-            if (product.getProductName() == null || product.getProductName().isEmpty() || product.getProductName().length() > 100) {
-                product.setProductName("상품명 없음");
+            if (product.getProductNameEn() == null || product.getProductNameEn().isEmpty() || product.getProductNameEn().length() > 100) {
+                product.setProductNameEn("상품명 없음");
             }
             if (product.getBrand() == null || product.getBrand().isEmpty() || product.getBrand().length() > 50) {
                 product.setBrand("브랜드명 없음");

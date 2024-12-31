@@ -21,10 +21,10 @@
                     <a class="top-link" th:if="${user != null && user.isAdmin()}" th:href="@{'/admin/'}">관리자 페이지</a>
                 </li>
                 <li class="top-item">
-                    <a class="top-link" th:href="${user == null} ? '/user/' : '/my'">마이페이지</a>
+                    <a class="top-link" th:href="${user == null} ? '/login' : '/my'">마이페이지</a>
                 </li>
                 <li class="top-item">
-                    <a class="top-link" th:href="${user == null} ? '/user/' : '/user/logout'" th:text="${user == null} ? '로그인' : '로그아웃'"></a>
+                    <a class="top-link" th:href="${user == null} ? '/login' : '/logout'" th:text="${user == null} ? '로그인' : '로그아웃'"></a>
                 </li>
             </ul>
         </div>
@@ -78,7 +78,7 @@
                 <span class="product-text">
                     <span class="text-container">
                         <span class="brand" th:text="${popularProduct.getBrand()}"></span>
-                        <span class="product-name" th:text="${popularProduct.getProductName()}"></span>
+                        <span class="product-name" th:text="${popularProduct.getProductNameEn()}"></span>
                     </span>
                     <span class="price" th:text="${popularProduct.getLowestPrice() != 0 ? #numbers.formatInteger(popularProduct.getLowestPrice(), 0, 'COMMA') + '원' : '-'}"></span>
                 </span>
@@ -114,7 +114,7 @@
                 <span class="product-text">
                     <span class="text-container">
                         <span class="brand" th:text="${newProduct.getBrand()}"></span>
-                        <span class="product-name" th:text="${newProduct.getProductName()}"></span>
+                        <span class="product-name" th:text="${newProduct.getProductNameEn()}"></span>
                     </span>
                     <span class="price" th:text="${newProduct.getLowestPrice() != 0 ? #numbers.formatInteger(newProduct.getLowestPrice(), 0, 'COMMA') + '원' : '-'}"></span>
                 </span>
