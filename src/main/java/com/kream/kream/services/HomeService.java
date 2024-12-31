@@ -1,6 +1,7 @@
 package com.kream.kream.services;
 
 import com.kream.kream.dtos.ProductDTO;
+import com.kream.kream.mappers.OrderMapper;
 import com.kream.kream.mappers.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,17 +14,19 @@ import java.util.List;
 @Service
 public class HomeService {
     public final ProductMapper productMapper;
+    public final OrderMapper orderMapper;
 
     @Autowired
-    public HomeService(ProductMapper productMapper) {
+    public HomeService(ProductMapper productMapper, OrderMapper orderMapper) {
         this.productMapper = productMapper;
+        this.orderMapper = orderMapper;
     }
 
     //region 홈페이지 상품 나열
 
     // 인기 상품
     public List<ProductDTO> getPopularProducts() {
-        List<ProductDTO> popularProducts = this.productMapper.selectPopularProducts();
+        List<ProductDTO> popularProducts = this.orderMapper.selectPopularProducts();
         if (popularProducts == null || popularProducts.isEmpty()) {
             return new ArrayList<>();
         }
@@ -51,8 +54,8 @@ public class HomeService {
             if (product.getProductId() < 1) {
                 product.setProductId(1);
             }
-            if (product.getProductName() == null || product.getProductName().isEmpty() || product.getProductName().length() > 100) {
-                product.setProductName("상품명 없음");
+            if (product.getProductNameEn() == null || product.getProductNameEn().isEmpty() || product.getProductNameEn().length() > 100) {
+                product.setProductNameEn("상품명 없음");
             }
             if (product.getBrand() == null || product.getBrand().isEmpty() || product.getBrand().length() > 50) {
                 product.setBrand("브랜드명 없음");

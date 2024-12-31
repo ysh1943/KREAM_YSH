@@ -1,3 +1,4 @@
+@charset "UTF-8";
 .header-menu > .tabs > .tab > .-selected {
   border-bottom: 2px solid #222;
   font-weight: 500;
@@ -117,6 +118,10 @@
   cursor: pointer;
   padding: 0.4rem 0.6rem;
 }
+.main-container #main > .content[rel=product-list] > .searchForm > .delete:hover {
+  background-color: #222;
+  color: #ffffff;
+}
 .main-container #main > .content[rel=product-list] > table {
   width: 100%;
   max-width: 100%;
@@ -130,6 +135,7 @@
 }
 .main-container #main > .content[rel=product-list] > table > thead > tr > th {
   border: 1px solid #ddd;
+  font-weight: 800;
   text-align: center;
   padding: 0.5rem 0.2rem;
   white-space: nowrap;
@@ -148,6 +154,7 @@
 }
 .main-container #main > .content[rel=product-list] > table > tbody > tr > td {
   border: 1px solid #ddd;
+  font-weight: 400;
   text-align: center;
   padding: 0.25rem;
   white-space: normal;
@@ -158,6 +165,10 @@
   color: #ffffff;
   cursor: pointer;
   padding: 0.4rem 0.6rem;
+}
+.main-container #main > .content[rel=product-list] > table > tbody > tr > td > button[name=delete]:hover {
+  background-color: #222;
+  color: #ffffff;
 }
 .main-container #main > .content[rel=product-register] {
   width: 100%;
@@ -202,6 +213,158 @@
   border: 1px solid #ddd;
   padding: 0.3rem;
   margin: 0.3rem;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  justify-content: flex-start;
+  border: none;
+  width: 20rem;
+  height: 10rem;
+  padding: 0.5rem;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .clothes-container {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  justify-content: flex-start;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .clothes-container > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .clothes-container > .title {
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.5rem;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .clothes-container > .size-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 1줄에 3개씩 */
+  gap: 10px;
+  padding: 0.5rem;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .clothes-container > .size-container > .check {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  justify-content: center;
+  width: 5rem;
+  height: 2rem;
+  border: #222 solid 1px;
+  border-radius: 0.3rem;
+  background-color: #ffffff;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .clothes-container > .size-container > .check > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .clothes-container > .size-container > .check > input {
+  display: none;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .clothes-container > .size-container > .check > input:checked + ._box {
+  color: white;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .line {
+  height: 8rem;
+  margin: 0.7rem 3rem;
+  border: #ddd solid 1px;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .shoes-container {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  justify-content: flex-start;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .shoes-container > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .shoes-container > .title {
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.5rem;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .shoes-container > .size-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 1줄에 3개씩 */
+  gap: 10px;
+  padding: 0.5rem;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .shoes-container > .size-container > .check {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  justify-content: center;
+  width: 5rem;
+  height: 2rem;
+  border: #222 solid 1px;
+  border-radius: 0.3rem;
+  background-color: #ffffff;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .shoes-container > .size-container > .check > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .shoes-container > .size-container > .check > input {
+  display: none;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .shoes-container > .size-container > .check > input:checked + ._box {
+  color: white;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .oneSize-container {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  justify-content: flex-start;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .oneSize-container > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .oneSize-container > .title {
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.5rem;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .oneSize-container > .size-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 1줄에 3개씩 */
+  gap: 10px;
+  padding: 0.5rem;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .oneSize-container > .size-container > .check {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  justify-content: center;
+  width: 5rem;
+  height: 2rem;
+  border: #222 solid 1px;
+  border-radius: 0.3rem;
+  background-color: #ffffff;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .oneSize-container > .size-container > .check > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .oneSize-container > .size-container > .check > input {
+  display: none;
+}
+.main-container #main > .content[rel=product-register] > form tr > .size-box > .oneSize-container > .size-container > .check > input:checked + ._box {
+  color: white;
 }
 .main-container #main > .content[rel=product-register] > form tr > td > .row {
   align-items: flex-start;

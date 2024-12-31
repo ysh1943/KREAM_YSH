@@ -23,10 +23,10 @@
                     <a class="top-link" th:if="${user != null && user.isAdmin()}" th:href="@{'/admin/'}">관리자 페이지</a>
                 </li>
                 <li class="top-item">
-                    <a class="top-link" th:href="${user == null} ? '/user/' : '/my'">마이페이지</a>
+                    <a class="top-link" th:href="${user == null} ? '/login' : '/my'">마이페이지</a>
                 </li>
                 <li class="top-item">
-                    <a class="top-link" th:href="${user == null} ? '/user/' : '/user/logout'"
+                    <a class="top-link" th:href="${user == null} ? '/login' : '/logout'"
                        th:text="${user == null} ? '로그인' : '로그아웃'"></a>
                 </li>
             </ul>
@@ -64,64 +64,102 @@
         <form class="nav-form">
             <ul class="tabs">
                 <li class="tab">
-                    <button type="submit" class="button" name="filter" value="all" th:href="@{/shop}"
-                     th:classappend="${filter == 'all' ? '-selected' : ''}">전체</button>
+                    <a class="tab-item" th:href="@{/shop}"
+                       th:classappend="${filter == null ? '-selected' : ''}">전체</a>
                 </li>
                 <li class="tab">
-                    <button type="submit" class="button" name="filter" value="top"
-                            th:selected="${filter != null && filter.equals('top')}"
-                            th:classappend="${filter == 'top' ? '-selected' : ''}">상의
-                    </button>
+                    <a class="tab-item" th:href="@{/shop(filter=${'top'})}"
+                       th:selected="${filter != null && filter.equals('top')}"
+                       th:classappend="${filter == 'top' ? '-selected' : ''}">상의
+                    </a>
                 </li>
                 <li class="tab">
-                    <button type="submit" class="button" name="filter" value="bottom"
-                            th:selected="${filter != null && filter.equals('bottom')}"
-                            th:classappend="${filter == 'bottom' ? '-selected' : ''}">하의
-                    </button>
+                    <a class="tab-item" th:href="@{/shop(filter=${'bottom'})}"
+                       th:selected="${filter != null && filter.equals('bottom')}"
+                       th:classappend="${filter == 'bottom' ? '-selected' : ''}">하의
+                    </a>
                 </li>
                 <li class="tab">
-                    <button type="submit" class="button" name="filter" value="shoes"
-                            th:selected="${filter != null && filter.equals('shoes')}"
-                            th:classappend="${filter == 'shoes' ? '-selected' : ''}">신발
-                    </button>
+                    <a class="tab-item" th:href="@{/shop(filter=${'shoes'})}"
+                       th:selected="${filter != null && filter.equals('shoes')}"
+                       th:classappend="${filter == 'shoes' ? '-selected' : ''}">신발
+                    </a>
                 </li>
                 <li class="tab">
-                    <button type="submit" class="button" name="filter" value="accessories"
-                            th:selected="${filter != null && filter.equals('accessories')}"
-                            th:classappend="${filter == 'accessories' ? '-selected' : ''}">패션잡화
-                    </button>
+                    <a class="tab-item" th:href="@{/shop(filter=${'accessories'})}"
+                       th:selected="${filter != null && filter.equals('accessories')}"
+                       th:classappend="${filter == 'accessories' ? '-selected' : ''}">패션잡화
+                    </a>
                 </li>
             </ul>
         </form>
     </nav>
-    <div class="filter-container">
-        <ul class="filter-buttons">
-            <li class="filter-button">
-                <button type="button" name="filter" value="all">
+    <div class="category-tab">
+        <form>
+            <button type="submit" name="category" value="outer">
+                <img src="/shop/assets/images/popular-outer.webp" alt="이미지">
+                <span>아우터</span>
+            </button>
+            <button type="submit" name="category" value="hoodie">
+                <img src="/shop/assets/images/popular-hoodie.webp" alt="이미지">
+                <span>후드</span>
+            </button>
+            <button type="submit" name="category" value="sneakers">
+                <img src="/shop/assets/images/popular-sneakers.webp" alt="이미지">
+                <span>스니커즈</span>
+            </button>
+            <button type="submit" name="category" value="ballCap">
+                <img src="/shop/assets/images/popular-ballCap.webp" alt="이미지">
+                <span>볼캡</span>
+            </button>
+            <button type="submit" name="category" value="necklace">
+                <img src="/shop/assets/images/popular-necklace.webp" alt="이미지">
+                <span>목걸이</span>
+            </button>
+            <button type="submit" name="category" value="eyewear">
+                <img src="/shop/assets/images/popular-eyewear.webp" alt="이미지">
+                <span>아이웨어</span>
+            </button>
+            <button type="submit" name="brand" value="Nike">
+                <img src="/shop/assets/images/Nike.webp" alt="이미지">
+                <span>나이키</span>
+            </button>
+            <button type="submit" name="brand" value="Supreme">
+                <img src="/shop/assets/images/Supreme.webp" alt="이미지">
+                <span>슈프림</span>
+            </button>
+            <button type="submit" name="brand" value="The North Face">
+                <img src="/shop/assets/images/TheNorthFace.webp" alt="이미지">
+                <span>노스페이스</span>
+            </button>
+            <button type="submit" name="brand" value="Chrome Hearts">
+                <img src="/shop/assets/images/ChromeHearts.webp" alt="이미지">
+                <span>크롬하츠</span>
+            </button>
+        </form>
+    </div>
+    <div class="category-container">
+        <ul class="category-buttons">
+            <li class="category-button">
+                <button type="button">
                     <span>카테고리</span>
                     <i class="fa-solid fa-angle-down"></i>
                 </button>
             </li>
-            <li class="filter-button">
-                <button type="button" name="filter" value="top">
+            <li class="category-button">
+                <button type="button">
                     <span>성별</span>
                     <i class="fa-solid fa-angle-down"></i>
                 </button>
             </li>
-            <li class="filter-button">
-                <button type="button" name="filter" value="bottom">
+            <li class="category-button">
+                <button type="button">
                     <span>색상</span>
                     <i class="fa-solid fa-angle-down"></i>
                 </button>
             </li>
-            <li class="filter-button">
-                <button type="button" name="filter" value="shoes">
-                    <span>브랜드</span>
-                    <i class="fa-solid fa-angle-down"></i>
-                </button>
-            </li>
-            <li class="filter-button">
-                <button type="button" name="filter" value="shoes">
+            <li class="category-button">
+                <button type="button">
                     <span>가격대</span>
                     <i class="fa-solid fa-angle-down"></i>
                 </button>
@@ -132,19 +170,18 @@
         <div class="-spring"></div>
         <form class="column">
             <button type="button" class="sort-title">
-                <span>인기순</span>
+                <span class="popular-title">인기순</span>
+                <span class="new-title">발매일순</span>
                 <i class="fa-solid fa-bars"></i>
             </button>
             <ul class="sort-list -visible">
-                <li class="sort-item -selected">
-                    <button type="submit" name="sort" value="popular"
-                            th:selected="${sort != null && sort.equals('popular')}">인기순</button>
+                <li class="sort-item -selected popularButton">
+                    <button type="button">인기순</button>
                     <div class="-spring"></div>
                     <i class="icon fa-solid fa-check"></i>
                 </li>
-                <li class="sort-item">
-                    <button type="submit" name="sort" value="newest"
-                            th:selected="${sort != null && sort.equals('newest')}">최신순</button>
+                <li class="sort-item newButton">
+                    <button type="button">발매일순</button>
                     <div class="-spring"></div>
                     <i class="icon fa-solid fa-check"></i>
                 </li>
@@ -153,15 +190,15 @@
     </div>
     <div class="main-container">
         <div class="error-list">
-            <div class="error" th:if="${popularProducts.isEmpty()}">
+            <div class="error" th:if="${popularProducts.isEmpty() && newProducts.isEmpty()}">
                 <i class="fa-solid fa-triangle-exclamation"></i>
-                인기상품을 불러오는 데 문제가 발생했습니다. 새로 고침해주세요.
+                상품을 불러오는 데 문제가 발생했습니다. 새로 고침해주세요.
             </div>
         </div>
-        <ul class="shop-products-list">
+        <ul class="shop-products-list popular-list">
             <li class="products-item" th:if="${!popularProducts.isEmpty()}"
                 th:each="popularProduct : ${popularProducts}">
-                <a th:href="@{'/shop?keyword=' + ${popularProduct.getProductName()}}" class="product-image">
+                <a th:href="@{'/shop?keyword=' + ${popularProduct.getProductNameEn()}}" class="product-image">
                     <span class="trading" th:if="${popularProduct.getTransactionCount() != 0}">
                         <span class="text">거래</span>
                         <span class="text" th:text="${popularProduct.getTransactionCount()}"></span>
@@ -172,15 +209,244 @@
                 <span class="product-text">
                     <span class="text-container">
                         <span class="brand" th:text="${popularProduct.getBrand()}"></span>
-                        <span class="product-name" th:text="${popularProduct.getProductName()}"></span>
+                        <span class="product-name-en" th:text="${popularProduct.getProductNameEn()}"></span>
+                        <span class="product-name-ko" th:text="${popularProduct.getProductNameKo()}"></span>
                     </span>
                     <span class="price"
                           th:text="${popularProduct.getLowestPrice() != null ? #numbers.formatInteger(popularProduct.getLowestPrice(), 0, 'COMMA') + '원' : '-'}"></span>
+                    <span class="span">즉시 구매가</span>
+                </span>
+            </li>
+        </ul>
+        <ul class="shop-products-list new-list">
+            <li class="products-item" th:if="${newProducts != null}" th:each="newProduct : ${newProducts}">
+                <a th:href="@{'/products?id=' + ${newProduct.getProductId()}}" class="product-image">
+                    <span class="releaseDate" th:if="${newProduct.getReleaseDate() != null}">
+                        <span class="text">발매일</span>
+                        <span class="text"
+                              th:text="${#temporals.format(newProduct.getReleaseDate(), 'yy/MM/dd')}"></span>
+                    </span>
+                    <img class="image" alt="new-product-image" th:src="@{${newProduct.getBase64Image()}}">
+                </a>
+                <span class="product-text">
+                    <span class="text-container">
+                        <span class="brand" th:text="${newProduct.getBrand()}"></span>
+                        <span class="product-name-en" th:text="${newProduct.getProductNameEn()}"></span>
+                        <span class="product-name-ko" th:text="${newProduct.getProductNameKo()}"></span>
+                    </span>
+                    <span class="price"
+                          th:text="${newProduct.getLowestPrice() != 0 ? #numbers.formatInteger(newProduct.getLowestPrice(), 0, 'COMMA') + '원' : '-'}"></span>
+                    <span class="span">즉시 구매가</span>
                 </span>
             </li>
         </ul>
     </div>
 </main>
+<div class="overlay"></div>
+<div class="category-box">
+    <div class="filter-title">
+        <i class="icon fa-solid fa-x"></i>
+        <h2>필터</h2>
+    </div>
+    <form>
+        <div class="clothes-category-container">
+            <h3>카테고리</h3>
+            <h4>상의</h4>
+            <div class="categoryDetail">
+                <label class="check">
+                    <input type="checkbox" name="category" value="outer">
+                    <span class="_box">아우터</span>
+                </label>
+                <label class="check">
+                    <input type="checkbox" name="category" value="hoodie">
+                    <span class="_box">후드티</span>
+                </label>
+                <label class="check">
+                    <input type="checkbox" name="category" value="tshirt">
+                    <span class="_box">티셔츠</span>
+                </label>
+            </div>
+            <h4>하의</h4>
+            <div class="categoryDetail">
+                <label class="check">
+                    <input type="checkbox" name="category" value="pants">
+                    <span class="_box">바지</span>
+                </label>
+                <label class="check">
+                    <input type="checkbox" name="category" value="shorts">
+                    <span class="_box">반바지</span>
+                </label>
+                <label class="check">
+                    <input type="checkbox" name="category" value="skirt">
+                    <span class="_box">스커트</span>
+                </label>
+            </div>
+            <h4>신발</h4>
+            <div class="categoryDetail">
+                <label class="check">
+                    <input type="checkbox" name="category" value="sneakers">
+                    <span class="_box">스니커즈</span>
+                </label>
+                <label class="check">
+                    <input type="checkbox" name="category" value="boots">
+                    <span class="_box">부츠</span>
+                </label>
+                <label class="check">
+                    <input type="checkbox" name="category" value="loafers">
+                    <span class="_box">로퍼</span>
+                </label>
+            </div>
+            <h4>패션 잡화</h4>
+            <div class="categoryDetail">
+                <label class="check">
+                    <input type="checkbox" name="category" value="ballCap">
+                    <span class="_box">볼캡</span>
+                </label>
+                <label class="check">
+                    <input type="checkbox" name="category" value="necklace">
+                    <span class="_box">목걸이</span>
+                </label>
+                <label class="check">
+                    <input type="checkbox" name="category" value="eyewear">
+                    <span class="_box">아이웨어</span>
+                </label>
+            </div>
+        </div>
+        <div class="gender-category-container">
+            <h3>성별</h3>
+            <h4>성별</h4>
+            <div class="categoryDetail">
+                <label class="check">
+                    <input type="checkbox" name="gender" value="men">
+                    <span class="_box">남성</span>
+                </label>
+                <label class="check">
+                    <input type="checkbox" name="gender" value="women">
+                    <span class="_box">여성</span>
+                </label>
+                <label class="check">
+                    <input type="checkbox" name="gender" value="kids">
+                    <span class="_box">키즈</span>
+                </label>
+            </div>
+        </div>
+        <div class="color-category-container">
+            <h3>색상</h3>
+            <div class="categoryDetail">
+                <div class="color-tag">
+                    <label class="checkColor black">
+                        <input type="checkbox" name="color" value="black">
+                        <span class="_box"><i class="fa-solid fa-check"></i></span>
+                    </label>
+                    <span>블랙</span>
+                </div>
+                <div class="color-tag">
+                    <label class="checkColor gray">
+                        <input type="checkbox" name="color" value="gray">
+                        <span class="_box"><i class="fa-solid fa-check"></i></span>
+                    </label>
+                    <span>그레이</span>
+                </div>
+                <div class="color-tag">
+                    <label class="checkColor white">
+                        <input type="checkbox" name="color" value="white">
+                        <span class="_box"><i class="fa-solid fa-check"></i></span>
+                    </label>
+                    <span>화이트</span>
+                </div>
+                <div class="color-tag">
+                    <label class="checkColor ivory">
+                        <input type="checkbox" name="color" value="ivory">
+                        <span class="_box"><i class="fa-solid fa-check"></i></span>
+                    </label>
+                    <span>아이보리</span>
+                </div>
+                <div class="color-tag">
+                    <label class="checkColor beige">
+                        <input type="checkbox" name="color" value="beige">
+                        <span class="_box"><i class="fa-solid fa-check"></i></span>
+                    </label>
+                    <span>베이지</span>
+                </div>
+                <div class="color-tag">
+                    <label class="checkColor brown">
+                        <input type="checkbox" name="color" value="brown">
+                        <span class="_box"><i class="fa-solid fa-check"></i></span>
+                    </label>
+                    <span>브라운</span>
+                </div>
+                <div class="color-tag">
+                    <label class="checkColor navy">
+                        <input type="checkbox" name="color" value="navy">
+                        <span class="_box"><i class="fa-solid fa-check"></i></span>
+                    </label>
+                    <span>네이비</span>
+                </div>
+                <div class="color-tag">
+                    <label class="checkColor blue">
+                        <input type="checkbox" name="color" value="blue">
+                        <span class="_box"><i class="fa-solid fa-check"></i></span>
+                    </label>
+                    <span>블루</span>
+                </div>
+                <div class="color-tag">
+                    <label class="checkColor skyblue">
+                        <input type="checkbox" name="color" value="skyblue">
+                        <span class="_box"><i class="fa-solid fa-check"></i></span>
+                    </label>
+                    <span>스카이블루</span>
+                </div>
+                <div class="color-tag">
+                    <label class="checkColor red">
+                        <input type="checkbox" name="color" value="red">
+                        <span class="_box"><i class="fa-solid fa-check"></i></span>
+                    </label>
+                    <span>레드</span>
+                </div>
+                <div class="color-tag">
+                    <label class="checkColor orange">
+                        <input type="checkbox" name="color" value="orange">
+                        <span class="_box"><i class="fa-solid fa-check"></i></span>
+                    </label>
+                    <span>오렌지</span>
+                </div>
+                <div class="color-tag">
+                    <label class="checkColor yellow">
+                        <input type="checkbox" name="color" value="yellow">
+                        <span class="_box"><i class="fa-solid fa-check"></i></span>
+                    </label>
+                    <span>옐로우</span>
+                </div>
+            </div>
+        </div>
+        <div class="price-category-container">
+            <h3>가격대</h3>
+            <h4>가격대</h4>
+            <div class="categoryDetail">
+                <label class="check">
+                    <input type="checkbox" name="price" value="100000">
+                    <span class="_box">10만원이하</span>
+                </label>
+                <label class="check">
+                    <input type="checkbox" name="price" value="100000-200000">
+                    <span class="_box">10만원대</span>
+                </label>
+                <label class="check">
+                    <input type="checkbox" name="price" value="200000-300000">
+                    <span class="_box">20만원대</span>
+                </label>
+                <label class="check">
+                    <input type="checkbox" name="price" value="300000-400000">
+                    <span class="_box">30만원대</span>
+                </label>
+            </div>
+        </div>
+        <div class="button-container">
+            <button class="reset-button" type="reset">초기화</button>
+            <button class="filter-button" type="submit">상품보기</button>
+        </div>
+    </form>
+</div>
 <footer id="footer">
     <div class="footer-container">
         <div class="service-area">

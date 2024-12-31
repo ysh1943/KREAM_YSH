@@ -5,15 +5,19 @@ import lombok.Setter;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.Base64;
 
 @Getter
 @Setter
 public class ProductDTO {
     private int productId;
-    private String productName;
+    private String productNameEn;
+    private String productNameKo;
     private String brand;
     private String category;
+    private String categoryDetail;
+    private LocalDate releaseDate;
     private int lowestPrice;
     private int transactionCount;
     private byte[] imageData;

@@ -1,9 +1,8 @@
 package com.kream.kream.controllers;
 
-import com.kream.kream.entities.CategoryDetailEntity;
-import com.kream.kream.entities.ImageEntity;
-import com.kream.kream.entities.ProductEntity;
-import com.kream.kream.entities.UserEntity;
+import com.kream.kream.dtos.OrderDTO;
+import com.kream.kream.dtos.ProductDTO;
+import com.kream.kream.entities.*;
 import com.kream.kream.results.CommonResult;
 import com.kream.kream.results.Result;
 import com.kream.kream.services.AdminService;
@@ -18,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/admin")
@@ -35,6 +35,18 @@ public class AdminController {
             return new ModelAndView("redirect:/");
         }
         ModelAndView modelAndView = new ModelAndView();
+        int userCount = this.adminService.selectUserCount();
+        int orderCount = this.adminService.selectOrderCount();
+        int statePending = this.adminService.selectStatePendingCount();
+        int stateInspecting = this.adminService.selectStateInspectingCount();
+        UserEntity[] users = this.adminService.selectUserByLimit();
+        OrderDTO[] orders = this.adminService.selectOrderByLimit();
+        modelAndView.addObject("userCount", userCount);
+        modelAndView.addObject("orderCount", orderCount);
+        modelAndView.addObject("statePending", statePending);
+        modelAndView.addObject("stateInspecting", stateInspecting);
+        modelAndView.addObject("users", users);
+        modelAndView.addObject("orders", orders);
         modelAndView.setViewName("admin/index");
         return modelAndView;
     }
@@ -124,21 +136,43 @@ public class AdminController {
     // @SessionAttribute(value = "user", required = false) UserEntity user 로그인된경우 서버로 요청받기 위해 적어야함
     public String postProduct(ProductEntity product,
                               @RequestParam("categoryDetail") String categoryDetailType,
-                              @RequestParam("files") MultipartFile[] files) throws IOException {
+                              @RequestParam("files") MultipartFile[] files,
+                              @RequestParam("sizes") String[] sizes) throws IOException {
         CategoryDetailEntity categoryDetail = adminService.findByCategoryId(categoryDetailType);
-        CommonResult result = this.adminService.addProduct(product, categoryDetail, files);
+        CommonResult result = this.adminService.addProduct(product, categoryDetail, files, sizes);
         JSONObject response = new JSONObject();
         response.put("result", result.name().toLowerCase());
         return response.toString();
     }
 
     @RequestMapping(value = "/order", method = RequestMethod.GET)
-    public ModelAndView getOrder(@SessionAttribute(value = "user", required = false) UserEntity user) {
+    public ModelAndView getOrder(@SessionAttribute(value = "user", required = false) UserEntity user,
+                                 @RequestParam(value = "filter", required = false) String filter,
+                                 @RequestParam(value = "keyword", required = false) String keyword) {
         if (user == null || !user.isAdmin()) {
             return new ModelAndView("redirect:/");
         }
         ModelAndView modelAndView = new ModelAndView();
+        if (filter == null && keyword == null) {
+            OrderDTO[] orders = this.adminService.selectOrder();
+            modelAndView.addObject("orders", orders);
+        } else {
+            OrderDTO[] orders = this.adminService.searchOrder(filter, keyword);
+            modelAndView.addObject("orders", orders);
+            modelAndView.addObject("filter", filter);
+            modelAndView.addObject("keyword", keyword);
+        }
         modelAndView.setViewName("admin/order");
         return modelAndView;
+    }
+
+    @RequestMapping(value = "/order", method = RequestMethod.PATCH)
+    @ResponseBody
+    public String patchOrder(@RequestParam(value = "id") int id,
+                             @RequestParam(value = "state") String state) {
+        CommonResult result = this.adminService.patchOrder(id, state);
+        JSONObject response = new JSONObject();
+        response.put("result", result.name().toLowerCase());
+        return response.toString();
     }
 }
