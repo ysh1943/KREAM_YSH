@@ -4,6 +4,13 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kream.kream.mappers.OrderMapper">
 
+    <insert id="insertOrder"
+    parameterType="com.kream.kream.entities.OrderEntity">
+        INSERT INTO `kream`.`order` (user_id, type, seller_bid_id, buyer_bid_id, price, address_id, state, delivery_note, created_at, updated_at, deleted_at)
+        VALUES (#{userId}, #{type}, #{sellerBidId}, #{buyerBidId}, #{price}, #{addressId}, #{state}, #{deliveryNote}, #{createdAt}, #{updatedAt}, #{deletedAt})
+    </insert>
+
+
     <select id="selectOrderCount"
             resultType="int">
         SELECT COUNT(*) AS allOrder

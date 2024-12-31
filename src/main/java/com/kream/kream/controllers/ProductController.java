@@ -5,6 +5,7 @@ import com.kream.kream.entities.ImageEntity;
 import com.kream.kream.entities.ProductEntity;
 import com.kream.kream.entities.UserEntity;
 import com.kream.kream.services.ProductService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @RequestMapping(value = "/products", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+    @RequestMapping(value = "/product", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getProducts(@SessionAttribute(value = "user", required = false) UserEntity user,
                                     @RequestParam(value = "id", required = false) Integer id) {
         ModelAndView modelAndView = new ModelAndView();
@@ -44,14 +45,20 @@ public class ProductController {
             modelAndView.addObject("user", user);
             modelAndView.addObject("images", images);
             modelAndView.addObject("product", product);
-            modelAndView.setViewName("product-detail/products");
+            modelAndView.setViewName("product/product");
         }
         return modelAndView;
     }
 
-    @RequestMapping(value = "/products",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/product",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String getSizeByProduct(@RequestParam(value = "id", required = false) Integer id) throws IOException {
+    public String getSizeByProduct(@SessionAttribute(value = "user", required = false) UserEntity user,
+                                   @RequestParam(value = "id", required = false) Integer id) throws IOException {
+        if (user == null) {
+            JSONObject response = new JSONObject();
+            response.put("result", "logout");
+            return response.toString();
+        }
         List<SizeDTO> sizes = this.productService.getSizeByProductId(id);
         JSONArray response = new JSONArray();
         for (SizeDTO size : sizes) {
@@ -71,7 +78,7 @@ public class ProductController {
         return response.toString();
     }
 
-    @RequestMapping(value = "/products-order-chart", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/product-order-chart", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getOrderChat(@RequestParam(value = "id", required = false) Integer id) {
         List<OrderChartDTO> orderCharts = this.productService.getOrderChartByProductId(id);
@@ -87,7 +94,7 @@ public class ProductController {
         return response.toString();
     }
 
-    @RequestMapping(value = "/products-sell-chart", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/product-sell-chart", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getSellBidChart(@RequestParam(value = "id", required = false) Integer id) {
         List<SellBidChartDTO> sellBidCharts = this.productService.getSellBidChartByProductId(id);
@@ -102,7 +109,7 @@ public class ProductController {
         return response.toString();
     }
 
-    @RequestMapping(value = "/products-buy-chart", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/product-buy-chart", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getBuyBidChart(@RequestParam(value = "id", required = false) Integer id) {
         List<BuyBidChartDTO> buyBidCharts = this.productService.getBuyBidChartByProductId(id);

@@ -22,10 +22,10 @@
                 </li>
                 <li class="top-item">
 
-                    <a class="top-link" th:href="${user == null} ? '/login/' : '/my/profile'">마이페이지</a>
+                    <a class="top-link" th:href="${user == null} ? '/login' : '/my/profile'">마이페이지</a>
                 </li>
                 <li class="top-item">
-                    <a class="top-link" th:href="${user == null} ? '/login/' : '/logout'" th:text="${user == null} ? '로그인' : '로그아웃'"></a>
+                    <a class="top-link" th:href="${user == null} ? '/login' : '/logout'" th:text="${user == null} ? '로그인' : '로그아웃'"></a>
 
 
                 </li>
@@ -71,7 +71,7 @@
         </div>
         <ul class="home-products-list">
             <li class="products-item"  th:if="${popularProducts != null}" th:each="popularProduct : ${popularProducts}">
-                <a th:href="@{'/products?id=' + ${popularProduct.getProductId()}}" class="product-image">
+                <a th:href="@{'/product?id=' + ${popularProduct.getProductId()}}" class="product-image">
                     <span class="trading" th:if="${popularProduct.getTransactionCount() != 0}">
                         <span class="text">거래</span>
                         <span class="text" th:text="${popularProduct.getTransactionCount()}"></span>
@@ -107,7 +107,7 @@
         </div>
         <ul class="home-products-list">
             <li class="products-item" th:if="${newProducts != null}" th:each="newProduct : ${newProducts}">
-                <a th:href="@{'/products?id=' + ${newProduct.getProductId()}}" class="product-image">
+                <a th:href="@{'/product?id=' + ${newProduct.getProductId()}}" class="product-image">
                     <span class="trading" th:if="${newProduct.getTransactionCount() != 0}">
                         <span class="text">거래</span>
                         <span class="text" th:text="${newProduct.getTransactionCount()}"></span>

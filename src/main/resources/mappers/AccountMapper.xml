@@ -6,7 +6,7 @@
     <insert id="insertAccount"
             parameterType="com.kream.kream.entities.AccountEntity">
         INSERT INTO `kream`.`account`(`id`, `user_id`, `bank_name`, `account_number`, `account_owner`, `created_at`,
-                                      `updatedAt`, `is_deleted`)
+                                      `updated_at`, `is_deleted`)
         VALUES (#{id}, #{userId}, #{bankName}, #{accountNumber}, #{accountOwner}, #{createdAt}, #{updatedAt},
                 #{deletedAt})
     </insert>
@@ -19,22 +19,7 @@
                `account_number` AS `accountNumber`,
                `account_owner`  AS `accountOwner`,
                `created_at`     AS `createdAt`,
-               `is_deleted`     AS `deletedAt`
-        FROM `kream`.`account`
-        WHERE `user_id` = #{userId}
-          AND `is_deleted` = false
-        LIMIT 1
-    </select>
-
-    <select id="selctAccounted"
-            resultType="com.kream.kream.entities.AccountEntity">
-        SELECT `id`             AS `id`,
-               `user_id`        AS `userId`,
-               `bank_name`      AS `bankName`,
-               `account_number` AS `accountNumber`,
-               `account_owner`  AS `accountOwner`,
-               `created_at`     AS `createdAt`,
-               `is_deleted`     AS `deletedAt`
+               `is_deleted`     AS `isDeleted`
         FROM `kream`.`account`
         WHERE `user_id` = #{userId}
           AND `is_deleted` = false
@@ -49,7 +34,7 @@
                `account_number` AS accountNumber,
                `account_owner`  AS accountOwner,
                `created_at`     AS createdAt,
-               `is_deleted`     AS deletedAt
+               `is_deleted`     AS isDeleted
         FROM `kream`.`account`
         WHERE `user_id` = #{userId}
     </select>
@@ -61,7 +46,7 @@
         LIMIT 1
     </delete>
 
-    <select id="selectmodifyAccount"
+    <select id="selectAccountByUserId"
             resultType="com.kream.kream.entities.AccountEntity">
         SELECT `id`             AS id,
                `user_id`        AS userId,
@@ -69,8 +54,8 @@
                `account_number` AS accountNumber,
                `account_owner`  AS accountOwner,
                `created_at`     AS createdAt,
-               `updatedAt`      AS updatedAt,
-               `is_deleted`     AS deletedAt
+               `updated_at`      AS updatedAt,
+               `is_deleted`     AS isDeleted
         FROM `kream`.`account`
         WHERE `user_id` = #{userId}
           AND `is_deleted` = false
@@ -82,7 +67,7 @@
         SET `bank_name`      = #{bankName},
             `account_number` = #{accountNumber},
             `account_owner`  = #{accountOwner},
-            `updatedAt`      = #{updatedAt}
+            `updated_at`      = #{updatedAt}
         WHERE `user_id` = #{userId}
     </update>
 

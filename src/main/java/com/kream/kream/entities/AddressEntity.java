@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@EqualsAndHashCode(of={"id"})
+@EqualsAndHashCode(of = {"id"})
 public class AddressEntity {
     private int id;
     private int userId;
@@ -20,5 +20,5 @@ public class AddressEntity {
     private boolean isDefault;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private boolean deletedAt;
+    private boolean isDeleted;
 }

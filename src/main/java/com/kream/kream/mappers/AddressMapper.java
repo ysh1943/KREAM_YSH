@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface AddressMapper {
+    AddressEntity selectAddressByUserId(Integer userId);
 
     int insertAddress(AddressEntity address);
 

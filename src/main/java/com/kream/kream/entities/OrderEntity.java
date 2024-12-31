@@ -22,6 +22,11 @@ public class OrderEntity {
         CANCELED,
     }
 
+    public enum Type {
+        BUY,
+        SELL,
+    }
+
     private int id;
     private int userId;
     private String type;
@@ -34,4 +39,5 @@ public class OrderEntity {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
+
 }

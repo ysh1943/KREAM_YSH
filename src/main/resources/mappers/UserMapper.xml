@@ -46,6 +46,7 @@
           AND `is_verified` = true
           AND `deleted_at` IS NULL
         ORDER BY `id` DESC
+    </select>
 
     <select id="selectUserCount" resultType="int">
         SELECT COUNT(*)
@@ -54,7 +55,7 @@
           AND `is_verified` = 1
 
     </select>
-    
+
     <select id="selectUser"
             resultType="com.kream.kream.entities.UserEntity">
         SELECT `id`                        AS `id`,

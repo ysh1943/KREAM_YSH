@@ -14,6 +14,9 @@ import java.util.List;
 
 @Mapper
 public interface OrderMapper {
+    int insertOrder(OrderEntity order);
+
+
     List<ProductDTO> selectPopularProducts();
     int selectOrderCount();
     int selectStatePendingCount();

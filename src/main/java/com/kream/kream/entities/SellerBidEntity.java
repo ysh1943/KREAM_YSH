@@ -19,6 +19,7 @@ public class SellerBidEntity {
     private int id;
     private int userId;
     private int sizeId;
+    private int addressId;
     private int price;
     private LocalDate deadline;
     private String state;

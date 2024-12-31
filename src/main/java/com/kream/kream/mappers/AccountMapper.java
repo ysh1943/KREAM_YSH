@@ -11,11 +11,9 @@ public interface AccountMapper {
 
     AccountEntity[] selectAccount(@Param("userId")int userId);
 
-    AccountEntity[] selctAccounted(@Param("userId")int userId);
-
     int deleteAccount(@Param("userId")int userId);
 
-    AccountEntity selectmodifyAccount(@Param("userId")int userId);
+    AccountEntity selectAccountByUserId(@Param("userId")int userId);
 
     int updateAccount(AccountEntity account);
 

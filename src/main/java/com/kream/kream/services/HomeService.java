@@ -23,7 +23,6 @@ public class HomeService {
     }
 
     //region 홈페이지 상품 나열
-
     // 인기 상품
     public List<ProductDTO> getPopularProducts() {
         List<ProductDTO> popularProducts = this.orderMapper.selectPopularProducts();
@@ -48,11 +47,8 @@ public class HomeService {
     //region productDTO 유효성 검사
     private void ValidProducts(List<ProductDTO> products) {
         for (ProductDTO product : products) {
-            if (product == null) {
+            if (product == null || product.getProductId() < 1) {
                 continue;
-            }
-            if (product.getProductId() < 1) {
-                product.setProductId(1);
             }
             if (product.getProductNameEn() == null || product.getProductNameEn().isEmpty() || product.getProductNameEn().length() > 100) {
                 product.setProductNameEn("상품명 없음");

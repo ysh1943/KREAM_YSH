@@ -100,7 +100,7 @@ public class MyService {
         if (userId < 1) {
             return null;
         }
-        return this.accountMapper.selctAccounted(userId);
+        return this.accountMapper.selectAccount(userId);
     }
 
 
@@ -138,7 +138,7 @@ public class MyService {
                 account.getAccountOwner().length() < 2 || account.getAccountOwner().length() > 10) {
             return CommonResult.FAILURE;
         }
-        AccountEntity dbaccount = this.accountMapper.selectmodifyAccount(account.getUserId());
+        AccountEntity dbaccount = this.accountMapper.selectAccountByUserId(account.getUserId());
         if (account.getUserId() < 1 ||
                 (account.getBankName().equals(dbaccount.getBankName()) && account.getAccountNumber().equals(dbaccount.getAccountNumber()))) {
             return CommonResult.FAILURE;
@@ -164,10 +164,10 @@ public class MyService {
         }
         AddressEntity dbaddress = this.addressMapper.deleteAddressById(address.getId());
 
-        if (dbaddress == null || dbaddress.isDeletedAt()) {
+        if (dbaddress == null || dbaddress.isDeleted()) {
             return CommonResult.FAILURE;
         }
-        address.setDeletedAt(true);
+        address.setDeleted(true);
         if (this.addressMapper.deleteAddress(address) == 0) {
             throw new TransactionalException();
         }
@@ -205,7 +205,7 @@ public class MyService {
             return CommonResult.FAILURE;
         }
         AccountEntity dbaccount = this.accountMapper.selectdelete(account.getUserId());
-        if (dbaccount == null || dbaccount.isDeletedAt()) {
+        if (dbaccount == null || dbaccount.isDeleted()) {
             return CommonResult.FAILURE;
         }
 

@@ -6,7 +6,7 @@
 
     <select id="selectSizeByProductId"
             resultType="com.kream.kream.dtos.SizeDTO">
-        SELECT `size`.`id`                              AS `sizeId`,
+        SELECT `size`.`id`                           AS `sizeId`,
                `size`.`type`                            AS `type`,
                MIN(`seller_bid`.`price`)                AS `sellPrice`,
                MAX(`buyer_bid`.`price`)                 AS `buyPrice`,
@@ -66,7 +66,7 @@
         WHERE `size`.`product_id` = #{id}
         GROUP BY `size`.`type`, `seller_bid`.`price`
         ORDER BY MAX(`seller_bid`.`created_at`) DESC
-        LIMIT 10
+        LIMIT 5
     </select>
 
     <select id="selectBuyBidChartByProductId" resultType="com.kream.kream.dtos.BuyBidChartDTO">
@@ -81,6 +81,57 @@
         WHERE `size`.`product_id` = #{id}
         GROUP BY `size`.`type`, `buyer_bid`.`price`
         ORDER BY MAX(`buyer_bid`.`created_at`) DESC
-        LIMIT 10
+        LIMIT 5
     </select>
+
+
+    <select id="selectProductBySizeId" resultType="com.kream.kream.dtos.OrderProductDTO">
+        SELECT `size`.`id`                 AS `sizeId`,
+               `size`.`type`               AS `sizeType`,
+               `product`.`model_number`    AS `modelNumber`,
+               `product`.`product_name_en` AS `productNameEn`,
+               `product`.`product_name_ko` AS `productNameKo`,
+               `image`.`data`              AS `imageData`,
+               `image`.`type`              AS `imageType`
+        FROM `kream`.`size`
+                 INNER JOIN `kream`.`product`
+                            ON `size`.`product_id` = `product`.`id`
+                 INNER JOIN `kream`.`image`
+                            ON `product`.`id` = `image`.`product_id`
+                                AND `image`.`is_primary` = 1
+        WHERE `size`.`id` = #{id}
+    </select>
+
+    <select id="selectProductPriceBySizeId" resultType="com.kream.kream.dtos.ProductPriceDTO">
+        WITH `price` AS
+                 (SELECT `size`.`id`               AS `sizeId`,
+                         MIN(`seller_bid`.`price`) AS `sellPrice`,
+                         MAX(`buyer_bid`.`price`)  AS `buyPrice`
+                  FROM `kream`.`size`
+                           LEFT JOIN `kream`.`seller_bid`
+                                     ON `size`.`id` = `seller_bid`.`size_id`
+                                         AND `seller_bid`.`state` = 'BIDDING'
+                                         AND `seller_bid`.`is_deleted` = 0
+                           LEFT JOIN `kream`.`buyer_bid`
+                                     ON `size`.`id` = `buyer_bid`.`size_id`
+                                         AND `buyer_bid`.`state` = 'BIDDING'
+                                         AND `buyer_bid`.`is_deleted` = 0
+                  WHERE `size`.`id` = #{id})
+        SELECT `price`.`sizeId`,
+               `price`.`sellPrice`,
+               `price`.`buyPrice`,
+               (SELECT `seller_bid`.`id`
+                FROM `kream`.`seller_bid`
+                WHERE `seller_bid`.`price` = `price`.`sellPrice`
+                  AND `seller_bid`.`size_id` = `price`.`sizeId`
+                ORDER BY `seller_bid`.`created_at`) AS `sellerBidId`,
+               (SELECT `buyer_bid`.`id`
+                FROM `kream`.`buyer_bid`
+                WHERE `buyer_bid`.`price` = `price`.`buyPrice`
+                  AND `buyer_bid`.`size_id` = `price`.`sizeId`
+                ORDER BY `buyer_bid`.`created_at`)  AS `buyerBidId`
+        FROM `price`;
+    </select>
+
+
 </mapper>
