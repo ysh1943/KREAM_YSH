@@ -1,30 +1,22 @@
-const $main = document.getElementById('main');
-const $content = $main.querySelector('.content');
-const $tableForm = $content.querySelector('.tableForm');
-const $table = $tableForm.querySelector('table');
-const $tbody = $table.querySelector('tbody');
-const $tr = $tbody.querySelector('tr');
-
 const rows = document.querySelectorAll('tr');
 rows.forEach(($tr) => {
     const updateButton = $tr.querySelector(':scope > td > button[name="update"]');
     if (updateButton) {
         updateButton.addEventListener('click', () => {
             // 해당 행에서 suspendSelect 값을 가져옴
-            const suspend = $tr.querySelector('.suspendSelect').value;
-            Dialog.defaultYesNo('변경', `정말로 회원의 계정 상태를 변경할까요?`, () => {
+            const state = $tr.querySelector('.stateSelect').value;
+            Dialog.defaultYesNo('변경', `주문 상태를 변경할까요?`, () => {
                 // 이메일 값을 가져오고 상태값을 서버에 전송
-                sendPatchRequest($tr.dataset['email'], suspend);
+                sendPatchRequest($tr.dataset['id'], state);
             });
         });
     }
 });
 
-const sendPatchRequest = (email, suspend) => {
+const sendPatchRequest = (id, state) => {
     const formData = new FormData();
-    formData.append('userEmail', email);
-    formData.append('suspend', suspend);
-    console.log(suspend);
+    formData.append('id', id);
+    formData.append('state', state);
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = () => {
         if (xhr.readyState !== XMLHttpRequest.DONE) {
@@ -63,8 +55,7 @@ const sendPatchRequest = (email, suspend) => {
                 break;
         }
     };
-    xhr.open('PATCH', '/admin/user');
+    xhr.open('PATCH', '/admin/order');
     xhr.send(formData);
     Loading.show(0);
 };
-

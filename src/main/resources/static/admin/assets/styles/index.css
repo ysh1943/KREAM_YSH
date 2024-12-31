@@ -99,11 +99,31 @@
   font-size: 14px;
   margin-top: 0.5rem;
 }
-#main > .table-container > .table-main > table > thead > tr > th,
-#main > .table-container > .table-main > table > tbody > tr > td {
+#main > .table-container > .table-main > table > thead > tr > th {
   border: 1px solid #ddd;
+  font-weight: 800;
   text-align: center;
   padding: 10px;
+  overflow: hidden;
+}
+#main > .table-container > .table-main > table > tbody > tr > .cover-td {
+  width: 3rem;
+  height: 3rem;
+  padding: 0.1rem;
+}
+#main > .table-container > .table-main > table > tbody > tr > .cover-td > .cover {
+  background-color: #eeeeee;
+  width: 3rem;
+  height: 3rem;
+  object-fit: cover;
+  object-position: center;
+}
+#main > .table-container > .table-main > table > tbody > tr > td {
+  border: 1px solid #ddd;
+  font-weight: 400;
+  text-align: center;
+  padding: 10px;
+  overflow: hidden;
 }
 
 /*# sourceMappingURL=index.css.map */

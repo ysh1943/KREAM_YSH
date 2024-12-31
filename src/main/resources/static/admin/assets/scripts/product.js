@@ -74,6 +74,7 @@ $navItems.forEach(($navItem) => {
             if (xhr.readyState !== XMLHttpRequest.DONE) {
                 return;
             }
+            Loading.hide();
             if (xhr.status < 200 || xhr.status >= 300) {
                 Dialog.show({
                     title: '오류',
@@ -108,6 +109,7 @@ $navItems.forEach(($navItem) => {
         };
         xhr.open('DELETE', '/admin/product');
         xhr.send(formData);
+        Loading.show(0);
     };
 }
 //endregion
@@ -117,6 +119,26 @@ $navItems.forEach(($navItem) => {
     const $content = $mainContents.find((x) => x.getAttribute('rel') === 'product-register');
     const $form = $content.querySelector(':scope > .form');
     const formData = new FormData();
+
+    // 모든 체크박스 요소를 선택
+    const checkboxes = document.querySelectorAll('.check input[type="checkbox"]');
+
+// 각 체크박스에 이벤트 리스너를 추가
+    checkboxes.forEach((checkbox) => {
+        checkbox.addEventListener('change', function() {
+            const checkBoxParent = this.closest('.check');  // 현재 체크박스의 부모 .check 요소 찾기
+
+            if (this.checked) {
+                // 체크박스가 체크된 경우
+                checkBoxParent.style.backgroundColor = '#222';
+                checkBoxParent.style.color = '#ffffff';
+            } else {
+                // 체크박스가 체크 해제된 경우
+                checkBoxParent.style.backgroundColor = '#ffffff';
+                checkBoxParent.style.color = '#222';
+            }
+        });
+    });
 
     const $previewWrapper = document.querySelectorAll('.preview-wrapper');
     $previewWrapper.forEach(($wrapper) => {
@@ -131,7 +153,7 @@ $navItems.forEach(($navItem) => {
         $inputFile.onchange = () => {
             if ($inputFile.files?.length === 0) {
                 // 파일이 없으면 텍스트 표시하고 이미지 숨기기
-                $text.style.display = 'flex';
+                $text.style.display = 'flex';ㅁ
                 $image.style.display = 'none';
                 $image.src = '';  // 미리보기 이미지 초기화
                 return;
@@ -148,7 +170,6 @@ $navItems.forEach(($navItem) => {
 
     $form.onsubmit = (e) => {
         e.preventDefault();
-
         formData.append('modelNumber', $form['modelNumber'].value);
         formData.append('baseName', $form['baseName'].value);
         formData.append('productNameKo', $form['productNameKo'].value);
@@ -168,11 +189,28 @@ $navItems.forEach(($navItem) => {
         }
         formData.append('color', $form['color'].value);
 
+        // 사이즈 배열 처리
+        const selectedSizes = [];
+        const sizeCheckboxes = $form.querySelectorAll("input[name='size']:checked");
+
+        sizeCheckboxes.forEach((checkbox) => {
+            selectedSizes.push(checkbox.value);
+        });
+
+        // 사이즈가 선택되었으면 배열 형태로 추가
+        if (selectedSizes.length > 0) {
+            selectedSizes.forEach((size) => {
+                formData.append('sizes', size);  // 서버에서 sizes[] 배열로 받을 수 있게
+                console.log(size);
+            });
+        }
+
         const xhr = new XMLHttpRequest();
         xhr.onreadystatechange = () => {
             if (xhr.readyState !== XMLHttpRequest.DONE) {
                 return;
             }
+            Loading.hide();
             if (xhr.status < 200 || xhr.status >= 300) {
                 Dialog.show({
                     title: '오류',
@@ -214,6 +252,7 @@ $navItems.forEach(($navItem) => {
         };
         xhr.open('POST', location.href);
         xhr.send(formData);
+        Loading.show(0);
     };
 }
 //endregion

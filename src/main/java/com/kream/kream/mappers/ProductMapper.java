@@ -2,6 +2,7 @@ package com.kream.kream.mappers;
 
 import com.kream.kream.dtos.OrderChartDTO;
 import com.kream.kream.dtos.ProductDTO;
+import com.kream.kream.dtos.ShopProductDTO;
 import com.kream.kream.dtos.SimilarProductImageDTO;
 import com.kream.kream.entities.OrderEntity;
 import com.kream.kream.entities.ProductEntity;
@@ -26,5 +27,14 @@ public interface ProductMapper {
     SimilarProductImageDTO[] selectProductImagesByBaseName(@Param("baseName") String baseName);
 
     List<ProductDTO> selectNewProducts();
-    List<ProductDTO> selectPopularProductsByFilter(String filter);
+
+    List<ProductDTO> selectPopularProducts();
+
+    List<ShopProductDTO> selectNewProductsByFilter(@Param("filter") String filter,
+                                                   @Param("keyword") String keyword,
+                                                   @Param("brand") String brand,
+                                                   @Param("category") String[] category,
+                                                   @Param("gender") String[] gender,
+                                                   @Param("color") String[] color,
+                                                   @Param("price") String[] price);
 }

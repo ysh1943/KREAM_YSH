@@ -5,21 +5,28 @@ import lombok.Setter;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Base64;
+
 
 @Getter
 @Setter
-public class ProductDTO {
-    private int productId;
-    private String productNameEn;
-    private String productNameKo;
-    private String brand;
-    private String category;
-    private String categoryDetail;
-    private LocalDate releaseDate;
-    private int lowestPrice;
-    private int transactionCount;
+public class OrderDTO {
+    public enum Type {
+        BUY,
+        SELL
+    }
+    private int id;
+    private int price;
+    private String userEmail;
+    private String type;
+    private String sellerUserEmail;
+    private String buyerUserEmail;
+    private String sellerProductName;
+    private String buyerProductName;
+    private String buyerAddress;
+    private String state;
+    private LocalDateTime createdAt;
     private byte[] imageData;
     private String imageType;
 
