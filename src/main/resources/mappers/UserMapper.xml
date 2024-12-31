@@ -46,6 +46,7 @@
           AND `is_verified` = true
           AND `deleted_at` IS NULL
         ORDER BY `id` DESC
+    </select>
 
     <select id="selectUserCount" resultType="int">
         SELECT COUNT(*)

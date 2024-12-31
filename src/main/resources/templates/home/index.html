@@ -22,10 +22,10 @@
                 </li>
                 <li class="top-item">
 
-                    <a class="top-link" th:href="${user == null} ? '/login/' : '/my/profile'">마이페이지</a>
+                    <a class="top-link" th:href="${user == null} ? '/login' : '/my/profile'">마이페이지</a>
                 </li>
                 <li class="top-item">
-                    <a class="top-link" th:href="${user == null} ? '/login/' : '/logout'" th:text="${user == null} ? '로그인' : '로그아웃'"></a>
+                    <a class="top-link" th:href="${user == null} ? '/login' : '/logout'" th:text="${user == null} ? '로그인' : '로그아웃'"></a>
 
 
                 </li>
