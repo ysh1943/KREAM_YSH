@@ -272,36 +272,37 @@ public class UserService {
                 user.getPassword() == null || user.getPassword().length() < 6 || user.getPassword().length() > 50) {
             return CommonResult.FAILURE; // 실패 상태 반환
         }
-        UserEntity dbUSer = this.userMapper.selectUserByEmail(user.getEmail());
-        if (dbUSer == null || dbUSer.getDeletedAt() != null) {
+        UserEntity dbUser = this.userMapper.selectUserByEmail(user.getEmail());
+        if (dbUser == null || dbUser.getDeletedAt() != null) {
             return CommonResult.FAILURE;
         }
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if (!encoder.matches(user.getPassword(), dbUSer.getPassword())) {
+        if (!encoder.matches(user.getPassword(), dbUser.getPassword())) {
             return CommonResult.FAILURE; // 비밀번호 불일치로 실패 반환
         }
 
-        if (!dbUSer.isVerified()) {
+        if (!dbUser.isVerified()) {
             return LoginResult.FAILURE_NOT_VERIFIED;
         }
 
-        if (dbUSer.isSuspended()) {
+        if (dbUser.isSuspended()) {
             return LoginResult.FAILURE_SUSPENDED;
         }
 
-        if (dbUSer.getTemporaryPassword() != null && dbUSer.getTemporaryPassword().isBefore(LocalDateTime.now())) {
+        if (dbUser.getTemporaryPassword() != null && dbUser.getTemporaryPassword().isBefore(LocalDateTime.now())) {
             return CommonResult.EXPIRED_PASSWORD;
         }
 
-        user.setPassword(dbUSer.getPassword());
-        user.setNickname(dbUSer.getNickname());
-        user.setContact(dbUSer.getContact());
-        user.setCreatedAt(dbUSer.getCreatedAt());
-        user.setAdmin(dbUSer.isAdmin());
-        user.setSuspended(dbUSer.isSuspended());
-        user.setVerified(dbUSer.isVerified());
-        user.setTemporaryPassword(dbUSer.getTemporaryPassword());
+        user.setId(dbUser.getId());
+        user.setPassword(dbUser.getPassword());
+        user.setNickname(dbUser.getNickname());
+        user.setContact(dbUser.getContact());
+        user.setCreatedAt(dbUser.getCreatedAt());
+        user.setAdmin(dbUser.isAdmin());
+        user.setSuspended(dbUser.isSuspended());
+        user.setVerified(dbUser.isVerified());
+        user.setTemporaryPassword(dbUser.getTemporaryPassword());
         return CommonResult.SUCCESS;
     }
 
@@ -467,6 +468,5 @@ public class UserService {
 
         return CommonResult.SUCCESS;
     }
-
 
 }

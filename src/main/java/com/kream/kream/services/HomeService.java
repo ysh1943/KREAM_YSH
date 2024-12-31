@@ -17,7 +17,6 @@ public class HomeService {
     @Autowired
     public HomeService(ProductMapper productMapper) {
         this.productMapper = productMapper;
-
     }
 
     //region 홈페이지 상품 나열
