@@ -20,6 +20,7 @@
             resultType="com.kream.kream.entities.ProductEntity">
         SELECT `product`.`id`         AS `id`,
                `category_detail_id`   AS `categoryDetailId`,
+               `base_name`            AS `baseName`,
                `product_name_ko`      AS `productNameKo`,
                `product_name_en`      AS `productNameEn`,
                `model_number`         AS `modelNumber`,
@@ -40,6 +41,7 @@
             resultType="com.kream.kream.entities.ProductEntity">
         SELECT `id`                 AS `id`,
                `category_detail_id` AS `categoryDetailId`,
+               `base_name`            AS `baseName`,
                `product_name_ko`    AS `productNameKo`,
                `product_name_en`    AS `productNameEn`,
                `model_number`       AS `modelNumber`,
@@ -57,19 +59,20 @@
     </select>
 
     <select id="selectProductBySearch">
-        SELECT  `id`                    AS `id`,
-                `category_detail_id`    AS `categoryDetailId`,
-                `product_name_ko`       AS `productNameKo`,
-                `product_name_en`       AS `productNameEn`,
-                `model_number`          AS `modelNumber`,
-                `release_date`          AS `releaseDate`,
-                `color`                 AS `color`,
-                `brand`                 AS `brand`,
-                `category`              AS `category`,
-                `gender`                AS `gender`,
-                `created_at`            AS `createdAt`,
-                `updated_at`            AS `updatedAt`,
-                `is_deleted`            AS `isDeleted`
+        SELECT `id`                 AS `id`,
+        `category_detail_id` AS `categoryDetailId`,
+        `base_name`            AS `baseName`,
+        `product_name_ko`    AS `productNameKo`,
+        `product_name_en`    AS `productNameEn`,
+        `model_number`       AS `modelNumber`,
+        `release_date`       AS `releaseDate`,
+        `color`              AS `color`,
+        `brand`              AS `brand`,
+        `category`           AS `category`,
+        `gender`             AS `gender`,
+        `created_at`         AS `createdAt`,
+        `updated_at`         AS `updatedAt`,
+        `is_deleted`         AS `isDeleted`
         FROM `kream`.`product`
         WHERE `is_deleted` = FALSE
         <if test="filter.equals('all')"> <!-- 참일떄만 붙여준다. -->
@@ -110,6 +113,7 @@
     <update id="updateProduct">
         UPDATE `kream`.`product`
         SET `category_detail_id` = #{product.categoryDetailId},
+            `base_name`          = #{product.baseName},
             `product_name_ko`    = #{product.productNameKo},
             `product_name_en`    = #{product.productNameEn},
             `model_number`       = #{product.modelNumber},

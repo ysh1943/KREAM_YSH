@@ -1,8 +1,10 @@
 package com.kream.kream.mappers;
 
+import com.kream.kream.dtos.OrderChartDTO;
 import com.kream.kream.dtos.ProductDTO;
 import com.kream.kream.dtos.ShopProductDTO;
 import com.kream.kream.dtos.SimilarProductImageDTO;
+import com.kream.kream.entities.OrderEntity;
 import com.kream.kream.entities.ProductEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

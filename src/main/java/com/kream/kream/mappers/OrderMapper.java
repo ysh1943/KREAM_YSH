@@ -2,7 +2,11 @@ package com.kream.kream.mappers;
 
 import com.kream.kream.dtos.OrderDTO;
 import com.kream.kream.dtos.ShopProductDTO;
+import com.kream.kream.dtos.OrderChartDTO;
+import com.kream.kream.dtos.ProductDTO;
+import com.kream.kream.entities.BuyerBidEntity;
 import com.kream.kream.entities.OrderEntity;
+import com.kream.kream.entities.SellerBidEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -10,6 +14,7 @@ import java.util.List;
 
 @Mapper
 public interface OrderMapper {
+    List<ProductDTO> selectPopularProducts();
     int selectOrderCount();
     int selectStatePendingCount();
     int selectStateInspectingCount();
@@ -21,6 +26,7 @@ public interface OrderMapper {
 
     OrderEntity selectOrderById(@Param("id") int id);
 
+    List<OrderChartDTO> selectOrderByProductId(Integer id);
     int updateOrder(OrderEntity order);
 
     List<ShopProductDTO> selectPopularProductsByFilter(@Param("filter") String filter,
