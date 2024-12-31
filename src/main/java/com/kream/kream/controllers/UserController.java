@@ -71,7 +71,9 @@ public class UserController extends AbstractGeneralController {
     public String getLogin(HttpSession session, UserEntity user) {
         Result result = this.userService.login(user);
         if (result == CommonResult.SUCCESS) {
-            session.setAttribute("user", user); // 로그인 성공 시 세션에 사용자 정보를 저장
+            session.setAttribute("user", user); // 로그인 성공 시 세션에
+            // 사용자 정보를 저장
+            session.setMaxInactiveInterval(36000);
         }
         JSONObject response = new JSONObject();
         response.put(Result.NAME, result.nameToLower());

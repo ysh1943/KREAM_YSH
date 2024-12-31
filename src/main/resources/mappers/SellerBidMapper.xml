@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kream.kream.mappers.SellerBidMapper">
+
+    <insert id="insertSellerBid"
+    parameterType="com.kream.kream.entities.SellerBidEntity">
+        INSERT INTO `kream`.`buyer_bid` (`user_id`, `size_id`, `address_id`, `price`, `deadline`, `state`, `created_at`, `update_at`, `is_deleted`)
+        VALUES (#{userId}, #{sizeId}, #{addressId}, #{price}, #{deadline}, #{state}, #{createdAt}, #{updatedAt}, #{isDeleted})
+    </insert>
+
+    <select id="selectPriceBySizeIdAndSellerBidId" resultType="com.kream.kream.entities.SellerBidEntity">
+        SELECT `id`         AS `id`,
+               `user_id`    AS `userId`,
+               `size_id`    AS `sizeId`,
+               `address_id` AS `addressId`,
+               `price`      AS `price`,
+               `deadline`   AS `deadline`,
+               `state`      AS `state`,
+               `created_at` AS `createdAt`,
+               `update_at`  AS `updatedAt`,
+               `is_deleted` AS `isDeleted`
+        FROM `kream`.`seller_bid`
+        WHERE `seller_bid`.`id` = #{sellerBidId}
+          AND `seller_bid`.`size_id` = #{sizeId}
+          AND `seller_bid`.`state` = 'BIDDING'
+          AND `seller_bid`.`is_deleted` = 0
+    </select>
+</mapper>

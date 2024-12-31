@@ -11,47 +11,49 @@
     <link rel="stylesheet" th:href="@{'/product/assets/styles/product.css'}" type="text/css">
     <script src="https://kit.fontawesome.com/20d32b3086.js" crossorigin="anonymous"></script>
     <script defer src="/assets/scripts/common.js" type="text/javascript"></script>
-    <script defer th:src="@{'/product-detail/assets/scripts/product.js'}" type="text/javascript"></script>
+    <script defer th:src="@{'/product/assets/scripts/product.js'}" type="text/javascript"></script>
 </head>
 <body>
 <div class="cover"></div>
 <div class="dialog">
-<!--    <button class="cancel">-->
-<!--        <img class="icon" src="/assets/images/cancel-icon.png" alt="cancel">-->
-<!--    </button>-->
 <!--    <div class="title-container">-->
-<!--        <span class="title">구매하기</span>-->
-<!--        <span class="sub-title">(가격 단위: 원)</span>-->
-<!--    </div>-->
-<!--    <div class="product">-->
-<!--        <img class="image" src="/home/assets/images/shoes4.png" alt="image">-->
-<!--        <div class="name-container">-->
-<!--            <span class="name-en">Nike Air Force 1 '07 Low White</span>-->
-<!--            <span class="name-ko">나이키 에어포스 1 '07 로우 화이트</span>-->
-<!--            <span class="model-number">315122-111/CW2288-111</span>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    <div class="size-container">-->
-<!--        <button class="size-button">-->
-<!--            <span class="size">230</span>-->
-<!--            <span class="price">구매입찰</span>-->
+<!--        <button class="cancel">-->
+<!--            <img class="icon" src="/assets/images/cancel-icon.png" alt="cancel">-->
 <!--        </button>-->
-<!--    </div>-->
-<!--    <div class="order">-->
-<!--        <div class="delivery">-->
-<!--            <span class="text">일반배송</span>-->
-<!--            <span class="date">5-7일</span>-->
-<!--            <span class="-spring"></span>-->
-<!--            <span class="delivery-price">351,000원</span>-->
-<!--        </div>-->
-<!--        <div class="button-container">-->
-<!--            <button class="cart button" type="button">장바구니 담기</button>-->
-<!--            <button class="bid button" type="button">즉시 구매/ 구매 입찰</button>-->
+<!--        <div class="title-wrap">-->
+<!--            <span class="title">구매하기</span>-->
+<!--            <span class="sub-title">(가격 단위: 원)</span>-->
 <!--        </div>-->
 <!--    </div>-->
-<!--    <div class="buy-bid-container">-->
-<!--        <button class="buy-bid-button" type="button">구매 입찰하기</button>-->
-<!--    </div>-->
+    <!--    <div class="product">-->
+    <!--        <img class="image" src="/home/assets/images/shoes4.png" alt="image">-->
+    <!--        <div class="name-container">-->
+    <!--            <span class="name-en">Nike Air Force 1 '07 Low White</span>-->
+    <!--            <span class="name-ko">나이키 에어포스 1 '07 로우 화이트</span>-->
+    <!--            <span class="model-number">315122-111/CW2288-111</span>-->
+    <!--        </div>-->
+    <!--    </div>-->
+    <!--    <div class="size-container">-->
+    <!--        <button class="size-button">-->
+    <!--            <span class="size">230</span>-->
+    <!--            <span class="price">구매입찰</span>-->
+    <!--        </button>-->
+    <!--    </div>-->
+    <!--    <div class="order">-->
+    <!--        <div class="delivery">-->
+    <!--            <span class="text">일반배송</span>-->
+    <!--            <span class="date">5-7일</span>-->
+    <!--            <span class="-spring"></span>-->
+    <!--            <span class="delivery-price">351,000원</span>-->
+    <!--        </div>-->
+    <!--        <div class="button-container">-->
+    <!--            <button class="cart button" type="button">장바구니 담기</button>-->
+    <!--            <button class="buy button" type="button">즉시 구매/ 구매 입찰</button>-->
+    <!--        </div>-->
+    <!--    </div>-->
+    <!--    <div class="bid-container">-->
+    <!--        <button class="bid-button" type="button">구매 입찰하기</button>-->
+    <!--    </div>-->
 </div>
 <header id="header">
     <div class="header-container">
@@ -62,10 +64,10 @@
                     <a class="top-link" th:if="${user != null && user.isAdmin()}" th:href="@{'/admin/'}">관리자 페이지</a>
                 </li>
                 <li class="top-item">
-                    <a class="top-link" th:href="${user == null} ? '/user/' : '/my'">마이페이지</a>
+                    <a class="top-link" th:href="${user == null} ? '/login' : '/my'">마이페이지</a>
                 </li>
                 <li class="top-item">
-                    <a class="top-link" th:href="${user == null} ? '/user/' : '/user/logout'"
+                    <a class="top-link" th:href="${user == null} ? '/login' : '/logout'"
                        th:text="${user == null} ? '로그인' : '로그아웃'"></a>
                 </li>
             </ul>
@@ -110,7 +112,7 @@
             </div>
             <div class="similar-image-container">
                 <div class="similar-image-cover" th:each="similarImage : ${similarImages}">
-                    <a class="link" th:href="@{'/products?id=' + ${similarImage.getProductId()}}">
+                    <a class="link" th:href="@{'/product?id=' + ${similarImage.getProductId()}}">
                         <img class="image" th:src="${similarImage.getBase64Image()}" alt="product-image"
                              th:data-id="${similarImage.getProductId()}">
                     </a>
@@ -181,18 +183,19 @@
             </div>
             <div class="detail-item-charts">
                 <span class="title">시세</span>
-<!--                <div class="bids-graph-container bids">-->
-<!--                    <div class="container-title">-->
-<!--                        <button class="button" type="button">1개월</button>-->
-<!--                        <button class="button" type="button">3개월</button>-->
-<!--                        <button class="button" type="button">6개월</button>-->
-<!--                        <button class="button" type="button">9개월</button>-->
-<!--                        <button class="button" type="button">전체</button>-->
-<!--                    </div>-->
-<!--                </div>-->
+                <!--                <div class="bids-graph-container bids">-->
+                <!--                    <div class="container-title">-->
+                <!--                        <button class="button" type="button">1개월</button>-->
+                <!--                        <button class="button" type="button">3개월</button>-->
+                <!--                        <button class="button" type="button">6개월</button>-->
+                <!--                        <button class="button" type="button">9개월</button>-->
+                <!--                        <button class="button" type="button">전체</button>-->
+                <!--                    </div>-->
+                <!--                </div>-->
                 <div class="bids-container bids">
                     <div class="container-title">
-                        <button class="button" type="button" style="background-color: #ffffff" data-id="order">체결 거래</button>
+                        <button class="button" type="button" style="background-color: #ffffff" data-id="order">체결 거래
+                        </button>
                         <button class="button" type="button" data-id="sell">판매 입찰</button>
                         <button class="button" type="button" data-id="buy">구매 입찰</button>
                     </div>
@@ -207,7 +210,8 @@
                         <tbody class="tbody">
                         <tr class="tr" th:each="orderChart : ${orderCharts}">
                             <td class="td" th:text="${orderChart.getSizeType()}"></td>
-                            <td class="td" th:text="${#numbers.formatInteger(orderChart.getOrderPrice() , 0 , 'COMMA') + '원'}"></td>
+                            <td class="td"
+                                th:text="${#numbers.formatInteger(orderChart.getOrderPrice() , 0 , 'COMMA') + '원'}"></td>
                             <td class="td" th:text="${#temporals.format(orderChart.getOrderDate(),'yyy-MM-dd')}"></td>
                         </tr>
                         </tbody>
@@ -239,58 +243,58 @@
             </div>
         </div>
     </div>
-    <footer id="footer">
-        <div class="footer-container">
-            <div class="service-area">
-                <div class="footer-menu">
-                    <div class="menu-box">
-                        <span class="menu-title">이용안내</span>
-                        <ul class="menu-list">
-                            <li class="menu-item">검수기준</li>
-                            <li class="menu-item">이용정책</li>
-                            <li class="menu-item">페널티 정책</li>
-                            <li class="menu-item">커뮤니티 가이드라인</li>
-                        </ul>
-                    </div>
-                    <div class="menu-box">
-                        <span class="menu-title">고객지원</span>
-                        <ul class="menu-list">
-                            <li class="menu-item">공지사항</li>
-                            <li class="menu-item">서비스 소개</li>
-                            <li class="menu-item">스토어 안내</li>
-                            <li class="menu-item">판매자 방문접수</li>
-                        </ul>
-                    </div>
+</main>
+<footer id="footer">
+    <div class="footer-container">
+        <div class="service-area">
+            <div class="footer-menu">
+                <div class="menu-box">
+                    <span class="menu-title">이용안내</span>
+                    <ul class="menu-list">
+                        <li class="menu-item">검수기준</li>
+                        <li class="menu-item">이용정책</li>
+                        <li class="menu-item">페널티 정책</li>
+                        <li class="menu-item">커뮤니티 가이드라인</li>
+                    </ul>
                 </div>
-                <div class="-spring"></div>
-                <div class="customer-service">
-                    <span class="service-title">고객센터 1588-7813</span>
-                    <span class="service-time">
+                <div class="menu-box">
+                    <span class="menu-title">고객지원</span>
+                    <ul class="menu-list">
+                        <li class="menu-item">공지사항</li>
+                        <li class="menu-item">서비스 소개</li>
+                        <li class="menu-item">스토어 안내</li>
+                        <li class="menu-item">판매자 방문접수</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="-spring"></div>
+            <div class="customer-service">
+                <span class="service-title">고객센터 1588-7813</span>
+                <span class="service-time">
                     <span class="time-term">운영시간 평일 10:00 - 18:00 (토•일, 공휴일 휴무)</span>
                     <span class="time-term">점심시간 평일 13:00 - 14:00</span>
                 </span>
-                    <span class="service-noti">1:1 문의하기는 앱에서만 가능합니다.</span>
-                </div>
-            </div>
-            <div class="corporation-are">
-                <ul class="term-list">
-                    <li class="term-item">회사소개</li>
-                    <li class="term-item">인재채용</li>
-                    <li class="term-item">제휴제안</li>
-                    <li class="term-item">이용약관</li>
-                    <li class="term-item bold">개인정보처리방침</li>
-                </ul>
-                <span class="business-info">크림 주식회사 · 대표 김창욱사업자등록번호 : 570-88-01618 사업자정보확인통신판매업 : 제 2021-성남분당C-0093호사업장소재지 : 경기도 성남시 분당구 분당내곡로 131 판교테크원 타워1, 7층호스팅 서비스 : 네이버 클라우드 ㈜</span>
-            </div>
-            <div class="notice-guarantee">
-                <span class="title">신한은행 채무지급보증 안내</span>
-                <span class="description">당사는 고객님의 현금 결제 금액에 대해 신한은행과 채무지급보증 계약을 체결하여 안전거래를 보장하고 있습니다.서비스가입 사실 확인</span>
-            </div>
-            <div class="notice-area">
-                <span class="notice">크림(주)는 통신판매 중개자로서 통신판매의 당사자가 아닙니다. 본 상품은 개별판매자가 등록한 상품으로 상품, 상품정보, 거래에 관한 의무와 책임은 각 판매자에게 있습니다. 단, 이용약관 및 정책, 기타 거래 체결 과정에서 고지하는 내용 등에 따라 검수하고 보증하는 내용에 대한 책임은 크림(주)에 있습니다.</span>
+                <span class="service-noti">1:1 문의하기는 앱에서만 가능합니다.</span>
             </div>
         </div>
-    </footer>
-</main>
+        <div class="corporation-are">
+            <ul class="term-list">
+                <li class="term-item">회사소개</li>
+                <li class="term-item">인재채용</li>
+                <li class="term-item">제휴제안</li>
+                <li class="term-item">이용약관</li>
+                <li class="term-item bold">개인정보처리방침</li>
+            </ul>
+            <span class="business-info">크림 주식회사 · 대표 김창욱사업자등록번호 : 570-88-01618 사업자정보확인통신판매업 : 제 2021-성남분당C-0093호사업장소재지 : 경기도 성남시 분당구 분당내곡로 131 판교테크원 타워1, 7층호스팅 서비스 : 네이버 클라우드 ㈜</span>
+        </div>
+        <div class="notice-guarantee">
+            <span class="title">신한은행 채무지급보증 안내</span>
+            <span class="description">당사는 고객님의 현금 결제 금액에 대해 신한은행과 채무지급보증 계약을 체결하여 안전거래를 보장하고 있습니다.서비스가입 사실 확인</span>
+        </div>
+        <div class="notice-area">
+            <span class="notice">크림(주)는 통신판매 중개자로서 통신판매의 당사자가 아닙니다. 본 상품은 개별판매자가 등록한 상품으로 상품, 상품정보, 거래에 관한 의무와 책임은 각 판매자에게 있습니다. 단, 이용약관 및 정책, 기타 거래 체결 과정에서 고지하는 내용 등에 따라 검수하고 보증하는 내용에 대한 책임은 크림(주)에 있습니다.</span>
+        </div>
+    </div>
+</footer>
 </body>
 </html>

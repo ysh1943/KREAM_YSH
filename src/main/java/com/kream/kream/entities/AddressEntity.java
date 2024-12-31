@@ -4,25 +4,20 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @EqualsAndHashCode(of = {"id"})
-public class SellerBidEntity {
-    public enum State {
-        BIDDING,
-        DEADLINE,
-    }
-
+public class AddressEntity {
     private int id;
     private int userId;
-    private int sizeId;
-    private int addressId;
-    private int price;
-    private LocalDate deadline;
-    private String state;
+    private String name;
+    private String contact;
+    private String postal;
+    private String basicAddress;
+    private String detailAddress;
+    private boolean isDefault;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private boolean isDeleted;

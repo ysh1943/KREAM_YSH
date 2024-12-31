@@ -293,7 +293,7 @@ public class UserService {
         if (dbUSer.getTemporaryPassword() != null && dbUSer.getTemporaryPassword().isBefore(LocalDateTime.now())) {
             return CommonResult.EXPIRED_PASSWORD;
         }
-
+        user.setId(dbUSer.getId());
         user.setPassword(dbUSer.getPassword());
         user.setNickname(dbUSer.getNickname());
         user.setContact(dbUSer.getContact());

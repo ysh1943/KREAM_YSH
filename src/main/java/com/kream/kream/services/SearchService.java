@@ -32,23 +32,6 @@ public class SearchService {
         if (searchKeywords == null || searchKeywords.isEmpty()) {
             return new ArrayList<>();
         }
-        for (SearchKeywordDTO searchKeyword : searchKeywords) {
-            if (searchKeyword == null) {
-                continue;
-            }
-            if (searchKeyword.getProductId() < 1) {
-                searchKeyword.setProductId(1);
-            }
-            if (searchKeyword.getProductNameKo() == null || searchKeyword.getProductNameKo().isEmpty() || searchKeyword.getProductNameKo().length() > 100) {
-                searchKeyword.setProductNameKo(null);
-            }
-            if (searchKeyword.getProductNameEn() == null || searchKeyword.getProductNameEn().isEmpty() || searchKeyword.getProductNameEn().length() > 100) {
-                searchKeyword.setProductNameEn(null);
-            }
-            if (searchKeyword.getBrand() == null || searchKeyword.getBrand().isEmpty() || searchKeyword.getBrand().length() > 50) {
-                searchKeyword.setBrand(null);
-            }
-        }
         return searchKeywords;
     }
 

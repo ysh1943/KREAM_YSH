@@ -53,30 +53,32 @@ body {
     pointer-events: all;
   }
 
-  > .cancel > .icon {
-    top: 0.5rem;
-    right: 1rem;
-    width: 2rem;
-    position: absolute;
-    cursor: pointer;
-  }
-
   > .title-container {
-    @include flex(column, center, flex-start, 0.1rem);
-    height: 3.75rem;
-
-    > .title {
-      background-color: #ffffff;
-      border: none;
-      color: #222222;
-      font-size: 1.1rem;
-      font-weight: 600;
-      padding: 0.7rem 0.875rem 0;
+    > .cancel > .icon {
+      top: 0.5rem;
+      right: 1rem;
+      width: 2rem;
+      position: absolute;
+      cursor: pointer;
     }
 
-    > .sub-title {
-      color: #22222280;
-      font-size: 0.8rem;
+    > .title-wrap {
+      @include flex(column, center, flex-start, 0.1rem);
+      height: 3.75rem;
+
+      > .title {
+        background-color: #ffffff;
+        border: none;
+        color: #222222;
+        font-size: 1.2rem;
+        font-weight: 600;
+        padding: 0.5rem 0.875rem 0;
+      }
+
+      > .sub-title {
+        color: #22222280;
+        font-size: 0.8rem;
+      }
     }
   }
 
@@ -142,13 +144,22 @@ body {
         background-color: darken($background_color, 10%);
       }
 
+      &.focus {
+        border: 0.0625rem solid #222222;
+        font-weight: 700;
+      }
+
       > .size {
         font-size: 0.9rem;
         font-weight: 400;
       }
 
       > .price {
-        color: #22222280;
+        color: #ef6253;
+
+        &.empty {
+          color: #22222280;
+        }
       }
     }
   }
@@ -204,24 +215,25 @@ body {
           background-color: #222222;
         }
 
-        &.bid {
+        &.buy {
           background-color: #ef6253;
         }
       }
     }
   }
 
-  > .buy-bid-container {
+  > .bid-container {
     background-color: #ffffff;
     border: 0.0625rem solid #eeeeee;
     border-radius: 1rem;
-    display: none;
     box-sizing: border-box;
+    display: none;
     padding: 0.5rem;
     z-index: 100;
 
-    > .buy-bid-button {
+    > .bid-button {
       width: 100%;
+      background-color: #ef6253;
       box-sizing: border-box;
       border-radius: 0.5rem;
       cursor: pointer;
@@ -229,6 +241,10 @@ body {
       font-size: 1rem;
       font-weight: 700;
       color: #ffffff;
+
+      &.sell {
+        background-color: #41b979;
+      }
     }
   }
 }
@@ -642,6 +658,120 @@ body {
           }
         }
       }
+    }
+  }
+}
+
+
+#footer {
+  width: 100vw;
+
+  > .footer-container {
+    width: 100%;
+    max-width: 80rem;
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 2.5rem;
+    border-top: 0.0625rem solid #eeeeee;
+
+    > .service-area {
+      @include flex(row, flex-start, flex-start, 1rem);
+
+      > .footer-menu {
+        @include flex(row, center, flex-start, 5rem);
+
+        > .menu-box {
+          @include flex(column, flex-start, flex-start, 0.9rem);
+
+          > .menu-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: inherit;
+          }
+
+          > .menu-list {
+            @include flex(column, flex-start, flex-strart, 0.7rem);
+
+            > .menu-item {
+              font-size: 0.8rem;
+              color: #22222280;
+            }
+          }
+        }
+      }
+
+      > .customer-service {
+        @include flex(column, flex-start, flex-start, 0.9rem);
+
+        > .service-title {
+          font-size: 0.9rem;
+          font-weight: 700;
+          color: inherit;
+        }
+
+        > .service-time {
+          @include flex(column, flex-start, flex-start, 0.7rem);
+
+          > .time-term {
+            font-size: 0.8rem;
+            color: #22222280;
+          }
+        }
+
+        > .service-noti {
+          font-size: 0.8rem;
+        }
+      }
+    }
+
+    > .corporation-are {
+      @include flex(column, flex-start, flex-start, 0.5rem);
+      margin-top: 3rem;
+      padding-top: 2rem;
+      box-sizing: border-box;
+      border-top: 0.0625rem solid #eeeeee;
+
+      > .term-list {
+        @include flex(row, flex-start, flex-start, 1.5rem);
+
+        > .term-item {
+          font-size: 0.8rem;
+          font-weight: 400;
+          color: #000000;
+
+          &.bold {
+            font-weight: 700;
+          }
+        }
+      }
+
+      > .business-info {
+        width: 35rem;
+        line-height: 1rem;
+        font-size: 0.7rem;
+        color: #22222280;
+      }
+    }
+
+    > .notice-guarantee {
+      @include flex(column, flex-start, flex-start, 0.2rem);
+      margin-top: 2rem;
+      font-size: 0.7rem;
+
+      > .title {
+        font-weight: 700;
+      }
+
+      > .description {
+        color: #22222280;
+      }
+    }
+
+    > .notice-area {
+      width: 35rem;
+      font-size: 0.7rem;
+      color: #22222280;
+      margin-top: 1rem;
     }
   }
 }

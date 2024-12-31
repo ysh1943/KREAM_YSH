@@ -3,12 +3,6 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kream.kream.mappers.UserMapper">
-    <delete id="deleteUserByEmail">
-        DELETE
-        FROM `kream`.`user`
-        WHERE `email` = #{email}
-        LIMIT 1
-    </delete>
 
     <insert id="insertUser"
             parameterType="com.kream.kream.entities.UserEntity">

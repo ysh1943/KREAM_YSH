@@ -1,8 +1,6 @@
 package com.kream.kream.mappers;
 
-import com.kream.kream.dtos.BuyBidChartDTO;
-import com.kream.kream.dtos.SellBidChartDTO;
-import com.kream.kream.dtos.SizeDTO;
+import com.kream.kream.dtos.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -14,4 +12,8 @@ public interface SizeMapper {
     List<SellBidChartDTO> selectSellBidChartByProductId(Integer id);
 
     List<BuyBidChartDTO> selectBuyBidChartByProductId(Integer id);
+
+    OrderProductDTO selectProductBySizeId(Integer id);
+
+    ProductPriceDTO selectProductPriceBySizeId(Integer id);
 }

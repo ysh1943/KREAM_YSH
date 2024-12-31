@@ -5,6 +5,7 @@ import com.kream.kream.entities.ImageEntity;
 import com.kream.kream.entities.ProductEntity;
 import com.kream.kream.entities.UserEntity;
 import com.kream.kream.services.ProductService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,13 @@ public class ProductController {
 
     @RequestMapping(value = "/product",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String getSizeByProduct(@RequestParam(value = "id", required = false) Integer id) throws IOException {
+    public String getSizeByProduct(@SessionAttribute(value = "user", required = false) UserEntity user,
+                                   @RequestParam(value = "id", required = false) Integer id) throws IOException {
+        if (user == null) {
+            JSONObject response = new JSONObject();
+            response.put("result", "logout");
+            return response.toString();
+        }
         List<SizeDTO> sizes = this.productService.getSizeByProductId(id);
         JSONArray response = new JSONArray();
         for (SizeDTO size : sizes) {

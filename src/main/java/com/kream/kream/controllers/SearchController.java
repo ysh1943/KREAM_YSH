@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 @Slf4j
 @Controller
 @RequestMapping(value = "/")
@@ -60,7 +59,7 @@ public class SearchController {
             searchKeyword.put("productNameEn", searchKeywordDTO.getProductNameEn());
             searchKeyword.put("brand", searchKeywordDTO.getBrand());
             response.put(searchKeyword);
-            count ++;
+            count++;
             if (count == 10) {
                 break;
             }
@@ -73,13 +72,13 @@ public class SearchController {
     @RequestMapping(value = "/recent-keyword", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getRecentKeyword(@SessionAttribute(value = "user", required = false) UserEntity user) {
-            List<String> recentKeywords = this.searchService.getRecentKeywords(user);
-            JSONArray response = new JSONArray();
-            for (String keyword : recentKeywords) {
-                JSONObject keywordResponse = new JSONObject();
-                keywordResponse.put("keyword", keyword);
-                response.put(keywordResponse);
-            }
+        List<String> recentKeywords = this.searchService.getRecentKeywords(user);
+        JSONArray response = new JSONArray();
+        for (String keyword : recentKeywords) {
+            JSONObject keywordResponse = new JSONObject();
+            keywordResponse.put("keyword", keyword);
+            response.put(keywordResponse);
+        }
         return response.toString();
     }
 
@@ -94,7 +93,7 @@ public class SearchController {
         return response.toString();
     }
 
-    @RequestMapping(value = "/recent-keyword",method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/recent-keyword", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String deleteRecentKeyword(@SessionAttribute(value = "user", required = false) UserEntity user) {
         CommonResult result = this.searchService.deleteRecentKeywords(user);
@@ -114,10 +113,17 @@ public class SearchController {
         List<PopularKeywordEntity> popularKeywordList = new ArrayList<>();
 
         for (PopularKeywordEntity popularKeyword : popularKeywords) {
-            popularKeywordList.add(popularKeyword);
+            if (popularKeyword != null) {
+                popularKeywordList.add(popularKeyword);
+            }
         }
 
-        popularKeywordList.sort((k1, k2) -> Integer.compare(k2.getCount(), k1.getCount()));
+        popularKeywordList.sort((k1, k2) -> {
+            if (k1 == null || k2 == null) {
+                return 0;
+            }
+            return Integer.compare(k2.getCount(), k1.getCount());
+        });
 
         List<PopularKeywordEntity> top20PopularKeywords = popularKeywordList.stream()
                 .limit(20)

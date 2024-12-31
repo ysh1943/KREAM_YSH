@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kream.kream.mappers.AddressMapper">
+
+    <select id="selectAddressByUserId" resultType="com.kream.kream.entities.AddressEntity">
+        SELECT `id`             AS `id`,
+               `user_id`        AS `userId`,
+               `name`           AS `name`,
+               `contact`        AS `contact`,
+               `postal`         AS `postal`,
+               `basic_address`  AS `basicAddress`,
+               `detail_address` AS `detailAddress`,
+               `is_default`     AS `isDefault`,
+               `created_at`     AS `createdAt`,
+               `updated_at`     AS `updatedAt`,
+               `is_deleted`     AS `isDeleted`
+        FROM `kream`.`address`
+        WHERE `address`.`user_id` = #{userId}
+          AND `address`.`is_default` = 1
+    </select>
+</mapper>
