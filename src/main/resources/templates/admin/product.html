@@ -120,6 +120,29 @@
                 </tr>
                 </tbody>
             </table>
+            <div class="move" th:if="${products != null && products.length > 0}">
+                <a class="page first"
+                   th:if="${ProductPageVo.requestPage > ProductPageVo.movableMinPage}"
+                   th:href="@{'/admin/product' (page=${ProductPageVo.movableMinPage}, filter=${filter}, keyword=${keyword})}"><i class="fa-solid fa-angles-left"></i></a>
+                <a class="page prev"
+                   th:if="${ProductPageVo.requestPage > ProductPageVo.movableMinPage}"
+                   th:href="@{'/admin/product' (page=${ProductPageVo.requestPage - 1}, filter=${filter}, keyword=${keyword})}"><i class="fa-solid fa-angle-left"></i></a>
+                <div class="page-container">
+                    <a class="page"
+                       th:if="${page >= ProductPageVo.movableMinPage}"
+                       th:each="page : ${#numbers.sequence(ProductPageVo.displayMinPage, ProductPageVo.displayMaxPage)}"
+                       th:text="${page}"
+                       th:href="@{'/admin/product' (page= ${page}, filter=${filter}, keyword=${keyword})}"
+                       th:classappend="${page == ProductPageVo.requestPage} ? 'selected'"></a>
+                    <!-- page = 반복값   pageVo.requestPage = 요청 페이지 -->
+                </div>
+                <a class="page next"
+                   th:if="${ProductPageVo.requestPage < ProductPageVo.movableMaxPage}"
+                   th:href="@{'/admin/product' (page=${ProductPageVo.requestPage + 1}, filter=${filter}, keyword=${keyword})}"><i class="fa-solid fa-angle-right"></i></a>
+                <a class="page last"
+                   th:if="${ProductPageVo.requestPage < ProductPageVo.movableMaxPage}"
+                   th:href="@{'/admin/product' (page=${ProductPageVo.movableMaxPage}, filter=${filter}, keyword=${keyword})}"><i class="fa-solid fa-angles-right"></i></a>
+            </div>
         </div>
         <div class="content " rel="product-register">
             <h1>상품 등록</h1>

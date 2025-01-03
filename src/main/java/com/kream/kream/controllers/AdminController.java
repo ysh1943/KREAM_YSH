@@ -1,12 +1,13 @@
 package com.kream.kream.controllers;
 
+import com.kream.kream.dtos.OrderCountDTO;
 import com.kream.kream.dtos.OrderDTO;
-import com.kream.kream.dtos.ProductDTO;
 import com.kream.kream.entities.*;
 import com.kream.kream.results.CommonResult;
-import com.kream.kream.results.Result;
 import com.kream.kream.services.AdminService;
-import org.apache.catalina.User;
+import com.kream.kream.vos.PageVo;
+import com.kream.kream.vos.ProductPageVo;
+import org.apache.commons.lang3.tuple.Pair;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -17,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
-import java.util.List;
 
 @Controller
 @RequestMapping(value = "/admin")
@@ -36,15 +36,11 @@ public class AdminController {
         }
         ModelAndView modelAndView = new ModelAndView();
         int userCount = this.adminService.selectUserCount();
-        int orderCount = this.adminService.selectOrderCount();
-        int statePending = this.adminService.selectStatePendingCount();
-        int stateInspecting = this.adminService.selectStateInspectingCount();
+        OrderCountDTO orderCounts = this.adminService.selectOrderCount();
         UserEntity[] users = this.adminService.selectUserByLimit();
         OrderDTO[] orders = this.adminService.selectOrderByLimit();
         modelAndView.addObject("userCount", userCount);
-        modelAndView.addObject("orderCount", orderCount);
-        modelAndView.addObject("statePending", statePending);
-        modelAndView.addObject("stateInspecting", stateInspecting);
+        modelAndView.addObject("orderCounts", orderCounts);
         modelAndView.addObject("users", users);
         modelAndView.addObject("orders", orders);
         modelAndView.setViewName("admin/index");
@@ -53,6 +49,7 @@ public class AdminController {
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public ModelAndView getUser(@SessionAttribute(value = "user", required = false) UserEntity user,
+                                @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                 @RequestParam(value = "filter", required = false) String filter,
                                 @RequestParam(value = "keyword", required = false) String keyword) {
         if (user == null || !user.isAdmin()) {
@@ -60,11 +57,13 @@ public class AdminController {
         }
         ModelAndView modelAndView = new ModelAndView();
         if (filter == null && keyword == null) {
-            UserEntity[] users = this.adminService.selectUser();
-            modelAndView.addObject("users", users);
+            Pair<PageVo, UserEntity[]> pair = this.adminService.selectUser(page);
+            modelAndView.addObject("PageVo", pair.getLeft());
+            modelAndView.addObject("users", pair.getRight());
         } else {
-            UserEntity[] users = this.adminService.searchUser(filter, keyword);
-            modelAndView.addObject("users", users);
+            Pair<PageVo, UserEntity[]> pair = this.adminService.searchUser(page, filter, keyword);
+            modelAndView.addObject("PageVo", pair.getLeft());
+            modelAndView.addObject("users", pair.getRight());
             modelAndView.addObject("filter", filter);
             modelAndView.addObject("keyword", keyword);
         }
@@ -85,6 +84,7 @@ public class AdminController {
 
     @RequestMapping(value = "/product", method = RequestMethod.GET)
     public ModelAndView getProduct(@SessionAttribute(value = "user", required = false) UserEntity user,
+                                   @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                    @RequestParam(value = "filter", required = false) String filter,
                                    @RequestParam(value = "keyword", required = false) String keyword) {
         if (user == null || !user.isAdmin()) {
@@ -92,11 +92,13 @@ public class AdminController {
         }
         ModelAndView modelAndView = new ModelAndView();
         if (filter == null && keyword == null) {
-            ProductEntity[] products = this.adminService.selectProduct();
-            modelAndView.addObject("products", products);
+            Pair<ProductPageVo, ProductEntity[]> pair = this.adminService.selectProduct(page);
+            modelAndView.addObject("ProductPageVo", pair.getLeft());
+            modelAndView.addObject("products", pair.getRight());
         } else {
-            ProductEntity[] products = this.adminService.searchProduct(filter, keyword);
-            modelAndView.addObject("products", products);
+            Pair<ProductPageVo, ProductEntity[]> pair = this.adminService.searchProduct(page, filter, keyword);
+            modelAndView.addObject("ProductPageVo", pair.getLeft());
+            modelAndView.addObject("products", pair.getRight());
             modelAndView.addObject("filter", filter);
             modelAndView.addObject("keyword", keyword);
         }
@@ -122,15 +124,6 @@ public class AdminController {
                 .body(image.getData());
     }
 
-    @RequestMapping(value = "/product", method = RequestMethod.DELETE)
-    @ResponseBody
-    public String deleteMusicIndex(@RequestParam(value = "ids", required = false) Integer[] ids) {
-        CommonResult result = this.adminService.deleteProducts(ids);
-        JSONObject response = new JSONObject();
-        response.put("result", result.name().toLowerCase());
-        return response.toString();
-    }
-
     @RequestMapping(value = "/product", method = RequestMethod.POST)
     @ResponseBody
     // @SessionAttribute(value = "user", required = false) UserEntity user 로그인된경우 서버로 요청받기 위해 적어야함
@@ -145,8 +138,18 @@ public class AdminController {
         return response.toString();
     }
 
+    @RequestMapping(value = "/product", method = RequestMethod.DELETE)
+    @ResponseBody
+    public String deleteProductIndex(@RequestParam(value = "ids", required = false) Integer[] ids) {
+        CommonResult result = this.adminService.deleteProducts(ids);
+        JSONObject response = new JSONObject();
+        response.put("result", result.name().toLowerCase());
+        return response.toString();
+    }
+
     @RequestMapping(value = "/order", method = RequestMethod.GET)
     public ModelAndView getOrder(@SessionAttribute(value = "user", required = false) UserEntity user,
+                                 @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                  @RequestParam(value = "filter", required = false) String filter,
                                  @RequestParam(value = "keyword", required = false) String keyword) {
         if (user == null || !user.isAdmin()) {
@@ -154,11 +157,13 @@ public class AdminController {
         }
         ModelAndView modelAndView = new ModelAndView();
         if (filter == null && keyword == null) {
-            OrderDTO[] orders = this.adminService.selectOrder();
-            modelAndView.addObject("orders", orders);
+            Pair<PageVo, OrderDTO[]> pair = this.adminService.selectOrder(page);
+            modelAndView.addObject("PageVo", pair.getLeft());
+            modelAndView.addObject("orders", pair.getRight());
         } else {
-            OrderDTO[] orders = this.adminService.searchOrder(filter, keyword);
-            modelAndView.addObject("orders", orders);
+            Pair<PageVo, OrderDTO[]> pair = this.adminService.searchOrder(page, filter, keyword);
+            modelAndView.addObject("PageVo", pair.getLeft());
+            modelAndView.addObject("orders", pair.getRight());
             modelAndView.addObject("filter", filter);
             modelAndView.addObject("keyword", keyword);
         }
@@ -169,7 +174,7 @@ public class AdminController {
     @RequestMapping(value = "/order", method = RequestMethod.PATCH)
     @ResponseBody
     public String patchOrder(@RequestParam(value = "id") int id,
-                             @RequestParam(value = "state") String state) {
+                             @RequestParam(value = "state", required = false) String state) {
         CommonResult result = this.adminService.patchOrder(id, state);
         JSONObject response = new JSONObject();
         response.put("result", result.name().toLowerCase());

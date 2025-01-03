@@ -1,23 +1,21 @@
 package com.kream.kream.services;
 
+import com.kream.kream.dtos.OrderCountDTO;
 import com.kream.kream.dtos.OrderDTO;
-import com.kream.kream.dtos.ProductDTO;
 import com.kream.kream.entities.*;
 import com.kream.kream.exceptions.TransactionalException;
 import com.kream.kream.mappers.*;
 import com.kream.kream.results.CommonResult;
-import com.kream.kream.results.Result;
+import com.kream.kream.vos.PageVo;
+import com.kream.kream.vos.ProductPageVo;
 import org.apache.catalina.User;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Service
 public class AdminService {
@@ -26,14 +24,18 @@ public class AdminService {
     private final CategoryDetailMapper categoryDetailMapper;
     private final SizeMapper sizeMapper;
     private final ImageMapper imageMapper;
+    private final SellerBidMapper sellerBidMapper;
+    private final BuyerBidMapper buyerBidMapper;
     private final OrderMapper orderMapper;
 
-    public AdminService(UserMapper userMapper, ProductMapper productMapper, CategoryDetailMapper categoryDetailMapper, SizeMapper sizeMapper, ImageMapper imageMapper, OrderMapper orderMapper) {
+    public AdminService(UserMapper userMapper, ProductMapper productMapper, CategoryDetailMapper categoryDetailMapper, SizeMapper sizeMapper, ImageMapper imageMapper, SellerBidMapper sellerBidMapper, BuyerBidMapper buyerBidMapper, OrderMapper orderMapper) {
         this.userMapper = userMapper;
         this.productMapper = productMapper;
         this.categoryDetailMapper = categoryDetailMapper;
         this.sizeMapper = sizeMapper;
         this.imageMapper = imageMapper;
+        this.sellerBidMapper = sellerBidMapper;
+        this.buyerBidMapper = buyerBidMapper;
         this.orderMapper = orderMapper;
     }
 
@@ -41,16 +43,8 @@ public class AdminService {
         return this.userMapper.selectUserCount();
     }
 
-    public int selectOrderCount() {
-        return this.orderMapper.selectOrderCount();
-    }
-
-    public int selectStatePendingCount() {
-        return this.orderMapper.selectStatePendingCount();
-    }
-
-    public int selectStateInspectingCount() {
-        return this.orderMapper.selectStateInspectingCount();
+    public OrderCountDTO selectOrderCount() {
+        return this.orderMapper.selectOrderCounts();
     }
 
     public UserEntity[] selectUserByLimit() {
@@ -77,18 +71,27 @@ public class AdminService {
         return limitedOrders;
     }
 
-    public UserEntity[] selectUser() {
-        return this.userMapper.selectUser();
+    public Pair<PageVo, UserEntity[]> selectUser(int page) {
+        page = Math.max(1, page);
+        int totalCount = this.userMapper.selectUserCount();
+        PageVo pageVo = new PageVo(page, totalCount);
+        UserEntity[] users = this.userMapper.selectUserByPage(pageVo.countPerPage,
+                pageVo.offsetCount);
+        return Pair.of(pageVo, users);
     }
 
-    public UserEntity[] searchUser(String filter, String keyword) {
+    public Pair<PageVo, UserEntity[]> searchUser(int page, String filter, String keyword) {
+        page = Math.max(1, page);
         if (filter == null || !filter.equals("all") && !filter.equals("email") && !filter.equals("nickName") && !filter.equals("suspended")) {
             filter = "all";
         }
         if (keyword == null) {
             keyword = "";
         }
-        return this.userMapper.selectUserBySearch(filter, keyword);
+        int totalCount = this.userMapper.selectUserCountBySearch(filter, keyword);
+        PageVo pageVo = new PageVo(page, totalCount);
+        UserEntity[] users = this.userMapper.selectUserBySearch(filter, keyword, pageVo.countPerPage, pageVo.offsetCount);
+        return Pair.of(pageVo, users);
     }
 
     public CommonResult patchUser(String userEmail, boolean suspend) {
@@ -104,18 +107,28 @@ public class AdminService {
                 : CommonResult.FAILURE;
     }
 
-    public ProductEntity[] selectProduct() {
-        return this.productMapper.selectProduct();
+    public Pair<ProductPageVo, ProductEntity[]> selectProduct(int page) {
+        page = Math.max(1, page); // page = page < 1 ? 1 : page; 페이지 번호가 1보다 작으면 1로 설정 ( 페이지 번호는 1이상 이야함 )
+        int totalCount = this.productMapper.selectProductCount(); // 전체 게시글의 개수
+        ProductPageVo pageVo = new ProductPageVo(page, totalCount);
+        ProductEntity[] products = this.productMapper.selectProduct(pageVo.countPerPage,
+                pageVo.offsetCount);
+        return Pair.of(pageVo, products);
     }
 
-    public ProductEntity[] searchProduct(String filter, String keyword) {
+    public Pair<ProductPageVo, ProductEntity[]> searchProduct(int page, String filter, String keyword) {
+        page = Math.max(1, page);
         if (filter == null || !filter.equals("all") && !filter.equals("modelNum") && !filter.equals("name") && !filter.equals("brand") && !filter.equals("category")) {
             filter = "all";
         }
         if (keyword == null) {
             keyword = "";
         }
-        return this.productMapper.selectProductBySearch(filter, keyword);
+        int totalCount = this.productMapper.selectProductCountBySearch(filter, keyword);
+        ProductPageVo pageVo = new ProductPageVo(page, totalCount);
+        ProductEntity[] products = this.productMapper.selectProductBySearch(filter, keyword, pageVo.countPerPage,
+                pageVo.offsetCount);
+        return Pair.of(pageVo, products);
     }
 
     public ProductEntity getProductById(Integer id) {
@@ -155,7 +168,9 @@ public class AdminService {
             return null;
         }
         return this.categoryDetailMapper.selectByCategoryId(categoryDetailType);
-    };
+    }
+
+    ;
 
     public CommonResult addProduct(ProductEntity product, CategoryDetailEntity categoryDetail, MultipartFile[] files, String[] sizes) throws IOException {
         if (product == null ||
@@ -210,29 +225,92 @@ public class AdminService {
         return CommonResult.SUCCESS;
     };
 
-    public OrderDTO[] selectOrder() {
-        return this.orderMapper.selectOrder();
+    public Pair<PageVo, OrderDTO[]> selectOrder(int page) {
+        page = Math.max(1, page); // page = page < 1 ? 1 : page; 페이지 번호가 1보다 작으면 1로 설정 ( 페이지 번호는 1이상 이야함 )
+        int totalCount = this.orderMapper.selectOrderCountsByPage(); // 전체 게시글의 개수
+        PageVo pageVo = new PageVo(page, totalCount);
+        OrderDTO[] orders = this.orderMapper.selectOrderByPage(pageVo.countPerPage,
+                pageVo.offsetCount);
+        return Pair.of(pageVo, orders);
     }
 
-    public OrderDTO[] searchOrder(String filter, String keyword) {
+    public Pair<PageVo, OrderDTO[]> searchOrder(int page, String filter, String keyword) {
+        page = Math.max(1, page);
         if (filter == null || !filter.equals("all") && !filter.equals("productName") && !filter.equals("email") && !filter.equals("state")) {
             filter = "all";
         }
         if (keyword == null) {
             keyword = "";
         }
-        return this.orderMapper.selectOrderBySearch(filter, keyword);
+        int totalCount = this.orderMapper.selectOrderCountsBySearch(filter, keyword);
+        PageVo pageVo = new PageVo(page, totalCount);
+        OrderDTO[] orders = this.orderMapper.selectOrderBySearch(filter, keyword, pageVo.countPerPage, pageVo.offsetCount);
+        return Pair.of(pageVo, orders);
     }
 
     public CommonResult patchOrder(int id, String state) {
+        // 주문 엔티티 조회
         OrderEntity order = this.orderMapper.selectOrderById(id);
+        Integer sellerBidId = order.getSellerBidId();
+        Integer buyerBidId = order.getBuyerBidId();
+        System.out.println(sellerBidId);
         if (order == null) {
+            return CommonResult.FAILURE; // 주문이 존재하지 않으면 실패
+        }
+        if (sellerBidId == null && buyerBidId == null) {
             return CommonResult.FAILURE;
+        } else if (sellerBidId != null && buyerBidId == null) {
+            SellerBidEntity sellerBid = this.sellerBidMapper.selectSellerBidById(sellerBidId);
+            if (state.equals("DELIVERED")) {
+                order.setState(state);
+                order.setUpdatedAt(LocalDateTime.now());
+                order.setDeletedAt(null);
+                sellerBid.setOrderState(SellerBidEntity.OrderState.SETTLED);
+                sellerBid.setUpdatedAt(LocalDateTime.now());
+                this.orderMapper.updateOrder(order);
+                this.sellerBidMapper.updateSellerBid(sellerBid);
+                return CommonResult.SUCCESS;
+            } else if (state.equals("IN_TRANSIT")) {
+                order.setState(state);
+                order.setUpdatedAt(LocalDateTime.now());
+                order.setDeletedAt(null);
+                sellerBid.setOrderState(SellerBidEntity.OrderState.SETTLING);
+                sellerBid.setUpdatedAt(LocalDateTime.now());
+                this.orderMapper.updateOrder(order);
+                this.sellerBidMapper.updateSellerBid(sellerBid);
+                return CommonResult.SUCCESS;
+            }
+            sellerBid.setOrderState(SellerBidEntity.OrderState.valueOf(state));
+            sellerBid.setUpdatedAt(LocalDateTime.now());
+            this.sellerBidMapper.updateSellerBid(sellerBid);
+        } else if (sellerBidId == null && buyerBidId != null) {
+            BuyerBidEntity buyerBid = this.buyerBidMapper.selectBuyerBidById(buyerBidId);
+            if (state.equals("SETTLED")) {
+                order.setState(state);
+                order.setUpdatedAt(LocalDateTime.now());
+                order.setDeletedAt(null);
+                buyerBid.setOrderState(BuyerBidEntity.OrderState.DELIVERED);
+                buyerBid.setUpdatedAt(LocalDateTime.now());
+                this.orderMapper.updateOrder(order);
+                this.buyerBidMapper.updateBuyerBid(buyerBid);
+                return CommonResult.SUCCESS;
+            } else if (state.equals("SETTLING")) {
+                order.setState(state);
+                order.setUpdatedAt(LocalDateTime.now());
+                order.setDeletedAt(null);
+                buyerBid.setOrderState(BuyerBidEntity.OrderState.IN_TRANSIT);
+                buyerBid.setUpdatedAt(LocalDateTime.now());
+                this.orderMapper.updateOrder(order);
+                this.buyerBidMapper.updateBuyerBid(buyerBid);
+                return CommonResult.SUCCESS;
+            }
+            buyerBid.setOrderState(BuyerBidEntity.OrderState.valueOf(state));
+            buyerBid.setUpdatedAt(LocalDateTime.now());
+            this.buyerBidMapper.updateBuyerBid(buyerBid);
         }
         order.setState(state);
         order.setUpdatedAt(LocalDateTime.now());
         order.setDeletedAt(null);
-
         return this.orderMapper.updateOrder(order) > 0
                 ? CommonResult.SUCCESS
                 : CommonResult.FAILURE;
