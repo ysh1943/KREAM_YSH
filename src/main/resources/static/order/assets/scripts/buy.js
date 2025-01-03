@@ -116,7 +116,9 @@ function updateNextPage() {
     const $nextPagePrice = document.createElement('span');
     $nextPagePrice.classList.add('next-page-price');
     $nextPagePrice.innerText = $inputPrice.value + '원';
-    $nextPagePrice.innerText = $price.innerText;
+    if ($price.style.display === 'block') {
+        $nextPagePrice.innerText = $price.innerText;
+    }
     $productContentWrap.append($nextPagePrice);
 
     // 주문정보에서 구매가
@@ -124,7 +126,9 @@ function updateNextPage() {
     $orderPrice.classList.add('content-text');
     $orderPrice.classList.add('bold');
     $orderPrice.innerText = $inputPrice.value + '원';
-    $orderPrice.innerText = $price.innerText;
+    if ($price.style.display === 'block') {
+        $orderPrice.innerText = $price.innerText;
+    }
     $contentTextWrap.prepend($orderPrice);
 
     // 최종 결제 금액
@@ -134,17 +138,21 @@ function updateNextPage() {
     numberInputPrice = numberInputPrice + 3000;
     let numberPrice = parseInt($price.innerText.replace(/[^0-9]/g, ''));
     numberPrice = numberPrice + 3000;
-    $inputPrice.value = numberInputPrice.toLocaleString();
-    $price.innerText = numberPrice.toLocaleString();
-    $lastPrice.innerText = $inputPrice.value + '원';
-    $lastPrice.innerText = $price.innerText + '원';
+    numberInputPrice = numberInputPrice.toLocaleString();
+    numberPrice = numberPrice.toLocaleString();
+    $lastPrice.innerText = numberInputPrice + '원';
+    if ($price.style.display === 'block') {
+        $lastPrice.innerText = numberPrice + '원';
+    }
     $allPriceWrap.append($lastPrice);
 
     // 입찰 버튼 내용
     const $orderButtonText = document.createElement('span');
     $orderButtonText.classList.add('order-button-text');
-    $orderButtonText.innerText = $inputPrice.value + '원 • 입찰하기';
-    $orderButtonText.innerText = $price.innerText + '원 • 결제하기';
+    $orderButtonText.innerText = numberInputPrice + '원 • 입찰하기';
+    if ($price.style.display === 'block') {
+        $orderButtonText.innerText = numberPrice + '원 • 결제하기';
+    }
     $lastOrderButton.append($orderButtonText);
 
     // 마감기간, 마감일
@@ -167,14 +175,15 @@ function updateNextPage() {
         const response = JSON.parse(xhr.responseText);
         if (response['result'] === 'empty') {
             $addressButtonText.innerText = '새 주소 추가';
-            const $addressContentWrap = new DOMParser().parseFromString(`
+            const $emptyAddressContentWrap = new DOMParser().parseFromString(`
             <div class="address-content-wrap">
             <div class="empty-text">등록된 기본 배송지가 없습니다.</div>
             <div class="empty-text">새 주소지를 추가해주세요.</div>
                     </div>
         `, 'text/html').querySelector('.address-content-wrap');
-            $addressContainer.append($addressContentWrap);
+            $addressContainer.append($emptyAddressContentWrap);
             $lastOrderButton.style.cursor = 'not-allowed';
+            $lastOrderButton.style.userSelect = 'none';
 
         } else {
             const $addressContentWrap = new DOMParser().parseFromString(`
@@ -192,17 +201,12 @@ function updateNextPage() {
                     <span class="title">주소</span>
                     <input maxlength=50 minlength="20" type="text" name="address" class="address" value="[${response['postal'] == null ? '-' : response['postal']}] ${response['basicAddress'] == null ? '' : response['basicAddress']} ${response['detailAddress'] == null ? '' : response['detailAddress']}">
                 </label>
-                <button class="note-button" type="button">
-                    <span class="note">요청사항 없음</span>
-                    <span class="-spring"></span>
-                    <i class="fa-solid fa-chevron-right"></i>
-                </button>
             </div>
         `, 'text/html').querySelector('.address-content-wrap');
             $addressContainer.append($addressContentWrap);
         }
     };
-    xhr.open('GET', `/address?user-id=${$form['user-id'].value}`);
+    xhr.open('GET', `/address`);
     xhr.send();
 
 
@@ -265,68 +269,68 @@ function buyFormSubmit() {
 
         const productName = $form['product-name'].value;
         const sizeId = $form['size-id'].value;
-        const price = $price.innerText.replace(/[^0-9]/g, '');
+        const price = Number($price.innerText.replace(/[^0-9]/g, '')) + 3000;
         const email = $form['user-email'].value;
 
-        console.log(price);
-        IMP.request_pay({
-            pg: "kakaopay.TC0ONETIME",
-            merchant_uid: `${sizeId}-${new Date().getTime()}`,
-            buyer_email: email,// 상점에서 생성한 고유 주문번호
-            name: productName,
-            amount: price,
-        }, function (rsp) {
-            if (rsp.success) {
-                // 결제 성공 시 서버에 결제 검증 요
-                console.log(`${sizeId}-${new Date().getTime()}`);
-                const xhr = new XMLHttpRequest();
-                const formData = new FormData();
-                formData.append("userId", $form['user-id'].value);
-                formData.append('type', type);
-                formData.append('sellerBidId', $form['seller-bid-id'].value);
-                formData.append('price', $price.innerText.replace(/[^0-9]/g, ''));
-                formData.append("addressId", $form['address-id'].value);
-                formData.append("sizeId", $form['size-id'].value);
-                formData.append("merchantUid", rsp.merchant_uid);
-                formData.append("name", rsp.name);
-                formData.append("buyerEmail", rsp.buyer_email);
-                formData.append("price", rsp.amount);
-                formData.append("pg", rsp.pg);
-                xhr.onreadystatechange = () => {
-                    if (xhr.readyState !== XMLHttpRequest.DONE) {
-                        return;
-                    }
-                    if (xhr.status < 200 || xhr.status >= 300) {
-                        Dialog.defaultOk('오류', '요청을 전송하는 도중 오류가 발생하였습니다. 잠시 후 다시 시도해 주세요.', ($dialog) => Dialog.hide($dialog))
-                        return;
-                    }
-                    const response = JSON.parse(xhr.responseText);
-                    const [title, content, onclick] = {
-                        failure: ['즉시 구매', '알수 없는 이유로 구매에 실패하였습니다. 잠시 후 다시 시도해주세요.', ($dialog) => Dialog.hide($dialog)],
-                        failure_price: ['즉시 구매', '판매자가 올린 가격과 일치하지 않습니다. 가격 확인 후 다시 시도해주세요.', ($dialog) => {
-                            Dialog.hide($dialog);
-                        }],
-                        success: ['즉시 구매', '구매가 완료되었습니다.', ($dialog) => {
-                            Dialog.hide($dialog);
-                            location.href = './';
-                        }],
-                    }[response['result']] || ['오류', '서버가 알 수 없는 응답을 반환하였습니다. 잠시 후 다시 시도해 주세요.', ($dialog) => Dialog.hide($dialog)];
-                    Dialog.show({
-                        title: title,
-                        content: content,
-                        buttons: [{text: '확인', onclick: onclick}]
-                    });
-                };
-                xhr.open('POST', '/buy-order');
-                xhr.send(formData);
-
-            } else {
-                // 결제 실패 처리
-                alert("결제에 실패하였습니다: " + rsp.error_msg);
+        const xhr = new XMLHttpRequest();
+        const formData = new FormData();
+        formData.append("userId", $form['user-id'].value);
+        formData.append('type', type);
+        formData.append('sellerBidId', $form['seller-bid-id'].value);
+        formData.append('price', price.toString());
+        formData.append("addressId", $form['address-id'].value);
+        formData.append("sizeId", $form['size-id'].value);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState !== XMLHttpRequest.DONE) {
+                return;
             }
-        });
+            if (xhr.status < 200 || xhr.status >= 300) {
+                Dialog.defaultOk('오류', '요청을 전송하는 도중 오류가 발생하였습니다. 잠시 후 다시 시도해 주세요.', ($dialog) => Dialog.hide($dialog))
+                return;
+            }
+            const response = JSON.parse(xhr.responseText);
+            if (response['result'] === 'failure') {
+                    Dialog.defaultOk('즉시 구매', '알수 없는 이유로 구매에 실패하였습니다. 잠시 후 다시 시도해주세요.', ($dialog) => Dialog.hide($dialog));
+            } else if (response['result'] === 'failure_unsigned') {
+                Dialog.defaultOk('즉시 구매', '로그인에 문제가 있습니다. 확인 후 다시 시도해 주세요.', ($dialog) => {
+                    Dialog.hide($dialog);
+                })
+            } else if (response['result'] === 'failure_price') {
+                    Dialog.defaultOk('즉시 구매', '판매자가 올린 가격과 일치하지 않습니다. 가격 확인 후 다시 시도해주세요.', ($dialog) => {
+                        Dialog.hide($dialog);
+                    })
+            } else if (response['result'] === 'failure_address') {
+                Dialog.defaultOk('즉시 구매', '배송 주소에 문제가 있습니다. 주소 확인 후 다시 시도해 주세요.', ($dialog) => {
+                    Dialog.hide($dialog);
+                })
+            } else if (response['result'] === 'failure_sellerBid') {
+                Dialog.defaultOk('즉시 구매', '판매자가 확인이 안됩니다. 잠시 후 다시 시도해 주세요.', ($dialog) => {
+                    Dialog.hide($dialog);
+                })
+            } else if (response['result'] === 'success') {
+                IMP.request_pay({
+                    pg: "kakaopay.TC0ONETIME",
+                    merchant_uid: `${sizeId}-${new Date().getTime()}`,
+                    buyer_email: email,// 상점에서 생성한 고유 주문번호
+                    name: productName,
+                    amount: price,
+                }, function (rsp) {
+                    if (rsp.success) {
+                        Dialog.defaultOk('즉시 구매', '구매가 완료되었습니다. 진행상황은 구매내역에서 확인해 주세요,', ($dialog) => Dialog.hide($dialog));
+                        location.href = './';
+                    } else {
+                        alert("결제에 실패하였습니다: " + rsp.error_msg);
+                    }
+                });
+            } else {
+                Dialog.defaultOk('오류', '서버가 알 수 없는 응답을 반환하였습니다. 잠시 후 다시 시도해 주세요.', ($dialog) => Dialog.hide($dialog));
+            }
+        };
+        xhr.open('POST', '/buy-order');
+        xhr.send(formData);
     }
 }
+
 //endregion
 
 if (type === 'bid') {
@@ -334,9 +338,8 @@ if (type === 'bid') {
     $inputPriceTitle.innerText = '구매 희망가'
     $bidButton.classList.add('active');
     $buyButton.classList.add('disable');
-    $deadLineWrap.style.display = 'flex';
+    $deadlineWrap.style.display = 'flex';
     $continueButton.classList.add('not-ready');
-    $inputPrice.value = '';
 
     formatPriceInput();
     handleDeadlineButtons();

@@ -220,7 +220,7 @@
         </ul>
         <ul class="shop-products-list new-list">
             <li class="products-item" th:if="${newProducts != null}" th:each="newProduct : ${newProducts}">
-                <a th:href="@{'/products?id=' + ${newProduct.getProductId()}}" class="product-image">
+                <a th:href="@{'/product?id=' + ${newProduct.getProductId()}}" class="product-image">
                     <span class="releaseDate" th:if="${newProduct.getReleaseDate() != null}">
                         <span class="text">발매일</span>
                         <span class="text"

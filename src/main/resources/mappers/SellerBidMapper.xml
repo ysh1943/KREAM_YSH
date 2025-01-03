@@ -6,8 +6,8 @@
 
     <insert id="insertSellerBid"
     parameterType="com.kream.kream.entities.SellerBidEntity">
-        INSERT INTO `kream`.`buyer_bid` (`user_id`, `size_id`, `address_id`, `price`, `deadline`, `state`, `created_at`, `update_at`, `is_deleted`)
-        VALUES (#{userId}, #{sizeId}, #{addressId}, #{price}, #{deadline}, #{state}, #{createdAt}, #{updatedAt}, #{isDeleted})
+        INSERT INTO `kream`.`seller_bid` (`user_id`, `size_id`, `address_id`, `price`, `deadline`, `state`, `order_state`, `created_at`, `update_at`, `is_deleted`)
+        VALUES (#{userId}, #{sizeId}, #{addressId}, #{price}, #{deadline}, #{state}, #{orderState} ,#{createdAt}, #{updatedAt}, #{isDeleted})
     </insert>
 
     <select id="selectPriceBySizeIdAndSellerBidId" resultType="com.kream.kream.entities.SellerBidEntity">
@@ -18,6 +18,7 @@
                `price`      AS `price`,
                `deadline`   AS `deadline`,
                `state`      AS `state`,
+               `order_state`AS `orderState`,
                `created_at` AS `createdAt`,
                `update_at`  AS `updatedAt`,
                `is_deleted` AS `isDeleted`
@@ -27,4 +28,19 @@
           AND `seller_bid`.`state` = 'BIDDING'
           AND `seller_bid`.`is_deleted` = 0
     </select>
+
+    <update id="updateSellerBidState">
+        UPDATE `kream`.`seller_bid`
+        SET `user_id`     = #{userId},
+            `size_id`     = #{sizeId},
+            `address_id`  = #{addressId},
+            `price`       = #{price},
+            `deadline`    = #{deadline},
+            `state`       = #{state},
+            `order_state` = #{orderState},
+            `created_at`  = #{createdAt},
+            `update_at`   = #{updatedAt},
+            `is_deleted`  = #{isDeleted}
+        WHERE `seller_bid`.`id` = #{id}
+    </update>
 </mapper>

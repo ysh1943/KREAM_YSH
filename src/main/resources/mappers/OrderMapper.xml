@@ -41,7 +41,12 @@
                `product`.`category`        AS category,
                `image`.`data`              AS imageData,
                `image`.`type`              AS imageType,
-               MIN(`seller_bid`.`price`)   AS lowestPrice,
+               (SELECT MIN(`seller_bid`.`price`)
+                FROM `kream`.`seller_bid`
+                         INNER JOIN `kream`.`size`
+                                    ON `seller_bid`.`size_id` = `size`.`id`
+                WHERE `size`.`product_id` = `product`.`id`
+                  AND `seller_bid`.`state` = 'BIDDING')     AS lowestPrice,
                COUNT(`order`.`id`)         AS transactionCount
         FROM `kream`.`order`
                  LEFT JOIN `kream`.`seller_bid`
@@ -58,6 +63,7 @@
                             ON `product`.`id` = `image`.`product_id`
                                 AND `image`.`is_primary` = 1
         WHERE `order`.`state` = 'DELIVERED'
+            OR `order`.`state` = 'SETTLED'
         GROUP BY `product`.`id`
         ORDER BY transactionCount DESC
         LIMIT 20
@@ -328,9 +334,7 @@
         SELECT `order`.`id`         AS `orderId`,
                `size`.`type`        AS `sizeType`,
                `order`.`price`      AS `orderPrice`,
-               `order`.`created_at` AS `orderDate`,
-               `seller_bid`.`price`,
-               `buyer_bid`.`price`
+               `order`.`created_at` AS `orderDate`
         FROM `kream`.`order`
                  LEFT JOIN `kream`.`seller_bid`
                            ON `order`.`seller_bid_id` = `seller_bid`.`id`
