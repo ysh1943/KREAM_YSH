@@ -1,5 +1,7 @@
 package com.kream.kream.services;
 
+import com.kream.kream.dtos.BuyingListDTO;
+import com.kream.kream.dtos.ShopProductDTO;
 import com.kream.kream.entities.AccountEntity;
 import com.kream.kream.entities.AddressEntity;
 import com.kream.kream.entities.UserEntity;
@@ -18,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -31,6 +35,18 @@ public class MyService {
         this.userMapper = userMapper;
         this.addressMapper = addressMapper;
         this.accountMapper = accountMapper;
+    }
+
+    public List<BuyingListDTO> getBuyingList(Integer userId, String state){
+        List<BuyingListDTO> buyings = this.userMapper.getBuyingsByUserOfState(userId, state);
+        if (buyings == null || buyings.isEmpty()){
+            return new ArrayList<>();
+        }
+        return buyings;
+    }
+
+    public List<BuyingListDTO>getBuyings(Integer userId, String state){
+        return userMapper.getBuyingsByUserOfOrderState(state, userId);
     }
 
     public Result resolveRecoverPassword(UserEntity user, String newPassword) {
@@ -102,7 +118,6 @@ public class MyService {
         }
         return this.accountMapper.selectAccount(userId);
     }
-
 
     @Transactional
     public Result modify(AddressEntity address) {
