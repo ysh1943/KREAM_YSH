@@ -334,7 +334,7 @@ if (type === 'bid') {
     $inputPriceTitle.innerText = '구매 희망가'
     $bidButton.classList.add('active');
     $buyButton.classList.add('disable');
-    $deadLineWrap.style.display = 'flex';
+    $deadlineWrap.style.display = 'flex';
     $continueButton.classList.add('not-ready');
     $inputPrice.value = '';
 

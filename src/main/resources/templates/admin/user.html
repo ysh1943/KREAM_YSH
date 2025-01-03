@@ -104,6 +104,29 @@
                     </tbody>
                 </table>
             </form>
+            <div class="move" th:if="${users != null && users.length > 0}">
+                <a class="page first"
+                   th:if="${PageVo.requestPage > PageVo.movableMinPage}"
+                   th:href="@{'/admin/user' (page=${PageVo.movableMinPage}, filter=${filter}, keyword=${keyword})}"><i class="fa-solid fa-angles-left"></i></a>
+                <a class="page prev"
+                   th:if="${PageVo.requestPage > PageVo.movableMinPage}"
+                   th:href="@{'/admin/user' (page=${PageVo.requestPage - 1}, filter=${filter}, keyword=${keyword})}"><i class="fa-solid fa-angle-left"></i></a>
+                <div class="page-container">
+                    <a class="page"
+                       th:if="${page >= PageVo.movableMinPage}"
+                       th:each="page : ${#numbers.sequence(PageVo.displayMinPage, PageVo.displayMaxPage)}"
+                       th:text="${page}"
+                       th:href="@{'/admin/user' (page= ${page}, filter=${filter}, keyword=${keyword})}"
+                       th:classappend="${page == PageVo.requestPage} ? 'selected'"></a>
+                    <!-- page = 반복값   pageVo.requestPage = 요청 페이지 -->
+                </div>
+                <a class="page next"
+                   th:if="${PageVo.requestPage < PageVo.movableMaxPage}"
+                   th:href="@{'/admin/user' (page=${PageVo.requestPage + 1}, filter=${filter}, keyword=${keyword})}"><i class="fa-solid fa-angle-right"></i></a>
+                <a class="page last"
+                   th:if="${PageVo.requestPage < PageVo.movableMaxPage}"
+                   th:href="@{'/admin/user' (page=${PageVo.movableMaxPage}, filter=${filter}, keyword=${keyword})}"><i class="fa-solid fa-angles-right"></i></a>
+            </div>
         </div>
     </main>
 </div>

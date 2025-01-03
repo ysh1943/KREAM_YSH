@@ -1,9 +1,6 @@
-const $cover = document.getElementById('cover');
-const $main = document.getElementById('main');
-const $navForm = document.querySelector('.tabs');
 const $sortList = document.querySelector('.sort-list');
 const $sortItems = Array.from($sortList.querySelectorAll('.sort-item'));
-const $sortButton = document.querySelector('.sort-title');
+
 
 document.querySelector('.sort-title').addEventListener('click', function() {
     // '.sort-list' 요소를 찾아서 토글

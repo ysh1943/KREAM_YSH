@@ -165,6 +165,77 @@
           }
         }
       }
+
+      > .move {
+        align-items: stretch;
+        display: flex;
+        flex-direction: row;
+        gap: 0.0625rem;
+        line-height: 1;
+        justify-content: center;
+
+        .page {
+          width: 1.75rem;
+          color: #a0a0a0;
+          font-size: 1rem;
+          font-weight: bold;
+          line-height: 1;
+          text-decoration: none;
+          user-select: none;
+          padding: 0 0.5rem;
+
+          align-items: center;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+
+          &:hover {
+            color: #222;
+          }
+
+          &:active {
+            color: #222;
+          }
+
+          &.selected {
+            color: #222;
+            cursor: pointer;
+            pointer-events: none;
+          }
+        }
+
+        > .page.first,
+        > .page.next {
+          border-top-left-radius: 0.25rem;
+          border-bottom-left-radius: 0.25rem;
+        }
+
+        > .page.prev,
+        > .page.last {
+          border-top-right-radius: 0.25rem;
+          border-bottom-right-radius: 0.25rem;
+        }
+
+        .page-container {
+          margin: 0 0.5rem;
+
+          align-items: stretch;
+          display: flex;
+          flex-direction: row;
+          gap: 0.0625rem;
+          justify-content: center;
+
+          > .page:first-of-type {
+            border-top-left-radius: 0.25rem;
+            border-bottom-left-radius: 0.25rem;
+          }
+
+          > .page:last-of-type {
+            border-top-right-radius: 0.25rem;
+            border-bottom-right-radius: 0.25rem;
+          }
+        }
+      }
     }
 
     > .content[rel="product-register"] {

@@ -15,7 +15,15 @@ public class BuyerBidEntity {
         BIDDING,
         DEADLINE,
     }
-
+    public enum OrderState {
+        PENDING,
+        INSPECTING,
+        INSPECTION_FAILED,
+        INSPECTION_PASSED,
+        IN_TRANSIT,
+        FAILED,
+        DELIVERED
+    }
     private int id;
     private int userId;
     private int sizeId;
@@ -23,6 +31,7 @@ public class BuyerBidEntity {
     private int price;
     private LocalDate deadline;
     private String state;
+    private OrderState orderState;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private boolean isDeleted;

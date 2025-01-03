@@ -13,10 +13,17 @@ public interface UserMapper {
 
     int selectUserCount();
 
+    int selectUserCountBySearch(String filter, String keyword);
+
     UserEntity[] selectUser();
 
+    UserEntity[] selectUserByPage(@Param("limitCount") int limitCount,
+                                  @Param("offsetCount") int offsetCount);
+
     UserEntity[] selectUserBySearch(@Param("filter") String filter,
-                                    @Param("keyword") String keyword);
+                                    @Param("keyword") String keyword,
+                                    @Param("limitCount") int limitCount,
+                                    @Param("offsetCount") int offsetCount);
 
 
     int deleteUserByEmail(@Param("email") String email);
@@ -36,10 +43,8 @@ public interface UserMapper {
 
     int updateUser(UserEntity user);
 
-
     List<BuyingListDTO> getBuyingsByUserOfState(Integer userId, String state);
 
     List<BuyingListDTO> getBuyingsByUserOfOrderState(@Param("order_state") String state,
                                                      @Param("userId") Integer userId);
-
 }
