@@ -12,6 +12,7 @@ import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -93,6 +94,7 @@ public class OrderService {
         }
         sellerBid.setCreatedAt(LocalDateTime.now());
         sellerBid.setState(BuyerBidEntity.State.BIDDING.name());
+        sellerBid.setOrderState(null);
 
         return this.sellerBidMapper.insertSellerBid(sellerBid) > 0
                 ? CommonResult.SUCCESS
@@ -100,12 +102,19 @@ public class OrderService {
     }
 
 
+    @Transactional
     public Result insertBuyOrder(OrderEntity order, int sizeId, int sellerBidId) {
-        SellerBidEntity sellerBidEntity = this.sellerBidMapper.selectPriceBySizeIdAndSellerBidId(sizeId, sellerBidId);
-        if (order == null || order.getUserId() < 1 || order.getSellerBidId() < 1  || order.getAddressId() < 1) {
+        SellerBidEntity sellerBid = this.sellerBidMapper.selectPriceBySizeIdAndSellerBidId(sizeId, sellerBidId);
+        if (order == null) {
             return CommonResult.FAILURE;
         }
-        if (order.getPrice() < 0 || order.getPrice() != (sellerBidEntity.getPrice() + 3000)) {
+        if (order.getUserId() < 1) {
+            return CommonResult.FAILURE_UNSIGNED;
+        }
+        if (order.getAddressId() < 1) {
+            return OrderValidationResult.FAILURE_ADDRESS;
+        }
+        if (order.getPrice() < 0 || order.getPrice() != (sellerBid.getPrice() + 3000)) {
             return OrderValidationResult.FAILURE_PRICE;
         }
         order.setBuyerBidId(null);
@@ -114,16 +123,38 @@ public class OrderService {
         order.setCreatedAt(LocalDateTime.now());
         order.setDeliveryNote(null);
 
-        return this.orderMapper.insertOrder(order) > 0
-                ? CommonResult.SUCCESS
-                : CommonResult.FAILURE;
-    }
+        sellerBid.setState(SellerBidEntity.State.ORDER.name());
+        sellerBid.setOrderState(SellerBidEntity.OrderState.PENDING.name());
+        sellerBid.setUpdatedAt(LocalDateTime.now());
+        int updateState = this.sellerBidMapper.updateSellerBid(sellerBid);
+        if (order.getSellerBidId() < 1 || updateState <= 0) {
+            return OrderValidationResult.FAILURE_SellerBid;
+        }
 
-    public Result insertSellOrder(OrderEntity order) {
-        if (order == null || order.getUserId() < 1 || order.getSellerBidId() < 1  || order.getAddressId() < 1) {
+        int buyOrder = this.orderMapper.insertOrder(order);
+        if (buyOrder <= 0) {
             return CommonResult.FAILURE;
         }
-        if (order.getPrice() < 0) {
+
+        return CommonResult.SUCCESS;
+
+    }
+
+    public Result insertSellOrder(OrderEntity order, int accountId, int sizeId, int buyerBidId) {
+        BuyerBidEntity buyerBid = this.buyerBidMapper.selectPriceBySizeIdAndBuyerBidId(sizeId, buyerBidId);
+        if (order == null) {
+            return CommonResult.FAILURE;
+        }
+        if (order.getUserId() < 1) {
+            return CommonResult.FAILURE_UNSIGNED;
+        }
+        if (order.getAddressId() < 1) {
+            return OrderValidationResult.FAILURE_ADDRESS;
+        }
+        if (accountId < 1) {
+            return OrderValidationResult.FAILURE_ACCOUNT;
+        }
+        if (order.getPrice() < 0 || order.getPrice() != (buyerBid.getPrice() - (5000 + (buyerBid.getPrice() * 0.04)))) {
             return OrderValidationResult.FAILURE_PRICE;
         }
         order.setSellerBidId(null);
@@ -132,9 +163,19 @@ public class OrderService {
         order.setCreatedAt(LocalDateTime.now());
         order.setDeliveryNote(null);
 
-        return this.orderMapper.insertOrder(order) > 0
-                ? CommonResult.SUCCESS
-                : CommonResult.FAILURE;
-    }
+        buyerBid.setState(BuyerBidEntity.State.ORDER.name());
+        buyerBid.setOrderState(BuyerBidEntity.OrderState.PENDING.name());
+        buyerBid.setUpdatedAt(LocalDateTime.now());
+        int updateState = this.buyerBidMapper.updateBuyerBid(buyerBid);
+        if (order.getBuyerBidId() < 1 || updateState < 1) {
+            return OrderValidationResult.FAILURE_SellerBid;
+        }
 
+        int sellOrder = this.orderMapper.insertOrder(order);
+        if (sellOrder <= 0) {
+            return CommonResult.FAILURE;
+        }
+
+        return CommonResult.SUCCESS;
+    }
 }

@@ -20,13 +20,11 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(value = "/")
 public class OrderController {
     private final OrderService orderService;
-    private final PaymentService paymentService;
 
 
     @Autowired
-    public OrderController(OrderService orderService, PaymentService paymentService) {
+    public OrderController(OrderService orderService) {
         this.orderService = orderService;
-        this.paymentService = paymentService;
     }
 
     @RequestMapping(value = "/order", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
@@ -52,8 +50,8 @@ public class OrderController {
 
     @RequestMapping(value = "/address", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String getAddress(@RequestParam(value = "user-id", required = false) Integer userId) {
-        AddressEntity address = this.orderService.getAddressByUserId(userId);
+    public String getAddress(@SessionAttribute(value = "user", required = false) UserEntity user) {
+        AddressEntity address = this.orderService.getAddressByUserId(user.getId());
         JSONObject response = new JSONObject();
         if (address == null) {
             response.put("result", "empty");
@@ -99,16 +97,9 @@ public class OrderController {
     @ResponseBody
     public String postBuyOrder(OrderEntity order,
                                @RequestParam(value = "sizeId", required = false) Integer sizeId,
-                               @RequestParam(value = "sellerBidId", required = false) Integer sellerBidId,
-                               @RequestParam(value = "merchantUid", required = false) String merchantUid) {
+                               @RequestParam(value = "sellerBidId", required = false) Integer sellerBidId) {
         Result result = this.orderService.insertBuyOrder(order, sizeId, sellerBidId);
         JSONObject response = new JSONObject();
-//        boolean isPaymentValid = this.paymentService.verifyPayment(merchantUid, sizeId, sellerBidId);
-//
-//        if (!isPaymentValid) {
-//            response.put(Result.NAME, OrderValidationResult.FAILURE_PRICE.nameToLower());
-//            return response.toString();
-//        }
         response.put(Result.NAME, result.nameToLower());
         return response.toString();
     }
@@ -124,12 +115,13 @@ public class OrderController {
 
     @RequestMapping(value = "/sell-order", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String postSellOrder(OrderEntity order) {
-        Result result = this.orderService.insertSellOrder(order);
-        System.out.println(result);
+    public String postSellOrder(OrderEntity order,
+                                @RequestParam(value = "accountId", required = false) Integer accountId,
+                                @RequestParam(value = "sizeId", required = false) Integer sizeId,
+                                @RequestParam(value = "buyerBidId", required = false) Integer buyerBidId) {
+        Result result = this.orderService.insertSellOrder(order, accountId, sizeId, buyerBidId);
         JSONObject response = new JSONObject();
         response.put(Result.NAME, result.nameToLower());
         return response.toString();
     }
-
 }

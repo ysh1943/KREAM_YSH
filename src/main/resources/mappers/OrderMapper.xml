@@ -89,6 +89,43 @@
         WHERE `deleted_at` IS NULL
     </select>
 
+    <select id="selectPopularProducts"
+            resultType="com.kream.kream.dtos.ProductDTO">
+        SELECT `product`.`id`              AS productId,
+               `product`.`product_name_en` AS productNameEn,
+               `product`.`product_name_ko` AS productNameKo,
+               `product`.`brand`           AS brand,
+               `product`.`category`        AS category,
+               `image`.`data`              AS imageData,
+               `image`.`type`              AS imageType,
+               (SELECT MIN(`seller_bid`.`price`)
+                FROM `kream`.`seller_bid`
+                         INNER JOIN `kream`.`size`
+                                    ON `seller_bid`.`size_id` = `size`.`id`
+                WHERE `size`.`product_id` = `product`.`id`
+                  AND `seller_bid`.`state` = 'BIDDING')     AS lowestPrice,
+               COUNT(`order`.`id`)         AS transactionCount
+        FROM `kream`.`order`
+                 LEFT JOIN `kream`.`seller_bid`
+                           ON `seller_bid_id` = `seller_bid`.`id`
+                               AND `seller_bid`.`state` = 'BIDDING'
+                 LEFT JOIN `kream`.`buyer_bid`
+                           ON `buyer_bid_id` = `buyer_bid`.`id`
+                 INNER JOIN `kream`.`size`
+                            ON `seller_bid`.`size_id` = `size`.`id`
+                                OR `buyer_bid`.`size_id` = `size`.`id`
+                 INNER JOIN `kream`.`product`
+                            ON `product_id` = `product`.`id`
+                 INNER JOIN `kream`.`image`
+                            ON `product`.`id` = `image`.`product_id`
+                                AND `image`.`is_primary` = 1
+        WHERE `order`.`state` = 'DELIVERED'
+            OR `order`.`state` = 'SETTLED'
+        GROUP BY `product`.`id`
+        ORDER BY transactionCount DESC
+        LIMIT 20
+    </select>
+
     <select id="selectOrder"
             resultType="com.kream.kream.dtos.OrderDTO">
         SELECT `order`.id                         AS id,
@@ -336,44 +373,6 @@
         LIMIT 1
     </update>
 
-    <select id="selectPopularProducts"
-            resultType="com.kream.kream.dtos.ProductDTO">
-        SELECT `product`.`id`              AS productId,
-               `product`.`product_name_en` AS productNameEn,
-               `product`.`product_name_ko` AS productNameKo,
-               `product`.`brand`           AS brand,
-               `product`.`category`        AS category,
-               `image`.`data`              AS imageData,
-               `image`.`type`              AS imageType,
-               MIN(`seller_bid`.`price`)   AS lowestPrice,
-               COUNT(`order`.`id`)         AS transactionCount
-        FROM `kream`.`order`
-                 LEFT JOIN `kream`.`seller_bid`
-                           ON `seller_bid_id` = `seller_bid`.`id`
-                               AND `seller_bid`.`state` = 'BIDDING'
-                 LEFT JOIN `kream`.`buyer_bid`
-                           ON `buyer_bid_id` = `buyer_bid`.`id`
-                 INNER JOIN `kream`.`size`
-                            ON `seller_bid`.`size_id` = `size`.`id`
-                                OR `buyer_bid`.`size_id` = `size`.`id`
-                 INNER JOIN `kream`.`product`
-                            ON `product_id` = `product`.`id`
-                 INNER JOIN `kream`.`image`
-                            ON `product`.`id` = `image`.`product_id`
-                                AND `image`.`is_primary` = 1
-        WHERE `order`.`state` = 'DELIVERED'
-           OR `order`.`state` = 'SETTLED'
-        GROUP BY `product`.`id`
-        ORDER BY transactionCount DESC
-        LIMIT 20
-
-
-
-
-
-
-    </select>
-
     <select id="selectPopularProductsByFilter"
             resultType="com.kream.kream.dtos.ShopProductDTO">
         SELECT  `product`.`id`              AS productId,
@@ -476,9 +475,7 @@
         SELECT `order`.`id`         AS `orderId`,
                `size`.`type`        AS `sizeType`,
                `order`.`price`      AS `orderPrice`,
-               `order`.`created_at` AS `orderDate`,
-               `seller_bid`.`price`,
-               `buyer_bid`.`price`
+               `order`.`created_at` AS `orderDate`
         FROM `kream`.`order`
                  LEFT JOIN `kream`.`seller_bid`
                            ON `order`.`seller_bid_id` = `seller_bid`.`id`

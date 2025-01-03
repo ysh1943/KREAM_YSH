@@ -17,9 +17,9 @@ public class OrderEntity {
         INSPECTION_PASSED,
         IN_TRANSIT,
         DELIVERED,
+        SETTLING,
         SETTLED,
         FAILED,
-        CANCELED,
     }
 
     public enum Type {
@@ -28,12 +28,12 @@ public class OrderEntity {
     }
 
     private int id;
-    private int userId;
+    private Integer userId;
     private String type;
     private Integer sellerBidId;
     private Integer buyerBidId;
     private int price;
-    private int addressId;
+    private Integer addressId;
     private String state;
     private String deliveryNote;
     private LocalDateTime createdAt;

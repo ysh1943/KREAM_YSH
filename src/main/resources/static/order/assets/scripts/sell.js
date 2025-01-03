@@ -127,7 +127,7 @@ function updateNextPage() {
                         </div>
                         <div class="-spring"></div>
                         <div class="content-text-wrap">
-                            <span class="content-text bold">${$inputPrice.value + '원'}</span>
+                            <span class="content-text bold">${$price.style.display === 'block' ? $price.innerText : $inputPrice.value + '원'}</span>
                             <span class="content-text">무료</span>
                             <span class="content-text charge">${$firstCharge.innerText}</span>
                             <span class="content-text">선불 • 판매자 부담</span>
@@ -158,8 +158,10 @@ function updateNextPage() {
 
     const $orderButtonText = document.createElement('span');
     $orderButtonText.classList.add('order-button-text');
-    $orderButtonText.innerText = $firstTotalPrice.innerText + '원 • 입찰하기';
-    $orderButtonText.innerText = $price.innerText + '원 • 결제하기';
+    $orderButtonText.innerText = $firstTotalPrice.innerText + '• 입찰하기';
+    if ($price.style.display === 'block') {
+        $orderButtonText.innerText = $firstTotalPrice.innerText + '• 결제하기';
+    }
     $lastOrderButton.append($orderButtonText);
 
     $firstPage.style.display = 'none';
@@ -167,7 +169,7 @@ function updateNextPage() {
 }
 //endregion
 
-//region getAddress
+//region 주소 불러오기
 {
     function getAddress() {
         // 주소 GET
@@ -191,7 +193,8 @@ function updateNextPage() {
                     </div>
         `, 'text/html').querySelector('.address-content-wrap');
                 $addressContainer.append($addressContentWrap);
-                $lastOrderButton.style.cursor = 'not-allowed'
+                $lastOrderButton.style.cursor = 'not-allowed';
+                $lastOrderButton.style.pointerEvents = 'none';
 
             } else {
                 const $addressContentWrap = new DOMParser().parseFromString(`
@@ -199,21 +202,16 @@ function updateNextPage() {
                 <input type="hidden" name="address-id" value="${response['id']}">
                 <label class="label">
                     <span class="title">받는 분</span>
-                    <input maxlength="10" minlength="1" type="text" name="name" class="name" value="${response['name'] == null ? '-' : response['name']}">
+                    <input readonly maxlength="10" minlength="1" type="text" name="name" class="name" value="${response['name'] == null ? '-' : response['name']}">
                 </label>
                 <label class="label">
                     <span class="title">연락처</span>
-                    <input maxlength="11" minlength="10" type="tel" name="contact" class="contact" value="${response['contact'] == null ? '-' : response['contact']}">
+                    <input readonly maxlength="11" minlength="10" type="tel" name="contact" class="contact" value="${response['contact'] == null ? '-' : response['contact']}">
                 </label>
                 <label class="label">
                     <span class="title">주소</span>
-                    <input maxlength=50 minlength="20" type="text" name="address" class="address" value="[${response['postal'] == null ? '-' : response['postal']}] ${response['basicAddress'] == null ? '' : response['basicAddress']} ${response['detailAddress'] == null ? '' : response['detailAddress']}">
+                    <input readonly maxlength=50 minlength="20" type="text" name="address" class="address" value="[${response['postal'] == null ? '-' : response['postal']}] ${response['basicAddress'] == null ? '' : response['basicAddress']} ${response['detailAddress'] == null ? '' : response['detailAddress']}">
                 </label>
-                <button class="note-button" type="button">
-                    <span class="note">요청사항 없음</span>
-                    <span class="-spring"></span>
-                    <i class="fa-solid fa-chevron-right"></i>
-                </button>
             </div>
         `, 'text/html').querySelector('.address-content-wrap');
                 $addressContainer.append($addressContentWrap);
@@ -227,7 +225,6 @@ function updateNextPage() {
 
 //region getAccount
 {
-
     function getAccount() {
         //계좌 GET
         const $accountContainer  = $nextPage.querySelector(':scope > .account-container');
@@ -251,18 +248,21 @@ function updateNextPage() {
             `, "text/html").querySelector('.account-content-wrap');
                 $accountContainer.append($accountContentWrap)
                 $accountButtonText.innerText = '계좌추가';
+                $lastOrderButton.style.pointerEvents = 'none';
+                $lastOrderButton.style.background = '#22222230';
                 $lastOrderButton.style.cursor = 'not-allowed';
             } else {
                 const $accountContentWrap = new DOMParser().parseFromString(`
             <div class="account-content-wrap">
                         <label class="label">
-                            <span class="title">계좌</span>
-                            <input maxlength="25" minlength="15" type="text" name="account" class="account" value="${response['bankName'].value} ${response['accountNumber'].value}">
+                            <span class="account-title">계좌</span>
+                            <input readonly maxlength="25" minlength="15" type="text" name="account" class="account input" value="${response['bankName']} ${response['accountNumber']}">
                         </label>
                         <label class="label">
-                            <span class="title">예금주</span>
-                            <input maxlength="10" minlength="1" type="text" name="name" class="name" value="${response['accountOwner'].value}">
+                            <span class="account-title">예금주</span>
+                            <input readonly maxlength="10" minlength="1" type="text" name="name" class="name input" value="${response['accountOwner']}">
                         </label>
+                        <input type="hidden" name="account-id" value="${response['id']}"
             </div>
             `, "text/html").querySelector('.account-content-wrap');
                 $accountContainer.append($accountContentWrap);
@@ -285,6 +285,7 @@ function addFormSubmit() {
         formData.append('price', $inputPrice.value.replace(/[^0-9]/g, ''));
         formData.append('deadline', $deadlineText.value);
         formData.append('addressId', $form['address-id'].value);
+        formData.append('accountId', $form['account-id'].value);
         formData.append("userId", $form['user-id'].value);
         formData.append("sizeId", $form['size-id'].value);
         xhr.onreadystatechange = () => {
@@ -319,10 +320,9 @@ function addFormSubmit() {
 
 //endregion
 
+//region 즉시 판매
 {
     function sellFormSubmit() {
-
-        console.log($firstTotalPrice.innerText);
         $form.onsubmit = (e) => {
             e.preventDefault();
             const xhr = new XMLHttpRequest();
@@ -330,8 +330,9 @@ function addFormSubmit() {
             formData.append("userId", $form['user-id'].value);
             formData.append('type', type);
             formData.append('buyerBidId', $form['buyer-bid-id'].value);
-            formData.append('price', $orderButtonText.innerText.replace(/[^0-9]/g, ''));
+            formData.append('price', $firstTotalPrice.innerText.replace(/[^0-9]/g, ''));
             formData.append("addressId", $form['address-id'].value);
+            formData.append('accountId', $form['account-id'].value);
             formData.append("sizeId", $form['size-id'].value);
             xhr.onreadystatechange = () => {
                 if (xhr.readyState !== XMLHttpRequest.DONE) {
@@ -344,10 +345,22 @@ function addFormSubmit() {
                 const response = JSON.parse(xhr.responseText);
                 const [title, content, onclick] = {
                     failure: ['즉시 판매', '알수 없는 이유로 구매에 실패하였습니다. 잠시 후 다시 시도해주세요.', ($dialog) => Dialog.hide($dialog)],
+                    failure_unsigned: ['즉시 판매', '로그인에 문제가 있습니다. 확인 후 다시 시도해 주세요.', ($dialog) => {
+                        Dialog.hide($dialog);
+                    }],
                     failure_price: ['즉시 판매', '구매자가 올린 가격과 일치하지 않습니다. 가격 확인 후 다시 시도해주세요.', ($dialog) => {
                         Dialog.hide($dialog);
                     }],
-                    success: ['즉시 판매', '판매가 완료되었습니다.', ($dialog) => {
+                    failure_address: ['즉시 판매', '반송 주소에 문제가 있습니다. 주소 확인 후 다시 시도해 주세요.', ($dialog) => {
+                        Dialog.hide($dialog);
+                    }],
+                    failure_account: ['즉시 판매', '정산 계좌에 문제가 있습니다. 계좌 확인 후 다시 시도해 주세요.', ($dialog) => {
+                        Dialog.hide($dialog);
+                    }],
+                    failure_buyerBid: ['즉시 판매', '구매자가 확인이 안됩니다. 잠시 후 다시 시도해 주세요.', ($dialog) => {
+                        Dialog.hide($dialog);
+                    }],
+                    success: ['즉시 판매', '판매가 완료되었습니다. 진행상황은 판매내역에서 확인해 주세요.', ($dialog) => {
                         Dialog.hide($dialog);
                         location.href = './';
                     }],
@@ -363,6 +376,7 @@ function addFormSubmit() {
         }
     }
 }
+//endregion
 
 if (type === 'add') {
     $topTitle.innerText = '판매 입찰하기';
@@ -390,7 +404,7 @@ if (type === 'sell') {
     $label.style.display = 'none';
     $price.style.display = 'block';
     $deadlineWrap.style.display = 'none';
-    let value = $price.innerText.replace(/[^0-9]/g, '');
+    let value = Number($price.innerText.replace(/[^0-9]/g, ''));
     let chargeValue = 5000 + Math.floor(value * 0.04);
     $firstCharge.innerText = `-${chargeValue.toLocaleString()}원`;
     let totalValue = value - chargeValue;
@@ -437,7 +451,7 @@ if (type === 'sell') {
         $warning.style.display = 'none';
         $label.style.display = 'none';
         $price.style.display = 'block';
-        let value = $price.innerText.replace(/[^0-9]/g, '');
+        let value = Number($price.innerText.replace(/[^0-9]/g, ''));
         let chargeValue = 5000 + Math.floor(value * 0.04);
         $firstCharge.innerText = `-${chargeValue.toLocaleString()}원`;
         let totalValue = value - chargeValue;

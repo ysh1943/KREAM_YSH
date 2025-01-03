@@ -265,7 +265,7 @@ public class AdminService {
                 order.setState(state);
                 order.setUpdatedAt(LocalDateTime.now());
                 order.setDeletedAt(null);
-                sellerBid.setOrderState(SellerBidEntity.OrderState.SETTLED);
+                sellerBid.setOrderState("SETTLED");
                 sellerBid.setUpdatedAt(LocalDateTime.now());
                 this.orderMapper.updateOrder(order);
                 this.sellerBidMapper.updateSellerBid(sellerBid);
@@ -274,13 +274,13 @@ public class AdminService {
                 order.setState(state);
                 order.setUpdatedAt(LocalDateTime.now());
                 order.setDeletedAt(null);
-                sellerBid.setOrderState(SellerBidEntity.OrderState.SETTLING);
+                sellerBid.setOrderState("SETTLING");
                 sellerBid.setUpdatedAt(LocalDateTime.now());
                 this.orderMapper.updateOrder(order);
                 this.sellerBidMapper.updateSellerBid(sellerBid);
                 return CommonResult.SUCCESS;
             }
-            sellerBid.setOrderState(SellerBidEntity.OrderState.valueOf(state));
+            sellerBid.setOrderState(state);
             sellerBid.setUpdatedAt(LocalDateTime.now());
             this.sellerBidMapper.updateSellerBid(sellerBid);
         } else if (sellerBidId == null && buyerBidId != null) {
@@ -289,7 +289,7 @@ public class AdminService {
                 order.setState(state);
                 order.setUpdatedAt(LocalDateTime.now());
                 order.setDeletedAt(null);
-                buyerBid.setOrderState(BuyerBidEntity.OrderState.DELIVERED);
+                buyerBid.setOrderState("DELIVERED");
                 buyerBid.setUpdatedAt(LocalDateTime.now());
                 this.orderMapper.updateOrder(order);
                 this.buyerBidMapper.updateBuyerBid(buyerBid);
@@ -298,13 +298,13 @@ public class AdminService {
                 order.setState(state);
                 order.setUpdatedAt(LocalDateTime.now());
                 order.setDeletedAt(null);
-                buyerBid.setOrderState(BuyerBidEntity.OrderState.IN_TRANSIT);
+                buyerBid.setOrderState("IN_TRANSIT");
                 buyerBid.setUpdatedAt(LocalDateTime.now());
                 this.orderMapper.updateOrder(order);
                 this.buyerBidMapper.updateBuyerBid(buyerBid);
                 return CommonResult.SUCCESS;
             }
-            buyerBid.setOrderState(BuyerBidEntity.OrderState.valueOf(state));
+            buyerBid.setOrderState(state);
             buyerBid.setUpdatedAt(LocalDateTime.now());
             this.buyerBidMapper.updateBuyerBid(buyerBid);
         }
