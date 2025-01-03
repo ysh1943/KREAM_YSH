@@ -1,5 +1,6 @@
 package com.kream.kream.controllers;
 
+import com.kream.kream.dtos.BuyingListDTO;
 import com.kream.kream.entities.AccountEntity;
 import com.kream.kream.entities.AddressEntity;
 import com.kream.kream.entities.EmailTokenEntity;
@@ -7,6 +8,7 @@ import com.kream.kream.entities.UserEntity;
 import com.kream.kream.results.Result;
 import com.kream.kream.services.MyService;
 import jakarta.servlet.http.HttpSession;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Controller
@@ -41,14 +46,41 @@ public class MyController {
         return modelAndView;
     }
 
+    @RequestMapping(value = "/buying/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String Buyings(@SessionAttribute(value = UserEntity.NAME_SINGULAR, required = false) UserEntity user,
+                          @RequestParam(value = "state", required = false) String state) throws IOException {
+
+        JSONArray response = new JSONArray();
+        List<BuyingListDTO> buyings = myService.getBuyingList(Objects.requireNonNull(user).getId(), state);
+        List<BuyingListDTO> buyingstate = myService.getBuyings(user.getId(), state);
+        for (BuyingListDTO buying : buyings) {
+            JSONObject result = new JSONObject();
+            result.put("image", buying.getBase64Image());
+            result.put("size", buying.getSizeType());
+            result.put("baseName", buying.getBaseName());
+            result.put("price", buying.getPrice());
+            result.put("deadline", buying.getDeadline());
+            response.put(result);
+        }
+        return response.toString();
+    }
+
     @RequestMapping(value = "/buying", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     @ResponseBody
-    public ModelAndView getBuying(@SessionAttribute(value = UserEntity.NAME_SINGULAR, required = false) UserEntity user) {
+    public ModelAndView getBuying(@SessionAttribute(value = UserEntity.NAME_SINGULAR, required = false) UserEntity user,
+                                  @RequestParam(value = "state", required = false) String state
+                                  ) {
         ModelAndView modelAndView = new ModelAndView();
         if (user == null) {
             modelAndView.setViewName("redirect:/login");
         }
+
+        List<BuyingListDTO> buyings = myService.getBuyingList(Objects.requireNonNull(user).getId(), state);
+        List<BuyingListDTO> buyingstate = myService.getBuyings(user.getId(), state);
+        modelAndView.addObject("buyingstate", buyingstate);
         modelAndView.addObject("user", user);
+        modelAndView.addObject("buyings", buyings);
         modelAndView.setViewName("/my/buying");
         return modelAndView;
     }

@@ -208,6 +208,7 @@
         LIMIT 1
     </select>
 
+
     <update id="updateUser"
             parameterType="com.kream.kream.entities.UserEntity">
         UPDATE `kream`.`user`
@@ -227,5 +228,50 @@
             AND `email` = #{email}
         LIMIT 1
     </update>
+
+
+
+    <select id="getBuyingsByUserOfState" resultType="com.kream.kream.dtos.BuyingListDTO">
+        SELECT
+            base_name  AS baseName,
+            S.type     AS sizeType,
+            I.data     AS imageData,
+            I.type     AS imageType,
+            BBID.price AS price,
+            deadline   AS deadline
+        FROM `kream`.buyer_bid BBID
+            INNER JOIN `kream`.size S
+                ON BBID.size_id = S.id
+            INNER JOIN `kream`.product P
+                ON S.product_id = P.id
+            INNER JOIN kream.image I
+                ON I.product_id = P.id
+        WHERE BBID.user_id = #{userId}
+        <if test="state != null">
+          AND BBID.state = #{state}
+        </if>
+    </select>
+
+    <select id="getBuyingsByUserOfOrderState" resultType="com.kream.kream.dtos.BuyingListDTO">
+        SELECT
+        base_name  AS baseName,
+        S.type     AS sizeType,
+        I.data     AS imageData,
+        I.type     AS imageType,
+        BBID.price AS price,
+        deadline   AS deadline
+        FROM `kream`.buyer_bid BBID
+        INNER JOIN `kream`.size S
+        ON BBID.size_id = S.id
+        INNER JOIN `kream`.product P
+        ON S.product_id = P.id
+        INNER JOIN kream.image I
+        ON I.product_id = P.id
+        WHERE BBID.user_id = #{userId}
+
+        <if test="order_state != null">
+            AND BBID.order_state = #{order_state}
+        </if>
+    </select>
 
 </mapper>
