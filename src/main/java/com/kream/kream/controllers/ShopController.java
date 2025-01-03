@@ -2,7 +2,6 @@ package com.kream.kream.controllers;
 
 import com.kream.kream.dtos.ShopProductDTO;
 import com.kream.kream.entities.UserEntity;
-import com.kream.kream.services.ProductService;
 import com.kream.kream.services.ShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -22,7 +20,7 @@ public class ShopController {
     private final ShopService shopService;
 
     @Autowired
-    public ShopController(ShopService shopService, ProductService productService) {
+    public ShopController(ShopService shopService) {
         this.shopService = shopService;
     }
 

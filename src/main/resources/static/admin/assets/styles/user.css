@@ -138,5 +138,64 @@
   background-color: #222;
   color: #ffffff;
 }
+.main-container #main > .content[rel=user-list] > .move {
+  align-items: stretch;
+  display: flex;
+  flex-direction: row;
+  gap: 0.0625rem;
+  line-height: 1;
+  justify-content: center;
+}
+.main-container #main > .content[rel=user-list] > .move .page {
+  width: 1.75rem;
+  color: #a0a0a0;
+  font-size: 1rem;
+  font-weight: bold;
+  line-height: 1;
+  text-decoration: none;
+  user-select: none;
+  padding: 0 0.5rem;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.main-container #main > .content[rel=user-list] > .move .page:hover {
+  color: #222;
+}
+.main-container #main > .content[rel=user-list] > .move .page:active {
+  color: #222;
+}
+.main-container #main > .content[rel=user-list] > .move .page.selected {
+  color: #222;
+  cursor: pointer;
+  pointer-events: none;
+}
+.main-container #main > .content[rel=user-list] > .move > .page.first,
+.main-container #main > .content[rel=user-list] > .move > .page.next {
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+.main-container #main > .content[rel=user-list] > .move > .page.prev,
+.main-container #main > .content[rel=user-list] > .move > .page.last {
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+.main-container #main > .content[rel=user-list] > .move .page-container {
+  margin: 0 0.5rem;
+  align-items: stretch;
+  display: flex;
+  flex-direction: row;
+  gap: 0.0625rem;
+  justify-content: center;
+}
+.main-container #main > .content[rel=user-list] > .move .page-container > .page:first-of-type {
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+.main-container #main > .content[rel=user-list] > .move .page-container > .page:last-of-type {
+  border-top-right-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
 
 /*# sourceMappingURL=user.css.map */

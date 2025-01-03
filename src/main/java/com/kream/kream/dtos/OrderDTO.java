@@ -25,22 +25,21 @@ public class OrderDTO {
     private String sellerProductName;
     private String buyerProductName;
     private String buyerAddress;
+    private String orderUserAddress;
     private String state;
+    private String sellerState;
+    private String buyerState;
     private LocalDateTime createdAt;
-    private byte[] imageData;
-    private String imageType;
+    private byte[] sellerImageData;
+    private String sellerImageType;
+    private byte[] buyerImageData;
+    private String buyerImageType;
 
     public String getBase64Image() throws IOException {
-        if (imageData != null && imageType != null) {
-            return "data:" + imageType + ";base64," + Base64.getEncoder().encodeToString(imageData);
-        }
-        try (InputStream inputStream = getClass().getResourceAsStream("/static/home/assets/images/no-image.png")) {
-            if (inputStream == null) {
-                throw new RuntimeException("기본 이미지를 찾을수 없습니다.");
-            }
-            return  Base64.getEncoder().encodeToString(inputStream.readAllBytes());
-        } catch (IOException e) {
-            throw new RuntimeException("기본이미지를 찾는데 실패했습니다.", e);
+        if (sellerImageData != null && sellerImageType != null) {
+            return "data:" + sellerImageType + ";base64," + Base64.getEncoder().encodeToString(sellerImageData);
+        } else {
+            return "data:" + buyerImageType + ";base64," + Base64.getEncoder().encodeToString(buyerImageData);
         }
     }
 }
