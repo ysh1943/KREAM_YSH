@@ -29,7 +29,25 @@
           AND `seller_bid`.`is_deleted` = 0
     </select>
 
-    <update id="updateSellerBidState">
+    <select id="selectSellerBidById"
+            resultType="com.kream.kream.entities.SellerBidEntity">
+        SELECT `id`         AS `id`,
+               `user_id`    AS `userId`,
+               `size_id`    AS `sizeId`,
+               `address_id` AS `addressId`,
+               `price`      AS `price`,
+               `deadline`   AS `deadline`,
+               `state`      AS `state`,
+               `created_at` AS `createdAt`,
+               `update_at`  AS `updatedAt`,
+               `is_deleted` AS `isDeleted`
+        FROM `kream`.`seller_bid`
+        WHERE `seller_bid`.`id` = #{sellerBidId}
+          AND `seller_bid`.`is_deleted` = 0
+    </select>
+
+
+    <update id="updateSellerBid">
         UPDATE `kream`.`seller_bid`
         SET `user_id`     = #{userId},
             `size_id`     = #{sizeId},
@@ -41,6 +59,7 @@
             `created_at`  = #{createdAt},
             `update_at`   = #{updatedAt},
             `is_deleted`  = #{isDeleted}
-        WHERE `seller_bid`.`id` = #{id}
+        WHERE `id` = #{id}
+        LIMIT 1
     </update>
 </mapper>

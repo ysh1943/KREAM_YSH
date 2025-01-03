@@ -126,7 +126,7 @@ public class OrderService {
         sellerBid.setState(SellerBidEntity.State.ORDER.name());
         sellerBid.setOrderState(SellerBidEntity.OrderState.PENDING.name());
         sellerBid.setUpdatedAt(LocalDateTime.now());
-        int updateState = this.sellerBidMapper.updateSellerBidState(sellerBid);
+        int updateState = this.sellerBidMapper.updateSellerBid(sellerBid);
         if (order.getSellerBidId() < 1 || updateState <= 0) {
             return OrderValidationResult.FAILURE_SellerBid;
         }
@@ -166,7 +166,7 @@ public class OrderService {
         buyerBid.setState(BuyerBidEntity.State.ORDER.name());
         buyerBid.setOrderState(BuyerBidEntity.OrderState.PENDING.name());
         buyerBid.setUpdatedAt(LocalDateTime.now());
-        int updateState = this.buyerBidMapper.updateBuyerBidState(buyerBid);
+        int updateState = this.buyerBidMapper.updateBuyerBid(buyerBid);
         if (order.getBuyerBidId() < 1 || updateState < 1) {
             return OrderValidationResult.FAILURE_SellerBid;
         }

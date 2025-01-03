@@ -47,17 +47,17 @@
         <div class="box">
             <i class="icon fa-solid fa-chart-simple"></i>
             <span class="name">총 거래량</span>
-            <span class="count" th:text="${orderCount}"></span>
+            <span class="count" th:text="${orderCounts.getAllOrder()}"></span>
         </div>
         <div class="box">
             <i class="icon fa-solid fa-hourglass-start"></i>
             <span class="name">입고 대기</span>
-            <span class="count" th:text="${statePending}"></span>
+            <span class="count" th:text="${orderCounts.getStatePending()}"></span>
         </div>
         <div class="box">
             <i class="icon fa-solid fa-chart-simple"></i>
             <span class="name">총 검수량</span>
-            <span class="count" th:text="${stateInspecting}"></span>
+            <span class="count" th:text="${orderCounts.getStateInspecting()}"></span>
         </div>
     </div>
     <div class="table-container">

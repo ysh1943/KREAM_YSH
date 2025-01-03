@@ -11,5 +11,7 @@ public interface SellerBidMapper {
     SellerBidEntity selectPriceBySizeIdAndSellerBidId(@Param(value = "sizeId") int sizeId,
                                      @Param(value = "sellerBidId") int sellerBidId);
 
-    int updateSellerBidState(SellerBidEntity sellerBid);
+    SellerBidEntity selectSellerBidById(int sellerBidId);
+
+    int updateSellerBid(SellerBidEntity sellerBid);
 }

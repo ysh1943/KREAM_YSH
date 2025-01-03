@@ -16,6 +16,52 @@
                 #{releaseDate}, #{color}, #{brand}, #{category}, #{gender}, #{createdAt}, #{updatedAt}, #{isDeleted})
     </insert>
 
+    <select id="selectProductCount"
+            resultType="_int">
+        SELECT COUNT(0)
+        FROM `kream`.`product`
+        WHERE `is_deleted` = false
+    </select>
+
+    <select id="selectProductCountBySearch"
+            resultType="java.lang.Integer">
+        SELECT COUNT(0)
+        FROM `kream`.`product`
+        WHERE `is_deleted` = false
+        <if test="filter.equals('all')"> <!-- 참일떄만 붙여준다. -->
+            AND (`model_number` LIKE CONCAT('%', #{keyword}, '%') OR `product_name_ko` LIKE CONCAT('%', #{keyword}, '%')
+            OR `product_name_en` LIKE CONCAT('%', #{keyword}, '%') OR `brand` LIKE CONCAT('%', #{keyword}, '%') OR
+            `category` LIKE
+            CASE
+            WHEN #{keyword} LIKE '%상의%' THEN '%top%'
+            WHEN #{keyword} LIKE '%하의%' THEN '%bottom%'
+            WHEN #{keyword} LIKE '%신발%' THEN '%shoes%'
+            WHEN #{keyword} LIKE '%패션잡화%' THEN '%accessories%'
+            ELSE CONCAT('%', #{keyword}, '%')
+            END)
+        </if>
+        <if test="filter.equals('modelNum')">
+            AND `model_number` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter.equals('name')">
+            AND (`product_name_ko` LIKE CONCAT('%', #{keyword}, '%') OR `product_name_en` LIKE CONCAT('%', #{keyword},
+            '%'))
+        </if>
+        <if test="filter.equals('brand')">
+            AND `brand` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter.equals('category')">
+            AND `category` LIKE
+            CASE
+            WHEN #{keyword} LIKE '%상의%' THEN '%top%'
+            WHEN #{keyword} LIKE '%하의%' THEN '%bottom%'
+            WHEN #{keyword} LIKE '%신발%' THEN '%shoes%'
+            WHEN #{keyword} LIKE '%패션잡화%' THEN '%accessories%'
+            ELSE CONCAT('%', #{keyword}, '%')
+            END
+        </if>
+    </select>
+
     <select id="selectProduct"
             resultType="com.kream.kream.entities.ProductEntity">
         SELECT `product`.`id`         AS `id`,
@@ -35,6 +81,7 @@
         FROM `kream`.`product`
         WHERE is_deleted = FALSE
         ORDER BY `id` DESC
+        LIMIT #{limitCount} OFFSET #{offsetCount}
     </select>
 
     <select id="selectProductById"
@@ -58,21 +105,22 @@
         LIMIT 1
     </select>
 
-    <select id="selectProductBySearch">
+    <select id="selectProductBySearch"
+            resultType="com.kream.kream.entities.ProductEntity">
         SELECT `id`                 AS `id`,
-        `category_detail_id` AS `categoryDetailId`,
-        `base_name`            AS `baseName`,
-        `product_name_ko`    AS `productNameKo`,
-        `product_name_en`    AS `productNameEn`,
-        `model_number`       AS `modelNumber`,
-        `release_date`       AS `releaseDate`,
-        `color`              AS `color`,
-        `brand`              AS `brand`,
-        `category`           AS `category`,
-        `gender`             AS `gender`,
-        `created_at`         AS `createdAt`,
-        `updated_at`         AS `updatedAt`,
-        `is_deleted`         AS `isDeleted`
+                `category_detail_id` AS `categoryDetailId`,
+                `base_name`            AS `baseName`,
+                `product_name_ko`    AS `productNameKo`,
+                `product_name_en`    AS `productNameEn`,
+                `model_number`       AS `modelNumber`,
+                `release_date`       AS `releaseDate`,
+                `color`              AS `color`,
+                `brand`              AS `brand`,
+                `category`           AS `category`,
+                `gender`             AS `gender`,
+                `created_at`         AS `createdAt`,
+                `updated_at`         AS `updatedAt`,
+                `is_deleted`         AS `isDeleted`
         FROM `kream`.`product`
         WHERE `is_deleted` = FALSE
         <if test="filter.equals('all')"> <!-- 참일떄만 붙여준다. -->
@@ -108,6 +156,7 @@
                 END
         </if>
         ORDER BY `id` DESC
+        LIMIT #{limitCount} OFFSET #{offsetCount}
     </select>
 
     <update id="updateProduct">
@@ -249,6 +298,10 @@
             AND `category` LIKE CONCAT('%', #{filter}, '%')
         </if>
 
+        <if test="keyword != null">
+            AND (`product_name_en` LIKE CONCAT('%', #{keyword}, '%') OR `product_name_ko` LIKE CONCAT('%', #{keyword}, '%') OR `brand` LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+
         <if test="brand != null">
             AND `brand` LIKE CONCAT('%', #{brand}, '%')
         </if>
@@ -297,6 +350,6 @@
             </foreach>
         </if>
         ORDER BY `product`.`release_date` DESC
-        LIMIT 20
     </select>
+
 </mapper>

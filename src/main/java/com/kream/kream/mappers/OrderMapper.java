@@ -1,12 +1,7 @@
 package com.kream.kream.mappers;
 
-import com.kream.kream.dtos.OrderDTO;
-import com.kream.kream.dtos.ShopProductDTO;
-import com.kream.kream.dtos.OrderChartDTO;
-import com.kream.kream.dtos.ProductDTO;
-import com.kream.kream.entities.BuyerBidEntity;
+import com.kream.kream.dtos.*;
 import com.kream.kream.entities.OrderEntity;
-import com.kream.kream.entities.SellerBidEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,21 +11,30 @@ import java.util.List;
 public interface OrderMapper {
     int insertOrder(OrderEntity order);
 
+    int selectOrderCountsByPage();
 
-    List<ProductDTO> selectPopularProducts();
-    int selectOrderCount();
-    int selectStatePendingCount();
-    int selectStateInspectingCount();
+    OrderCountDTO selectOrderCounts();
+
+    int selectOrderCountsBySearch(@Param("filter") String filter,
+                                  @Param("keyword") String keyword);
 
     OrderDTO[] selectOrder();
 
+    OrderDTO[] selectOrderByPage(@Param("limitCount") int limitCount,
+                                 @Param("offsetCount") int offsetCount);
+
     OrderDTO[] selectOrderBySearch(@Param("filter") String filter,
-                                   @Param("keyword") String keyword);
+                                   @Param("keyword") String keyword,
+                                   @Param("limitCount") int limitCount,
+                                   @Param("offsetCount") int offsetCount);
+
+    int updateOrder(OrderEntity order);
 
     OrderEntity selectOrderById(@Param("id") int id);
 
+    List<ProductDTO> selectPopularProducts();
+
     List<OrderChartDTO> selectOrderByProductId(Integer id);
-    int updateOrder(OrderEntity order);
 
     List<ShopProductDTO> selectPopularProductsByFilter(@Param("filter") String filter,
                                                        @Param("keyword") String keyword,

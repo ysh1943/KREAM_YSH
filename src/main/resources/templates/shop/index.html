@@ -213,7 +213,7 @@
                         <span class="product-name-ko" th:text="${popularProduct.getProductNameKo()}"></span>
                     </span>
                     <span class="price"
-                          th:text="${popularProduct.getLowestPrice() != null ? #numbers.formatInteger(popularProduct.getLowestPrice(), 0, 'COMMA') + '원' : '-'}"></span>
+                          th:text="${popularProduct.getLowestPrice() != 0 ? #numbers.formatInteger(popularProduct.getLowestPrice(), 0, 'COMMA') + '원' : '-'}"></span>
                     <span class="span">즉시 구매가</span>
                 </span>
             </li>
