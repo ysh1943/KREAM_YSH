@@ -14,4 +14,6 @@ public interface SellerBidMapper {
     SellerBidEntity selectSellerBidById(int sellerBidId);
 
     int updateSellerBid(SellerBidEntity sellerBid);
+
+
 }

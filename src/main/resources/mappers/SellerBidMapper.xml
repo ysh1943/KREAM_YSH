@@ -8,6 +8,13 @@
     parameterType="com.kream.kream.entities.SellerBidEntity">
         INSERT INTO `kream`.`seller_bid` (`user_id`, `size_id`, `address_id`, `price`, `deadline`, `state`, `order_state`, `created_at`, `update_at`, `is_deleted`)
         VALUES (#{userId}, #{sizeId}, #{addressId}, #{price}, #{deadline}, #{state}, #{orderState} ,#{createdAt}, #{updatedAt}, #{isDeleted})
+        ON DUPLICATE KEY UPDATE
+                             `address_id` = #{addressId},
+                             `price` = #{price},
+                             `deadline` = #{deadline},
+                             `state` = 'BIDDING',
+                             `order_state` = NULL,
+                             `update_at` = NOW()
     </insert>
 
     <select id="selectPriceBySizeIdAndSellerBidId" resultType="com.kream.kream.entities.SellerBidEntity">

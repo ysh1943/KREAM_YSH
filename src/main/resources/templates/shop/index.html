@@ -23,7 +23,7 @@
                     <a class="top-link" th:if="${user != null && user.isAdmin()}" th:href="@{'/admin/'}">관리자 페이지</a>
                 </li>
                 <li class="top-item">
-                    <a class="top-link" th:href="${user == null} ? '/login' : '/my'">마이페이지</a>
+                    <a class="top-link" th:href="${user == null} ? '/login' : '/my/'">마이페이지</a>
                 </li>
                 <li class="top-item">
                     <a class="top-link" th:href="${user == null} ? '/login' : '/logout'"

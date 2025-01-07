@@ -88,6 +88,7 @@
     <select id="selectProductBySizeId" resultType="com.kream.kream.dtos.OrderProductDTO">
         SELECT `size`.`id`                 AS `sizeId`,
                `size`.`type`               AS `sizeType`,
+               `product`.`id`              AS `productId`,
                `product`.`model_number`    AS `modelNumber`,
                `product`.`product_name_en` AS `productNameEn`,
                `product`.`product_name_ko` AS `productNameKo`,
