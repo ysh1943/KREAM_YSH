@@ -36,10 +36,13 @@ public interface UserMapper {
 
     UserEntity selectUserByContact(@Param("contact") String contact);
 
+    UserEntity selectContact(UserEntity user);
+
     UserEntity selectUserByNickname(@Param("nickname") String nickname);
 
     UserEntity selectUserBySocialTypeCodeAndSocialId(@Param("socialTypeCode") String socialTypeCode,
                                                      @Param("socialId") String socialId);
+    int contactUpdate(UserEntity user);
 
     int updateUser(UserEntity user);
 

@@ -70,7 +70,7 @@ public class MyController {
     @ResponseBody
     public ModelAndView getBuying(@SessionAttribute(value = UserEntity.NAME_SINGULAR, required = false) UserEntity user,
                                   @RequestParam(value = "state", required = false) String state
-                                  ) {
+    ) {
         ModelAndView modelAndView = new ModelAndView();
         if (user == null) {
             modelAndView.setViewName("redirect:/login");
@@ -108,6 +108,15 @@ public class MyController {
         return response.toString();
     }
 
+    @RequestMapping(value = "/modify-contact", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String patchContact(UserEntity user) {
+        Result result = this.myService.modifyContact(user);
+        JSONObject response = new JSONObject();
+        response.put(Result.NAME, result.nameToLower());
+        return response.toString();
+    }
+
     @RequestMapping(value = "/address", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     @ResponseBody
     public ModelAndView getAddress(@SessionAttribute(value = UserEntity.NAME_SINGULAR) UserEntity user) {
@@ -123,8 +132,8 @@ public class MyController {
 
     @RequestMapping(value = "/address", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String postAddress(AddressEntity address) {
-        Result result = this.myService.addAddress(address);
+    public String postAddress(AddressEntity address, @RequestParam(value = "setDefault", required = false, defaultValue = "false") boolean setDefault) {
+        Result result = this.myService.addAddress(address, setDefault);
         JSONObject response = new JSONObject();
         response.put(Result.NAME, result.nameToLower());
         return response.toString();
@@ -147,8 +156,9 @@ public class MyController {
 
     @RequestMapping(value = "/address-modify", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String modifyAddress(AddressEntity address) {
-        Result result = this.myService.modify(address);
+    public String modifyAddress(AddressEntity address,
+                                @RequestParam(value = "setDefault", required = false, defaultValue = "false") boolean setDefault) {
+        Result result = this.myService.modify(address, setDefault);
         JSONObject response = new JSONObject();
         response.put(Result.NAME, result.nameToLower());
         return response.toString();

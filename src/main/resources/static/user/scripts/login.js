@@ -33,10 +33,13 @@ $form.onsubmit = (e) => {
         return;
     }
     const xhr = new XMLHttpRequest();
-    const url = new URL(location.href);
-    url.pathname = '/login';
-    url.searchParams.set('email', $form['email'].value);
-    url.searchParams.set('password', $form['password'].value);
+    const formData = new FormData();
+    formData.append('email', $form['email'].value);
+    formData.append('password', $form['password'].value);
+    // const url = new URL(location.href);
+    // url.pathname = '/login';
+    // url.searchParams.set('email', $form['email'].value);
+    // url.searchParams.set('password', $form['password'].value);
     xhr.onreadystatechange = () => {
         if (xhr.readyState !== XMLHttpRequest.DONE) {
             return;
@@ -75,8 +78,8 @@ $form.onsubmit = (e) => {
             }]
         });
     };
-    xhr.open('GET', url.toString());
-    xhr.send();
+    xhr.open('POST', '/login');
+    xhr.send(formData);
 };
 
 

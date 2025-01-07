@@ -37,16 +37,36 @@ public class MyService {
         this.accountMapper = accountMapper;
     }
 
-    public List<BuyingListDTO> getBuyingList(Integer userId, String state){
+    public List<BuyingListDTO> getBuyingList(Integer userId, String state) {
         List<BuyingListDTO> buyings = this.userMapper.getBuyingsByUserOfState(userId, state);
-        if (buyings == null || buyings.isEmpty()){
+        if (buyings == null || buyings.isEmpty()) {
             return new ArrayList<>();
         }
         return buyings;
     }
 
-    public List<BuyingListDTO>getBuyings(Integer userId, String state){
+    public List<BuyingListDTO> getBuyings(Integer userId, String state) {
         return userMapper.getBuyingsByUserOfOrderState(state, userId);
+    }
+
+    @Transactional
+    public Result modifyContact(UserEntity user) {
+        if (user == null ||
+                user.getEmail() == null || user.getContact().length() != 11) {
+            return CommonResult.FAILURE;
+        }
+        UserEntity dbUser = this.userMapper.selectUserByEmail(user.getEmail());
+        if (dbUser == null) {
+            return CommonResult.FAILURE;
+        }
+        if (user.getContact().equals(dbUser.getContact())) {
+            return LoginResult.FAILURE_DUPLICATE_CONTACT;
+        }
+        user.setContact(user.getContact().substring(0, 11));
+        if (this.userMapper.contactUpdate(user) == 0) {
+            throw new TransactionalException();
+        }
+        return CommonResult.SUCCESS;
     }
 
     public Result resolveRecoverPassword(UserEntity user, String newPassword) {
@@ -79,12 +99,13 @@ public class MyService {
 
 
     @Transactional
-    public Result addAddress(AddressEntity address) {
+    public Result addAddress(AddressEntity address, boolean setDefault) {
         if (address == null ||
                 address.getName().length() < 2 || address.getName().length() > 20 ||
                 address.getDetailAddress().length() < 2 || address.getDetailAddress().length() > 50) {
             return CommonResult.FAILURE;
         }
+
 
         AddressEntity[] dbAddress = this.addressMapper.selectAddressById(address.getUserId());
         for (int i = 0; i < dbAddress.length; i++) {
@@ -97,6 +118,18 @@ public class MyService {
             }
         }
 
+        if (setDefault) {
+            for (AddressEntity addressEntity : dbAddress) {
+                addressEntity.setDefault(false);
+                if (this.addressMapper.isdefault(addressEntity) == 0) {
+                    throw new TransactionalException();
+                }
+            }
+            address.setDefault(true);
+            // 지금 사용자의 모든 주소 불러와서 돌려서
+            // is_default false 로 설정 update
+            // 지금 추가하는 주소 is_default true로 설정해서 추가
+        }
         address.setCreatedAt(LocalDateTime.now());
         if (this.addressMapper.insertAddress(address) == 0) {
             throw new TransactionalException();
@@ -120,7 +153,7 @@ public class MyService {
     }
 
     @Transactional
-    public Result modify(AddressEntity address) {
+    public Result modify(AddressEntity address, boolean setDefault) {
         if (address == null ||
                 address.getName().length() < 2 || address.getName().length() > 20 ||
                 address.getDetailAddress().length() < 2 || address.getDetailAddress().length() > 50) {
@@ -134,6 +167,18 @@ public class MyService {
 
         if (address.getContact().equals(dbAddress.getContact())) {
             return LoginResult.FAILURE_DUPLICATE_CONTACT;
+        }
+
+        AddressEntity[] dbaddress = this.addressMapper.selectAllAddress(address.getUserId());
+        if (setDefault) {
+            for (AddressEntity addressEntity : dbaddress) {
+                addressEntity.setDefault(false);
+
+                if (this.addressMapper.isdefault(addressEntity) == 0) {
+                    throw new TransactionalException();
+                }
+            }
+            address.setDefault(true);
         }
 
         address.setUpdatedAt(LocalDateTime.now());

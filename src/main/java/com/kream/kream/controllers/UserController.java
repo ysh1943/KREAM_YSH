@@ -66,7 +66,7 @@ public class UserController extends AbstractGeneralController {
     }
 
     // 로그인 JSON
-    @RequestMapping(value = "/login", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getLogin(HttpSession session, UserEntity user) {
         Result result = this.userService.login(user);

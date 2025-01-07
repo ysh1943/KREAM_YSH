@@ -22,4 +22,6 @@ public interface AddressMapper {
     AddressEntity[] selectAllAddress(@Param("userId")int userId);
 
     int modifyAddress(AddressEntity address);
+
+    int isdefault(AddressEntity address);
 }

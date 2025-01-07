@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Kream</title>
-    <link rel="stylesheet" th:href="@{/user/styles/common.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/assets/styles/common.css}" type="text/css">
     <link rel="stylesheet" th:href="@{/my/styles/address.css}" type="text/css">
     <script defer th:src="@{/assets/scripts/common.js}" type="text/javascript"></script>
     <script defer th:src="@{/my/scripts/address.js}" type="text/javascript"></script>
@@ -89,45 +89,8 @@
         </div>
         <div class="content_area">
             <div class="my_addressBook">
-                <div class="content_title">
-                    <div class="title">
-                        <h3>주소록</h3>
-                    </div>
-                    <div class="btn_box">
-                        <button class="btn">
-                            <span class="btn_txt">+ 새 배송지 추가</span>
-                        </button>
-                    </div>
-                </div>
-                <div class="my_list">
-                    <div class="basic">
-                        <div class="my_item">
-                            <div class="info_bind">
-                                <div class="address_info">
-                                    <div class="name_box">
-                                        <span class="name">양세훈</span>
-                                        <span class="mark">기본 배송지</span>
-                                    </div>
-                                    <p class="phone">
-                                        010
-                                        <span class="hyphen"></span>
-                                        9607
-                                        <span class="hyphen"></span>
-                                        1943
-                                    </p>
-                                    <div class="address_box">
-                                        <div class="zipcode">(41230)</div>
-                                        <div class="address">대구 동구 효신로</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="btn_bind">
-                                <button class="button modify" type="submit">수정</button>
-                                <button class="button delete" type="submit">삭제</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div class="content_title dom"></div>
+
                 <div class="layer">
                     <div class="cover" id="cover"></div>
                     <form class="layer_container">
@@ -219,6 +182,7 @@
                         </div>
                     </form>
                 </div>
+
                 <div class="layer modify">
                     <div class="cover" id="cover-modify"></div>
                     <form class="layer_container">
@@ -243,7 +207,7 @@
                         <div class="layer_content">
                             <div class="delivery_bind">
                                 <label>
-                                    <input name="userId" type="text" >
+                                    <input name="userId" type="text">
                                 </label>
                                 <div class="delivery_input">
                                     <div class="input_box">
@@ -265,7 +229,8 @@
                                     <div class="input_box">
                                         <h4 class="title">우편번호</h4>
                                         <label class="--obj-label">
-                                            <input autocomplete="off" class="text" name="postal" placeholder="우편번호를 검색하세요"
+                                            <input autocomplete="off" class="text" name="postal"
+                                                   placeholder="우편번호를 검색하세요"
                                                    type="text">
                                             <input class="button" id="btn postal" type="button" value="우편번호">
                                             <span class="_warning"></span>
@@ -313,6 +278,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <footer id="footer">

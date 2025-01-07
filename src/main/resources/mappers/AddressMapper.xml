@@ -95,6 +95,7 @@
             `postal`         = #{postal},
             `basic_address`  = #{basicAddress},
             `detail_address` = #{detailAddress},
+            `is_default`     = #{isDefault},
             `updated_at`     = #{updatedAt}
         WHERE `id` = #{id}
     </update>
@@ -104,6 +105,13 @@
         UPDATE `kream`.`address`
         SET `is_deleted` = #{isDeleted}
         WHERE `id` = #{id}
+    </update>
+
+    <update id="isdefault"
+            parameterType="com.kream.kream.entities.AddressEntity">
+        UPDATE `kream`.`address`
+        SET `is_default` = #{isDefault}
+        WHERE `user_id` = #{userId}
     </update>
 
     <select id="deleteAddressById"

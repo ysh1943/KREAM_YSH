@@ -101,7 +101,6 @@
   top: 0;
   left: 0;
   position: relative;
-  height: 754px;
   padding: 40px 40px 160px 40px;
   margin: 0 auto;
   max-width: 1280px;
@@ -195,7 +194,6 @@
   box-sizing: border-box;
 }
 .container > .content > .content_area > .my_profile > .content_title {
-  border-bottom: 3px solid #222222;
   padding-bottom: 16px;
   box-sizing: border-box;
 }
@@ -229,11 +227,50 @@
   letter-spacing: -0.27px;
 }
 .container > .content > .content_area > .my_profile > .profile_info > .profile_group > .unit {
-  border-bottom: 1px solid #ebebeb;
   display: flex;
   flex-direction: column;
   padding: 25px 0 12px;
   position: relative;
+  border-bottom: 1px solid #eeeeee;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .unit.agree {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  justify-content: flex-start;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .unit.agree > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .unit.agree > .input-box {
+  width: 51px;
+  height: 51px;
+  box-sizing: border-box;
+  margin-left: auto;
+  pointer-events: all;
+  cursor: pointer;
+  position: relative;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .unit.agree > .input-box > .--obj-label {
+  cursor: pointer;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .unit.agree > .input-box > .--obj-label > .on {
+  display: block;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .unit.agree > .input-box > .--obj-label > .off {
+  display: none;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .unit.agree > .input-box > input[type=checkbox]:not(:checked) + .--obj-label > .on {
+  display: none;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .unit.agree > .input-box > input[type=checkbox]:not(:checked) + .--obj-label > .off {
+  display: block;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .unit > h2 {
+  font-weight: 500;
+  font-size: 17px;
 }
 .container > .content > .content_area > .my_profile > .profile_info > .profile_group > .unit > .title {
   color: rgba(34, 34, 34, 0.5);
@@ -275,6 +312,104 @@
   justify-content: center;
   text-align: center;
   vertical-align: middle;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .contact_modify {
+  padding-top: 23px;
+  margin: 0;
+  box-sizing: border-box;
+  display: none;
+  /* 자식 요소들 스타일 */
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .contact_modify > .title {
+  color: #222222;
+  padding-bottom: 22px;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .contact_modify > .input_box {
+  padding: 10px 0 14px;
+  position: relative;
+  box-sizing: border-box;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .contact_modify > .input_box > .input_title {
+  font-size: 13px;
+  letter-spacing: -0.7px;
+  line-height: 18px;
+  box-sizing: border-box;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .contact_modify > .input_box > .input_item {
+  width: 100%;
+  box-sizing: border-box;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .contact_modify > .input_box > .input_item > .text {
+  font-size: 15px;
+  letter-spacing: -0.15px;
+  padding-bottom: 7px;
+  padding-top: 7px;
+  background-color: transparent;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  resize: none;
+  box-sizing: border-box;
+  border-bottom: 1px solid #ebebeb;
+  width: 100%;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .contact_modify > .input_box > .input_item.--obj-label {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  justify-content: center;
+  padding: 10px 0 0 0;
+  width: 100%;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .contact_modify > .input_box > .input_item.--obj-label > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .contact_modify > .input_box > .input_item.--obj-label.-invalid > .text:not(:disabled) {
+  border-color: #e74c3c !important;
+  font-size: 15px;
+  letter-spacing: -0.15px;
+  line-height: 22px;
+  padding: 8px 0;
+  width: 100%;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .contact_modify > .input_box > .input_item.--obj-label.-invalid > ._warning {
+  color: #e74c3c;
+  display: block;
+  font-size: 0.8rem;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .contact_modify > .modify_btn {
+  font-size: 0;
+  padding-top: 28px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .contact_modify > .modify_btn > .button {
+  padding: 0 38px;
+  height: 42px;
+  letter-spacing: -0.14px;
+  cursor: pointer;
+  vertical-align: middle;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 400;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .contact_modify > .modify_btn > .button.cancel {
+  background-color: #ffffff;
+  border: 1px solid #d3d3d3;
+  color: rgba(34, 34, 34, 0.8);
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .contact_modify > .modify_btn > .button.enter {
+  margin-left: 8px;
+  background-color: #222222;
+  color: #ffffff;
+  cursor: pointer;
+}
+.container > .content > .content_area > .my_profile > .profile_info > .profile_group > .contact_modify.-visible {
+  display: block;
 }
 .container > .content > .content_area > .my_profile > .profile_info > .profile_group .modify {
   padding-top: 23px;
@@ -367,7 +502,7 @@
 }
 .container > .content > .content_area > .my_profile > .profile_info > .profile_group .modify > .modify_btn > .button.enter {
   margin-left: 8px;
-  background-color: rgba(34, 34, 34, 0.2);
+  background-color: #222222;
   color: #ffffff;
   cursor: pointer;
 }
