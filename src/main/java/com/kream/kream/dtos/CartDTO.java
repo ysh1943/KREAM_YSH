@@ -9,17 +9,12 @@ import java.util.Base64;
 
 @Getter
 @Setter
-public class SizeDTO {
-    private int sizeId;
-    private int sellerBidId;
+public class CartDTO {
+    private int id;
     private String type;
     private int sellPrice;
-    private int buyPrice;
-    private int lowestSellPrice;
-    private int highestBuyPrice;
     private String nameEn;
     private String nameKo;
-    private String modelNumber;
     private byte[] imageData;
     private String imageType;
 

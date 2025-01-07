@@ -3,6 +3,23 @@ const $form = document.body.querySelector(':scope > .container > .content >.regi
 const $firstInput = document.getElementById('all');
 const $secondCheckbox = $form.querySelectorAll(':scope > .join-terms > .item > .agree')
 
+// const emailID = document.querySelector($form['email'].value);
+// const passwordID = document.querySelector($form['password'].value);
+// const nickNameID = document.querySelector($form['nickname'].value);
+// const contactID = document.querySelector($form['contact'].value);
+// const buttonID = document.querySelector('[data-id="button"]');
+//
+// if (emailID || passwordID || nickNameID || contactID === '') {
+//     buttonID.style.pointerEvents = 'none'; // 버튼 비활성화
+//     buttonID.style.opacity = '0.5'; // 시각적으로도 비활성화 표현
+//     buttonID.style.cursor = 'not-allowed'; // 마우스 포인터 변경
+// } else {
+//     buttonID.style.pointerEvents = 'auto'; // 버튼 활성화
+//     buttonID.style.opacity = '1'; // 버튼 활성화
+//     buttonID.style.cursor = 'pointer'; // 마우스 포인터 변경
+// }
+
+
 // 모두 동의를 눌렀을 때의 조건.
 $firstInput.addEventListener('change', function () {
     const ischecked = $firstInput.checked;

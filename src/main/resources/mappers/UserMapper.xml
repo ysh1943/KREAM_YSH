@@ -222,6 +222,25 @@
         LIMIT 1
     </select>
 
+    <select id="selectContact"
+            resultType="com.kream.kream.entities.UserEntity">
+        SELECT `id`               AS `id`,
+               `email`            AS `email`,
+               `password`         AS `password`,
+               `contact`          AS `contact`,
+               `nickname`         AS `nickname`,
+               `is_admin`         AS `isAdmin`,
+               `is_suspended`     AS `isSuspended`,
+               `is_verified`      AS `isVerified`,
+               `social_type_code` AS `socialTypeCode`,
+               `social_id`        AS `socialId`,
+               `created_at`       AS `createdAt`,
+               `updated_at`       AS `updatedAt`,
+               `deleted_at`       AS `deletedAt`
+        FROM `kream`.`user`
+        WHERE `contact` = #{contact}
+    </select>
+
     <select id="selectUserByNickname"
             resultType="com.kream.kream.entities.UserEntity">
         SELECT `id`               AS `id`,
@@ -264,6 +283,12 @@
         LIMIT 1
     </select>
 
+    <update id="contactUpdate"
+            parameterType="com.kream.kream.entities.UserEntity">
+        UPDATE `kream`.`user`
+        SET `contact` = #{contact}
+        WHERE `email` = #{email}
+    </update>
 
     <update id="updateUser"
             parameterType="com.kream.kream.entities.UserEntity">

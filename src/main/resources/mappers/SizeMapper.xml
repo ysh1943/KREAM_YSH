@@ -6,8 +6,9 @@
 
     <select id="selectSizeByProductId"
             resultType="com.kream.kream.dtos.SizeDTO">
-        SELECT `size`.`id`                           AS `sizeId`,
+        SELECT `size`.`id`                              AS `sizeId`,
                `size`.`type`                            AS `type`,
+               `seller_bid`.`id`                        AS `sellerBidId`,
                MIN(`seller_bid`.`price`)                AS `sellPrice`,
                MAX(`buyer_bid`.`price`)                 AS `buyPrice`,
                `product`.`product_name_en`              AS `nameEn`,

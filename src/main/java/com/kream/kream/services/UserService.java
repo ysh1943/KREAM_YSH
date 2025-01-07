@@ -266,7 +266,7 @@ public class UserService {
                 .build();
     }
 
-    public Result login(UserEntity user) {
+    public Result login(UserEntity user)   {
         if (user == null ||
                 user.getEmail() == null || user.getEmail().length() < 8 || user.getEmail().length() > 50 ||
                 user.getPassword() == null || user.getPassword().length() < 6 || user.getPassword().length() > 50) {

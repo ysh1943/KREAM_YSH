@@ -313,6 +313,36 @@ const user = "${user}";
                         `, 'text/html').querySelector('.order');
                         $dialog.append($order);
 
+                        // //장바구니 담기
+                        // const $userId = $dialog['user-id'].value;
+                        const $cart = $order.querySelector(':scope > .button-container > .cart');
+                        $cart.onclick = () => {
+                            const xhr = new XMLHttpRequest();
+                            const formData = new FormData();
+                            formData.append('sellerBidId', item['sellerBidId']);
+                            formData.append('userId',item['userId'])
+
+                            xhr.onreadystatechange = () => {
+                                if (xhr.readyState !== XMLHttpRequest.DONE) {
+                                    return;
+                                }
+                                if (xhr.status < 200 || xhr.status >= 300) {
+                                    Dialog.defaultOk('오류', '요청을 전송하는 도중 오류가 발생하였습니다. 잠시 후 다시 시도해 주세요.', ($dialog) => Dialog.hide($dialog))
+                                    return;
+                                }
+                                const response = JSON.parse(xhr.responseText);
+                                console.log(response);
+                                if (response['result'] === 'success') {
+                                    location.href = '/cart/';
+                                } else {
+                                    Dialog.defaultOk('오류', '요청을 전송하는 도중 오류가 발생하였습니다. 잠시 후 다시 시도해 주세요.', ($dialog) => Dialog.hide($dialog))
+                                }
+
+                            };
+                            xhr.open('POST', '/cart/');
+                            xhr.send(formData);
+                        }
+
                         // 구매 입찰, 판매 입찰, 즉시 판매 버튼
                         const $bidContainer = new DOMParser().parseFromString(`
                         <div class="bid-container">

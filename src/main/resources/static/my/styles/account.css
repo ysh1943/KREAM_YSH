@@ -395,7 +395,7 @@
 .container > .content > .content_area > .my_profile > .accountregistration > .registrationbtn > .button {
   border-radius: 10px;
   width: 102px;
-  background-color: rgba(34, 34, 34, 0.2);
+  background-color: #222222;
   color: #ffffff;
   font-weight: 400;
   height: 42px;
@@ -404,7 +404,7 @@
 .container > .content > .content_area > .my_profile > .accountregistration > .registrationbtn > .modifybtn {
   border-radius: 10px;
   width: 102px;
-  background-color: rgba(34, 34, 34, 0.2);
+  background-color: #222222;
   color: #ffffff;
   font-weight: 400;
   height: 42px;

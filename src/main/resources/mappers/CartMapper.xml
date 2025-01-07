@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kream.kream.mappers.CartMapper">
+
+    <delete id="deleteCart">
+        DELETE
+        FROM `kream`.`cart`
+        WHERE `id` = #{id}
+        LIMIT 1
+    </delete>
+    <insert id="insertCart"
+            parameterType="com.kream.kream.entities.CartEntity">
+        INSERT INTO `kream`.`cart`(`user_id`, `seller_bid_id`, `created_at`, `updated_at`, `is_deleted`)
+        VALUES (#{userId}, #{sellerBidId},#{createdAt},#{updatedAt},#{isDeleted})
+    </insert>
+
+    <select id="selectCartByUserId"
+    resultType="com.kream.kream.dtos.CartDTO">
+        SELECT `cart`.`id`                 AS `id`,
+               `product`.`product_name_en` AS `nameEn`,
+               `product`.`product_name_ko` AS `nameKo`,
+               `image`.`data`              AS `imageData`,
+               `image`.`type`              AS `imageType`,
+               `seller_bid`.`price`        AS `sellPrice`,
+               `size`.`type`               AS `type`
+        FROM `kream`.`cart`
+                 INNER JOIN `kream`.`seller_bid`
+                            ON `cart`.`seller_bid_id` = `seller_bid`.`id`
+                                AND `seller_bid`.`state` = 'BIDDING'
+                                AND `seller_bid`.`is_deleted` = 0
+                 INNER JOIN `kream`.`size`
+                            ON seller_bid.size_id = size.id
+                 INNER JOIN `kream`.`product`
+                            ON size.product_id = product.id
+                 INNER JOIN `kream`.`image`
+                            ON product.id = image.product_id
+                                AND `image`.`is_primary` = 1
+        WHERE `cart`.`user_id` = #{userId}
+          AND `cart`.`is_deleted` = false
+    </select>
+
+    <select id="countCart"
+            resultType="_int">
+        SELECT SUM(`SELL`.`price`)
+        FROM `kream`.`cart` cart
+                 INNER JOIN `kream`.`seller_bid` AS SELL
+                            ON cart.seller_bid_id = SELL.id
+                                AND `SELL`.`state` = 'BIDDING'
+                                AND `SELL`.`is_deleted` = 0
+        WHERE cart.user_id = #{userId}
+    </select>
+</mapper>

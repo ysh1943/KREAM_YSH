@@ -1,5 +1,5 @@
 @charset "UTF-8";
-@import "../../user/styles/global";
+@import "../../assets/styles/global";
 
 #header {
   background-color: #ffffff;
@@ -177,10 +177,7 @@
         box-sizing: border-box;
 
         > .content_title {
-          display: flex !important;
-          flex-direction: row !important;
-          align-items: center !important;
-          justify-content: flex-start !important;
+          @include flex(row, center, flex-start);
 
           > .title {
             font-size: 24px;
@@ -223,6 +220,22 @@
 
               }
 
+            }
+          }
+
+          &.dom {
+            @include flex(column, flex-start, center);
+
+            > .btn_box {
+              @include flex(column, center, center, 1rem);
+              margin-left: 0;
+              padding: 90px 0;
+              width: 100%;
+
+              > span {
+                text-align: center;
+                color: #a0a0a0;
+              }
             }
           }
 
@@ -279,7 +292,6 @@
                       background-color: #f4f4f4;
                       border-radius: 10px;
                       box-sizing: border-box;
-                      display: inline-block;
                       font-size: 12px;
                       letter-spacing: -.06px;
                       line-height: 14px;
@@ -287,6 +299,7 @@
                       margin-top: 0;
                       padding: 3px 6px;
                       vertical-align: top;
+                      display: none;
 
                     }
 

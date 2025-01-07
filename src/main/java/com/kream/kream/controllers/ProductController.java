@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping(value = "/")
@@ -32,25 +33,29 @@ public class ProductController {
                                     @RequestParam(value = "id", required = false) Integer id) {
         ModelAndView modelAndView = new ModelAndView();
         ProductEntity product = this.productService.getProductDetailById(id);
+        if (user != null) {
+            modelAndView.addObject("user", user);
+        }
         if (product == null) {
             modelAndView.setViewName("redirect:/");
         } else {
-            SimilarProductImageDTO[] similarImages = this.productService.getImageByBaseName(product.getBaseName());
+            SimilarProductImageDTO[] similarImages = this.productService.getImageByBaseName(Objects.requireNonNull(product).getBaseName());
             ImageEntity[] images = this.productService.getImageById(id);
             List<SizeDTO> sizes = this.productService.getSizeByProductId(id);
             List<OrderChartDTO> orderCharts = this.productService.getOrderChartByProductId(id);
             modelAndView.addObject("orderCharts", orderCharts);
             modelAndView.addObject("sizes", sizes);
             modelAndView.addObject("similarImages", similarImages);
-            modelAndView.addObject("user", user);
+
             modelAndView.addObject("images", images);
             modelAndView.addObject("product", product);
             modelAndView.setViewName("product/product");
         }
+
         return modelAndView;
     }
 
-    @RequestMapping(value = "/product",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/product", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getSizeByProduct(@SessionAttribute(value = "user", required = false) UserEntity user,
                                    @RequestParam(value = "id", required = false) Integer id) throws IOException {
@@ -58,24 +63,27 @@ public class ProductController {
             JSONObject response = new JSONObject();
             response.put("result", "logout");
             return response.toString();
+        } else {
+            List<SizeDTO> sizes = this.productService.getSizeByProductId(id);
+            JSONArray response = new JSONArray();
+            for (SizeDTO size : sizes) {
+                JSONObject result = new JSONObject();
+                result.put("sizeId", size.getSizeId());
+                result.put("sellerBidId", size.getSellerBidId());
+                result.put("type", size.getType());
+                result.put("sellPrice", size.getSellPrice());
+                result.put("buyPrice", size.getBuyPrice());
+                result.put("lowestSellPrice", size.getLowestSellPrice());
+                result.put("highestBuyPrice", size.getHighestBuyPrice());
+                result.put("nameEn", size.getNameEn());
+                result.put("nameKo", size.getNameKo());
+                result.put("modelNumber", size.getModelNumber());
+                result.put("base64Image", size.getBase64Image());
+                result.put("userId",user.getId());
+                response.put(result);
+            }
+            return response.toString();
         }
-        List<SizeDTO> sizes = this.productService.getSizeByProductId(id);
-        JSONArray response = new JSONArray();
-        for (SizeDTO size : sizes) {
-            JSONObject result = new JSONObject();
-            result.put("sizeId", size.getSizeId());
-            result.put("type", size.getType());
-            result.put("sellPrice", size.getSellPrice());
-            result.put("buyPrice", size.getBuyPrice());
-            result.put("lowestSellPrice", size.getLowestSellPrice());
-            result.put("highestBuyPrice", size.getHighestBuyPrice());
-            result.put("nameEn", size.getNameEn());
-            result.put("nameKo", size.getNameKo());
-            result.put("modelNumber", size.getModelNumber());
-            result.put("base64Image", size.getBase64Image());
-            response.put(result);
-        }
-        return response.toString();
     }
 
     @RequestMapping(value = "/product-order-chart", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -33,13 +33,18 @@ $postalModifyBtn.addEventListener('click', () => {
     }).open();
 });
 
-$MyAddressBook.querySelector(':scope > .content_title > .btn_box > .btn').onclick = (e) => {
+$AddressForm.querySelector(':scope > .close').onclick = (e) => {
     e.preventDefault();
-    $cover.onclick = () => {
-        $layer.hide();
-    }
-    $layer.show();
+    $layer.hide();
 }
+
+// $MyAddressBook.querySelector(':scope > .content_title.dom > .btn_box > .btn').onclick = (e) => {
+//     e.preventDefault();
+//     $cover.onclick = () => {
+//         $layer.hide();
+//     }
+//     $layer.show();
+// }
 $layer.querySelector(':scope > .layer_container > .layer_content > .layer_btn >.close').onclick = (e) => {
     e.preventDefault();
     $layer.hide();
@@ -53,7 +58,6 @@ $layerModify.querySelector(':scope > .layer_container > .layer_content > .layer_
 const $Mylist = $ContentArea.querySelector(':scope > .my_addressBook > .my_list');
 
 const ArrayAddress = (address) => {
-
     const $MyList = new DOMParser().parseFromString(
         `<div class="my_list">
                     <div class="basic">
@@ -91,6 +95,11 @@ const ArrayAddress = (address) => {
             $coverModify.hide();
             $layerModify.hide();
         }
+        $ModifyForm.querySelector(':scope > .close').onclick = (e) => {
+            e.preventDefault();
+            $layerModify.hide();
+        }
+
         $layerModify.show();
         /** @type {HTMLFontElement} */
         const $form = $layerModify.querySelector(':scope > form');
@@ -111,12 +120,15 @@ const ArrayAddress = (address) => {
             formData.append('postal', $form['postal'].value);
             formData.append('basicAddress', $form['basicAddress'].value);
             formData.append('detailAddress', $form['detailAddress'].value);
+            formData.append('setDefault', check2.checked);
+            formData.append('userId', address['userId']);
 
             const xhr = new XMLHttpRequest();
             xhr.onreadystatechange = () => {
                 if (xhr.readyState !== XMLHttpRequest.DONE) {
                     return;
                 }
+                Loading.hide();
                 if (xhr.status < 200 || xhr.status >= 300) {
                     Dialog.show({
                         title: '오류',
@@ -173,7 +185,7 @@ const ArrayAddress = (address) => {
             };
             xhr.open('PATCH', './address-modify');
             xhr.send(formData);
-
+            Loading.show(0)
         };
     }
     $MyList.querySelector(':scope > .basic > .my_item > .btn_bind > .button.delete').onclick = (e) => {
@@ -222,11 +234,16 @@ const ArrayAddress = (address) => {
     }
 
     $MyAddressBook.append($MyList);
+    const $Mark = $MyList.querySelector('.mark');
+    if (address['default'] === true) {
+        $Mark.style.display = 'flex';
+    }
     return $MyList;
 }
+const $Contenttitle = $MyAddressBook.querySelector(':scope > .content_title.dom');
 
 const loadAddress = () => {
-    $Mylist.innerHTML = '';
+
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = () => {
         if (xhr.readyState !== XMLHttpRequest.DONE) {
@@ -237,43 +254,42 @@ const loadAddress = () => {
         }
         const allAddress = JSON.parse(xhr.responseText);
         if (allAddress.length === 0) {
-            const $MyList = new DOMParser().parseFromString(`
-            <div class="my_list">
-                    <div class="basic">
-                        <div class="my_item">
-                            <div class="info_bind">
-                                <div class="address_info">
-                                    <div class="name_box">
-                                        <span class="name">양세훈</span>
-                                        <span class="mark">기본 배송지</span>
-                                    </div>
-                                    <p class="phone">
-                                        010
-                                        <span class="hyphen"></span>
-                                        9607
-                                        <span class="hyphen"></span>
-                                        1943
-                                    </p>
-                                    <div class="address_box">
-                                        <div class="zipcode">(41230)</div>
-                                        <div class="address">대구 동구 효신로</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="btn_bind">
-                                <button class="button modify" type="submit">수정</button>
-                                <button class="button delete" type="submit">삭제</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>`, "text/html").querySelector('.my_list');
-            $MyAddressBook.append($MyList);
-            return $MyList;
+            $Contenttitle.innerHTML = `
+                <div class="title">
+                    <h3>주소록</h3>
+                </div>
+                <div class="btn_box">
+                    <span>배송지 정보가 없습니다.<br>새 배송지를 등록해주세요</span>
+                    <button class="btn">
+                        <span class="btn_txt">새 배송지 추가</span>
+                    </button>
+                </div>`;
         } else {
+            $Contenttitle.classList.remove('dom');
+            $Contenttitle.innerHTML = `
+                    <div class="title">
+                        <h3>주소록</h3>
+                    </div>
+                    <div class="btn_box">
+                        <button class="btn">
+                            <span class="btn_txt">새 배송지 추가</span>
+                        </button>
+                    </div>`;
             for (const address of allAddress) {
                 ArrayAddress(address);
+
             }
         }
+        $Contenttitle.querySelector('.btn').onclick = (e) => {
+            e.preventDefault();
+            $cover.onclick = () => {
+                $layer.hide();
+            }
+            $layer.show();
+        }
+
+
+
     }
     xhr.open('GET', `./address/`);
     xhr.send();
@@ -289,12 +305,14 @@ $AddressForm.onsubmit = (e) => {
     formData.append('postal', $AddressForm['postal'].value);
     formData.append('basicAddress', $AddressForm['basicAddress'].value);
     formData.append('detailAddress', $AddressForm['detailAddress'].value);
+    formData.append('setDefault', check1.checked);
 
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = () => {
         if (xhr.readyState !== XMLHttpRequest.DONE) {
             return;
         }
+        Loading.hide();
         if (xhr.status < 200 || xhr.status >= 300) {
             Dialog.show({
                 title: '오류',
@@ -353,6 +371,7 @@ $AddressForm.onsubmit = (e) => {
     };
     xhr.open('POST', '/my/address');
     xhr.send(formData);
+    Loading.show(0)
 }
 
 // 주소 ID
