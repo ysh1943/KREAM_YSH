@@ -46,6 +46,14 @@
         WHERE `buyer_bid`.`id` = #{buyerBidId}
           AND `buyer_bid`.`is_deleted` = 0
     </select>
+    <select id="selectBuyerBidUserCount"
+            resultType="int">
+        SELECT COUNT(*)
+        FROM `kream`.`buyer_bid`
+        WHERE `buyer_bid`.`user_id` = #{id}
+          AND `buyer_bid`.`is_deleted` = 0
+          AND `order_state` != 'FAILED'
+    </select>
 
     <update id="updateBuyerBid">
         UPDATE `kream`.`buyer_bid`

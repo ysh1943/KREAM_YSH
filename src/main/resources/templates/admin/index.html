@@ -89,7 +89,7 @@
                     <td th:if="${user.getSocialTypeCode()} == null">KREAM</td>
                     <td th:text="${user.getContact()}"></td>
                     <td th:text="${user.getNickname()}"></td>
-                    <td>-</td>
+                    <td th:text="${user.getUserOrderCount() + user.getUserSellerBidCount() + user.getUserBuyerBidCount()} + '건'"></td>
                     <td th:text="${#temporals.format(user.getCreatedAt(), 'yyyy-MM-dd')}"></td>
                     <td th:if="${user.isSuspended() == false}">활동</td>
                     <td th:if="${user.isSuspended() == true}">정지</td>
@@ -138,7 +138,10 @@
                         th:text="${order.getUserEmail()}"></td>
                     <td th:if="${order.getType() != 'BUY'}"
                         th:text="${order.getBuyerUserEmail()}"></td>
-                    <td th:text="${order.getBuyerAddress()}"></td>
+                    <td th:if="${order.getBuyerAddress() != null}"
+                        th:text="${order.getBuyerAddress()}"></td>
+                    <td th:if="${order.getBuyerBidAddress() != null}"
+                        th:text="${order.getBuyerBidAddress()}"></td>
                     <td th:if="${order.getState() == 'PENDING'}">대기중</td>
                     <td th:if="${order.getState() == 'INSPECTING'}">검수중</td>
                     <td th:if="${order.getState() == 'INSPECTION_FAILED'}">검수불합격</td>

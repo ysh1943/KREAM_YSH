@@ -69,10 +69,10 @@
                         <th style="width: 2rem;">번호</th>
                         <th></th>
                         <th style="width: 12rem;">상품명</th>
-                        <th style="width: 5rem;">가격</th>
+                        <th style="width: 6rem;">가격</th>
                         <th>판매자 이메일</th>
                         <th>구매자 이메일</th>
-                        <th style="width: 9rem;">구매자 주소</th>
+                        <th style="width: 10rem;">구매자 주소</th>
                         <th style="width: 6rem;">거래 날짜</th>
                         <th style="width: 7rem;">판매자 주문 상태</th>
                         <th style="width: 7rem;">구매자 주문 상태</th>
@@ -101,8 +101,8 @@
                             th:text="${order.getBuyerUserEmail()}"></td>
                         <td th:if="${order.getBuyerAddress() != null}"
                             th:text="${order.getBuyerAddress()}"></td>
-                        <td th:if="${order.getOrderUserAddress() != null}"
-                            th:text="${order.getOrderUserAddress()}"></td>
+                        <td th:if="${order.getBuyerBidAddress() != null}"
+                            th:text="${order.getBuyerBidAddress()}"></td>
                         <td th:text="${#temporals.format(order.getCreatedAt(), 'yyyy-MM-dd')}"></td>
                         <td th:if="${order.getType() == 'SELL'}">
                             <span th:if="${order.getState() == 'PENDING'}">대기중</span>
@@ -112,7 +112,6 @@
                             <span th:if="${order.getState() == 'IN_TRANSIT'}">정산중</span>
                             <span th:if="${order.getState() == 'SETTLING'}">정산중</span>
                             <span th:if="${order.getState() == 'FAILED'}">거래실패</span>
-                            <span th:if="${order.getState() == 'DELIVERED'}">정산완료</span>
                             <span th:if="${order.getState() == 'SETTLED'}">정산완료</span>
                         </td>
                         <td th:if="${order.getSellerState() != null}">
@@ -134,7 +133,6 @@
                             <span th:if="${order.getState() == 'SETTLING'}">배송중</span>
                             <span th:if="${order.getState() == 'FAILED'}">거래실패</span>
                             <span th:if="${order.getState() == 'DELIVERED'}">배송완료</span>
-                            <span th:if="${order.getState() == 'SETTLED'}">배송완료</span>
                         </td>
                         <td th:if="${order.getBuyerState() != null}">
                             <span th:if="${order.getBuyerState() == 'PENDING'}">대기중</span>
