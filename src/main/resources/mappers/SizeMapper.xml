@@ -20,13 +20,15 @@
                          LEFT JOIN `kream`.`size`
                                    ON `seller_bid`.`size_id` = `size`.`id`
                 WHERE `size`.`product_id` = `product`.`id`
-                  AND `seller_bid`.`state` = 'BIDDING') AS lowestSellPrice,
+                  AND `seller_bid`.`state` = 'BIDDING'
+                  AND `seller_bid`.`is_deleted` = 0) AS lowestSellPrice,
                (SELECT MAX(`buyer_bid`.`price`)
                 FROM `kream`.`buyer_bid`
                          LEFT JOIN `kream`.`size`
                                    ON `buyer_bid`.`size_id` = `size`.`id`
                 WHERE `size`.`product_id` = `product`.`id`
-                  AND `buyer_bid`.`state` = 'BIDDING')  AS highestBuyPrice
+                  AND `buyer_bid`.`state` = 'BIDDING'
+                  AND `buyer_bid`.`is_deleted` = 0)  AS highestBuyPrice
         FROM `kream`.`size`
                  LEFT JOIN `kream`.`seller_bid`
                            ON `size`.`id` = `seller_bid`.`size_id`
@@ -125,11 +127,13 @@
                 FROM `kream`.`seller_bid`
                 WHERE `seller_bid`.`price` = `price`.`sellPrice`
                   AND `seller_bid`.`size_id` = `price`.`sizeId`
+                  AND `seller_bid`.`is_deleted` = 0
                 ORDER BY `seller_bid`.`created_at`) AS `sellerBidId`,
                (SELECT `buyer_bid`.`id`
                 FROM `kream`.`buyer_bid`
                 WHERE `buyer_bid`.`price` = `price`.`buyPrice`
                   AND `buyer_bid`.`size_id` = `price`.`sizeId`
+                  AND `buyer_bid`.`is_deleted` = 0
                 ORDER BY `buyer_bid`.`created_at`)  AS `buyerBidId`
         FROM `price`;
     </select>

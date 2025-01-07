@@ -103,13 +103,16 @@
                          INNER JOIN `kream`.`size`
                                     ON `seller_bid`.`size_id` = `size`.`id`
                 WHERE `size`.`product_id` = `product`.`id`
+                  AND `seller_bid`.`is_deleted` = 0
                   AND `seller_bid`.`state` = 'BIDDING')     AS lowestPrice,
                COUNT(`order`.`id`)         AS transactionCount
         FROM `kream`.`order`
                  LEFT JOIN `kream`.`seller_bid`
                            ON `seller_bid_id` = `seller_bid`.`id`
+                               AND `seller_bid`.`is_deleted` = 0
                  LEFT JOIN `kream`.`buyer_bid`
                            ON `buyer_bid_id` = `buyer_bid`.`id`
+                               AND `buyer_bid`.`is_deleted` = 0
                  INNER JOIN `kream`.`size`
                             ON `seller_bid`.`size_id` = `size`.`id`
                                 OR `buyer_bid`.`size_id` = `size`.`id`
