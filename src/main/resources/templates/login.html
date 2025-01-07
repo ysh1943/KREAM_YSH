@@ -23,10 +23,10 @@
                     <a class="top-link" th:href="@{'/admin/'}" th:if="${user != null && user.isAdmin()}">관리자 페이지</a>
                 </li>
                 <li class="top-item">
-                    <a class="top-link" th:href="${user == null} ? '/user/' : '/my'">마이페이지</a>
+                    <a class="top-link" th:href="${user == null} ? '/login' : '/my/profile'">마이페이지</a>
                 </li>
                 <li class="top-item">
-                    <a class="top-link" th:href="${user == null} ? '/user/' : '/user/logout'"
+                    <a class="top-link" th:href="${user == null} ? '/' : '/logout'"
                        th:text="${user == null} ? '로그인' : '로그아웃'"></a>
                 </li>
             </ul>
@@ -39,7 +39,7 @@
             <nav class="menu">
                 <ul class="menu-list">
                     <li class="menu-item">
-                        <a class="menu-link bold" th:href="@{'/'}">HOEM</a>
+                        <a class="menu-link bold" th:href="@{'/'}">HOME</a>
                     </li>
                     <li class="menu-item">
                         <a class="menu-link" th:href="@{'/shop'}">SHOP</a>

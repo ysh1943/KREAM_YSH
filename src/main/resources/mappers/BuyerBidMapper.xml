@@ -53,6 +53,14 @@
         WHERE `buyer_bid`.`id` = #{buyerBidId}
           AND `buyer_bid`.`is_deleted` = 0
     </select>
+    <select id="selectBuyerBidUserCount"
+            resultType="int">
+        SELECT COUNT(*)
+        FROM `kream`.`buyer_bid`
+        WHERE `buyer_bid`.`user_id` = #{id}
+          AND `buyer_bid`.`is_deleted` = 0
+          AND `order_state` != 'FAILED'
+    </select>
 
     <select id="selectBuyerBidByState" resultType="com.kream.kream.dtos.BidStateDTO">
         SELECT `buyer_bid`.`id`            AS `buyerBidId`,

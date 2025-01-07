@@ -1,11 +1,7 @@
 package com.kream.kream.services;
 
-import com.kream.kream.dtos.BidStateDTO;
-import com.kream.kream.dtos.OrderStateDTO;
-import com.kream.kream.entities.AccountEntity;
-import com.kream.kream.entities.AddressEntity;
-import com.kream.kream.entities.BuyerBidEntity;
-import com.kream.kream.entities.UserEntity;
+import com.kream.kream.dtos.*;
+import com.kream.kream.entities.*;
 import com.kream.kream.exceptions.TransactionalException;
 import com.kream.kream.mappers.*;
 import com.kream.kream.results.AddressResult;
@@ -22,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class MyService {
@@ -30,14 +27,16 @@ public class MyService {
     private final AccountMapper accountMapper;
     private final BuyerBidMapper buyerBidMapper;
     private final OrderMapper orderMapper;
+    private final SellerBidMapper sellerBidMapper;
 
     @Autowired
-    public MyService(UserMapper userMapper, AddressMapper addressMapper, AccountMapper accountMapper, BuyerBidMapper buyerBidMapper, OrderMapper orderMapper) {
+    public MyService(UserMapper userMapper, OrderMapper orderMapper, AddressMapper addressMapper, AccountMapper accountMapper, BuyerBidMapper buyerBidMapper, SellerBidMapper sellerBidMapper) {
         this.userMapper = userMapper;
         this.addressMapper = addressMapper;
         this.accountMapper = accountMapper;
-        this.buyerBidMapper = buyerBidMapper;
         this.orderMapper = orderMapper;
+        this.buyerBidMapper = buyerBidMapper;
+        this.sellerBidMapper = sellerBidMapper;
     }
 
     public List<BidStateDTO> getBuyerBidList(Integer userId, String state){
@@ -301,5 +300,61 @@ public class MyService {
         return CommonResult.SUCCESS;
     }
 
+    public int getSellerBidListCount(int id) {
+        return this.sellerBidMapper.selectSellerBidByUserCount(id);
+    }
 
+    public SellingBidListDTO[] getSellerBidList(int id, String tab, String state) {
+        return this.sellerBidMapper.selectSellerBidByUser(id, tab, state);
+    }
+
+    public CommonResult deleteSellerBid(Integer id) {
+        if (id == null || id < 1) {
+            return CommonResult.FAILURE;
+        }
+        SellerBidEntity sellerBid = this.sellerBidMapper.selectSellerBidById(id);
+        if (sellerBid == null) {
+            return CommonResult.FAILURE;
+        } else {
+            sellerBid.setDeleted(true);
+        }
+        return this.sellerBidMapper.updateSellerBid(sellerBid) > 0
+                ? CommonResult.SUCCESS
+                : CommonResult.FAILURE;
+    }
+
+    public int getSellerOrderListCount(int id) {
+        return this.orderMapper.selectOrderListByUserCount(id);
+    }
+
+    public SellingOrderListDTO[] getSellerOrderList(int id, String tab, String state) {
+        return this.orderMapper.selectOrderListByUser(id, tab, state);
+    }
+
+    public CommonResult patchOrderState(Integer id) {
+        if (id == null || id < 1) {
+            return CommonResult.FAILURE;
+        }
+        OrderEntity order = this.orderMapper.selectOrderById(id);
+        if (order == null) {
+            return CommonResult.FAILURE;
+        } else {
+            if (order.getSellerBidId() != null) {
+                SellerBidEntity sellerBid = this.sellerBidMapper.selectSellerBidById(order.getSellerBidId());
+                sellerBid.setOrderState("FAILED");
+                this.sellerBidMapper.updateSellerBid(sellerBid);
+            }
+            order.setState("FAILED");
+            this.orderMapper.updateOrder(order);
+        }
+        return CommonResult.SUCCESS;
+    }
+
+    public int getSellerOrderCompleteListCount(int id) {
+        return this.orderMapper.selectOrderCompleteListByUserCount(id);
+    }
+
+    public SellingOrderCompleteListDTO[] getSellerOrderCompleteList(int id, String tab, String state) {
+        return this.orderMapper.selectOrderCompleteListByUser(id, tab, state);
+    }
 }

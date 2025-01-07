@@ -1,5 +1,10 @@
 package com.kream.kream.controllers;
 
+import com.kream.kream.dtos.SellingBidListDTO;
+import com.kream.kream.dtos.SellingOrderCompleteListDTO;
+import com.kream.kream.dtos.SellingOrderListDTO;
+import com.kream.kream.entities.*;
+import com.kream.kream.results.CommonResult;
 import com.kream.kream.dtos.BidStateDTO;
 import com.kream.kream.dtos.OrderStateDTO;
 import com.kream.kream.entities.AccountEntity;
@@ -7,6 +12,7 @@ import com.kream.kream.entities.AddressEntity;
 import com.kream.kream.entities.UserEntity;
 import com.kream.kream.results.Result;
 import com.kream.kream.services.MyService;
+import jakarta.servlet.http.HttpSession;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +20,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,7 +48,6 @@ public class MyController {
         }
         modelAndView.addObject("user", user);
         modelAndView.setViewName("/my/index");
-
         return modelAndView;
     }
 
@@ -120,6 +127,52 @@ public class MyController {
             modelAndView.setViewName("/my/buying");
         }
         return modelAndView;
+    }
+
+    @RequestMapping(value = "/selling", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+    @ResponseBody
+    public ModelAndView getSelling(@SessionAttribute(value = "user", required = false) UserEntity user,
+                                   @RequestParam(value = "tab", required = false) String tab,
+                                   @RequestParam(value = "state", required = false) String state) {
+        ModelAndView modelAndView = new ModelAndView();
+        if (user == null) {
+            modelAndView.setViewName("redirect:/");
+            return modelAndView;
+        }
+        int sellerBidsCount = myService.getSellerBidListCount(user.getId());
+        SellingBidListDTO[] sellerBids = myService.getSellerBidList(user.getId(), tab, state);
+        int sellerOrdersCount = myService.getSellerOrderListCount(user.getId());
+        SellingOrderListDTO[] sellerOrders = myService.getSellerOrderList(user.getId(), tab, state);
+        int sellerOrdersCompleteCount = myService.getSellerOrderCompleteListCount(user.getId());
+        SellingOrderCompleteListDTO[] sellerOrdersComplete = myService.getSellerOrderCompleteList(user.getId(), tab, state);
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("tab", tab);
+        modelAndView.addObject("sellerBidsCount", sellerBidsCount);
+        modelAndView.addObject("sellerBids", sellerBids);
+        modelAndView.addObject("sellerOrdersCount", sellerOrdersCount);
+        modelAndView.addObject("sellerOrders", sellerOrders);
+        modelAndView.addObject("sellerOrdersCompleteCount", sellerOrdersCompleteCount);
+        modelAndView.addObject("sellerOrdersComplete", sellerOrdersComplete);
+        modelAndView.setViewName("/my/selling");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/selling", method = RequestMethod.DELETE)
+    @ResponseBody
+    public String deleteSellerBidId(@RequestParam(value = "id", required = false) Integer id) {
+        CommonResult result = this.myService.deleteSellerBid(id);
+        JSONObject response = new JSONObject();
+        response.put("result", result.name().toLowerCase());
+        return response.toString();
+    }
+
+    @RequestMapping(value = "/selling", method = RequestMethod.PATCH)
+    @ResponseBody
+    public String patchOrderState(@RequestParam(value = "id") Integer id) {
+        CommonResult result = this.myService.patchOrderState(id);
+        JSONObject response = new JSONObject();
+        response.put("result", result.name().toLowerCase());
+        return response.toString();
     }
 
     @RequestMapping(value = "/profile", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)

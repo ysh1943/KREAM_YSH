@@ -1,6 +1,7 @@
 package com.kream.kream.mappers;
 
 import com.kream.kream.entities.UserEntity;
+import com.kream.kream.entities.UserOrderCountEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -11,12 +12,12 @@ public interface UserMapper {
 
     int selectUserCountBySearch(String filter, String keyword);
 
-    UserEntity[] selectUser();
+    UserOrderCountEntity[] selectUser();
 
-    UserEntity[] selectUserByPage(@Param("limitCount") int limitCount,
-                                  @Param("offsetCount") int offsetCount);
+    UserOrderCountEntity[] selectUserByPage(@Param("limitCount") int limitCount,
+                                            @Param("offsetCount") int offsetCount);
 
-    UserEntity[] selectUserBySearch(@Param("filter") String filter,
+    UserOrderCountEntity[] selectUserBySearch(@Param("filter") String filter,
                                     @Param("keyword") String keyword,
                                     @Param("limitCount") int limitCount,
                                     @Param("offsetCount") int offsetCount);

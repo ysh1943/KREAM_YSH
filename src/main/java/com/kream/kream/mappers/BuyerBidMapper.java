@@ -31,6 +31,5 @@ public interface BuyerBidMapper {
 
     int updateBuyerBid(BuyerBidEntity buyerBid);
 
-
-
+    int selectBuyerBidUserCount(@Param(value = "id") int id);
 }
