@@ -5,18 +5,27 @@ import lombok.Setter;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Base64;
 
 @Getter
 @Setter
-public class BuyingListDTO {
-    private String baseName;
+public class BidStateDTO {
+    public enum State {
+        BIDDING,
+        DEADLINE,
+        ORDER,
+    }
+
+    private int buyerBidId;
+    private int productId;
+    private String productNameEn;
     private String sizeType;
     private byte[] imageData;
     private String imageType;
     private int price;
-    private LocalDateTime deadline;
+    private LocalDate deadline;
+    private State state;
 
     public String getBase64Image() throws IOException {
         if (imageData != null && imageType != null) {

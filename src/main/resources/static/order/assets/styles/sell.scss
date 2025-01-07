@@ -630,6 +630,10 @@
           padding: 0.5rem;
           z-index: 8;
 
+          &.disable-button {
+            cursor: not-allowed;
+          }
+
           > .order-button {
             background-color: #41b979;
             width: 43.75rem;
@@ -637,6 +641,12 @@
             border-radius: 0.5rem;
             cursor: pointer;
             padding: 1rem;
+
+            &.disable-button {
+              background-color: #22222230;
+              user-select: none;
+              pointer-events: none;
+            }
 
             > .order-button-text {
               color: #ffffff;

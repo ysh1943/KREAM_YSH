@@ -434,7 +434,6 @@
         <if test="brand != null">
             AND `brand` LIKE CONCAT('%', #{brand}, '%')
         </if>
-
         <!-- category 조건 -->
         <if test="category != null and category.length > 0">
             AND `category-detail`.`type` IN
@@ -755,6 +754,74 @@
           AND `size`.product_id = #{id}
         ORDER BY `order`.`created_at` DESC
         LIMIT 5
+    </select>
+
+
+    <select id="selectBuyerOrderByState" resultType="com.kream.kream.dtos.OrderStateDTO">
+        SELECT `product`.`product_name_en` AS `productNameEn`,
+               `product`.`id` AS `productId`,
+               `size`.`type` AS `sizeType`,
+               `image`.`data` AS `imageData`,
+               `image`.`type` AS `imageType`,
+               `order`.`state` AS `state`,
+               `order`.`price` AS `price`
+        FROM `kream`.`order`
+        INNER JOIN `kream`.`seller_bid`
+        ON `order`.`seller_bid_id` = `seller_bid`.`id`
+        INNER JOIN `kream`.`size`
+        ON seller_bid.size_id = size.id
+        INNER JOIN `kream`.`product`
+        ON size.product_id = product.id
+        INNER JOIN `kream`.`image`
+        ON product.id = image.product_id
+        AND `image`.`is_primary` = 1
+        WHERE `order`.`user_id` = #{userId}
+        AND `order`.`deleted_at` IS NULL
+        <if test="state == 'pending-all'">
+            AND (`order`.`state` = 'PENDING' OR `order`.`state` = 'INSPECTING' OR
+            `order`.`state` = 'INSPECTION_FAILED' OR `order`.`state` = 'INSPECTION_PASSED' OR
+            `order`.`state` = 'IN_TRANSIT')
+        </if>
+        <if test="state == 'finish-all'">
+            AND (`order`.`state` = 'FAILED' OR `order`.`state` = 'DELIVERED')
+        </if>
+        <if test="state != 'pending-all' and state != 'finish-all'">
+            AND `order`.`state` = #{state}
+        </if>
+    </select>
+
+    <select id="selectBuyerOrderCountByPending" resultType="java.lang.Integer">
+        SELECT COUNT(0)
+        FROM `kream`.`order`
+                 INNER JOIN `kream`.`seller_bid`
+                            ON `order`.`seller_bid_id` = `seller_bid`.`id`
+                 INNER JOIN `kream`.`size`
+                            ON seller_bid.size_id = size.id
+                 INNER JOIN `kream`.`product`
+                            ON size.product_id = product.id
+                 INNER JOIN `kream`.`image`
+                            ON product.id = image.product_id
+                                AND `image`.`is_primary` = 1
+        WHERE `order`.`user_id` = #{userId}
+          AND `order`.`deleted_at` IS NULL
+          AND (`order`.`state` != 'FAILED' AND `order`.`state` != 'DELIVERED' AND `order`.`state` != 'SETTLING' AND `order`.`state` != 'SETTLED')
+    </select>
+
+    <select id="selectBuyerOrderCountByFinish" resultType="java.lang.Integer">
+        SELECT COUNT(0)
+        FROM `kream`.`order`
+                 INNER JOIN `kream`.`seller_bid`
+                            ON `order`.`seller_bid_id` = `seller_bid`.`id`
+                 INNER JOIN `kream`.`size`
+                            ON seller_bid.size_id = size.id
+                 INNER JOIN `kream`.`product`
+                            ON size.product_id = product.id
+                 INNER JOIN `kream`.`image`
+                            ON product.id = image.product_id
+                                AND `image`.`is_primary` = 1
+        WHERE `order`.`user_id` = #{userId}
+          AND `order`.`deleted_at` IS NULL
+          AND (`order`.`state` = 'FAILED' OR `order`.`state` = 'DELIVERED')
     </select>
 
     <select id="selectOrderCountByUserId"

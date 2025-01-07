@@ -153,7 +153,7 @@ $navItems.forEach(($navItem) => {
         $inputFile.onchange = () => {
             if ($inputFile.files?.length === 0) {
                 // 파일이 없으면 텍스트 표시하고 이미지 숨기기
-                $text.style.display = 'flex';ㅁ
+                $text.style.display = 'flex';
                 $image.style.display = 'none';
                 $image.src = '';  // 미리보기 이미지 초기화
                 return;

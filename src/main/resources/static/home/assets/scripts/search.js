@@ -180,7 +180,7 @@ const $cover = document.getElementById('cover');
     const $recentArea = $main.querySelector(':scope > .recent-area')
     const $recentCancel = $main.querySelector(':scope > .recent-area > .title-wrap > .recent-cancel');
     $recentCancel.onclick = () => {
-        Dialog.defaultYesNo('최근 검색어 삭제', '검색기록을 모두 삭제하겠습니까?', () => {
+        Dialog. defaultYesNo('최근 검색어 삭제', '검색기록을 모두 삭제하겠습니까?', () => {
             const xhr = new XMLHttpRequest();
             xhr.onreadystatechange = () => {
                 if (xhr.readyState !== XMLHttpRequest.DONE) {

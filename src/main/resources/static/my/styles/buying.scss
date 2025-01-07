@@ -1,6 +1,7 @@
 @charset "UTF-8";
 @import "../../user/styles/global";
 
+
 #header {
   background-color: #ffffff;
   top: 0;
@@ -79,9 +80,8 @@
     top: 0;
     left: 0;
     position: relative;
-    height: 754px;
-    padding: 40px 40px 160px 40px;
-    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 35px;
     max-width: 1280px;
     width: 100%;
 
@@ -153,6 +153,7 @@
                 letter-spacing: -.15px;
                 line-height: 18px;
                 text-decoration: none;
+                cursor: pointer;
 
                 &.requestPage {
                   color: #222;
@@ -255,8 +256,10 @@
 
                   > .tab_link {
                     @include flex(row, center, center);
+                    width: 100%;
                     position: relative;
-                    border-bottom: 2px solid #ebebeb;
+                    border-bottom: 0.0625rem solid #ebebeb;
+                    cursor: pointer;
                     padding-top: 12px;
                     height: 68px;
                     padding-bottom: 12px;
@@ -264,14 +267,27 @@
                     text-align: center;
                     text-decoration: none;
 
+                    &.tab_on {
+                      border-bottom: 0.125rem solid #222222;
+
+                      > .tab_box {
+
+                        > .title {
+                          font-weight: bold;
+                        }
+                        > .count {
+                          color: #ef6253;
+                        }
+                      }
+                    }
+
                     > .tab_box {
                       @include flex(column-reverse, center, center);
                       text-align: center;
                       box-sizing: border-box;
 
                       > .title {
-                        color: rgba(34, 34, 34, .5);
-                        font-weight: 700;
+                        font-weight: 200;
                         font-size: 13px;
                         text-align: center;
                       }
@@ -425,14 +441,15 @@
                       margin: 6px;
                       box-sizing: border-box;
 
-
                       > .status_link {
                         list-style-type: none;
+                        width: 100%;
                         margin: 0;
                         box-sizing: border-box;
                         background-color: #ffffff;
                         border: 1px solid #ebebeb;
                         border-radius: 12px;
+                        cursor: pointer;
                         display: block;
                         font-size: 14px;
                         line-height: 20px;
@@ -441,6 +458,12 @@
                         text-align: center;
                         white-space: nowrap;
                         text-decoration: none;
+
+                        &:hover {
+                          border: 0.0625rem solid #222;
+                          font-weight: bold;
+                        }
+
 
                         > .text {
                           color: rgba(34, 34, 34);
@@ -464,30 +487,21 @@
           }
 
           > .my_order_list {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            width: 100%;
 
             > .empty-page {
-              @include flex(column, center, center);
-              min-height: 192px;
+              @include flex(column, center, center, 0.7rem);
               padding: 56px 28px;
 
               > .text_body {
-                @include flex(row, center, center);
-                gap: 0 2px;
-                box-sizing: border-box;
 
-                > p {
+                > .text {
                   color: #222222;
                   text-align: center;
-                  width: inherit;
-
                 }
               }
 
               > .button {
-                @include flex(column, center, center);
                 color: #ffffff;
                 text-decoration: none;
                 box-sizing: border-box;
@@ -517,40 +531,20 @@
                   }
                 }
               }
-
-            }
-
-            > .divider {
-              height: 8px;
-              margin: 0;
-              padding: 0;
-              background-color: #ebebeb;
-
             }
 
             > .product_list {
+              width: 100%;
               padding: 16px;
               cursor: pointer;
-              min-height: 104px;
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
               text-decoration: none;
               box-sizing: border-box;
 
               > .content {
-                align-items: center;
-                display: flex;
-                gap: 8px;
-                width: 100%;
-                margin: 0;
-                padding: 0;
-                cursor: pointer;
+                @include flex(row, center, flex-start, 1rem);
 
                 > .content_thumbnail-text {
-                  display: flex;
-                  flex: 1 1 auto;
-                  gap: 12px;
+                  @include flex(row, center, flex-start, 0.5rem);
 
                   > .image {
                     border-radius: 10px;
@@ -578,6 +572,7 @@
 
                     > .text {
                       display: flex;
+                      font-size: 13px;
                       align-items: center;
                       box-sizing: border-box;
                       color: #222222;
@@ -586,18 +581,21 @@
 
                     > .size {
                       color: #222222;
+                      font-size: 13px;
+                      font-weight: bold;
                     }
                   }
                 }
 
                 > .text_body {
                   color: #222222;
-
+                  font-size: 13px;
 
                 }
 
                 > .label_item {
                   color: #222222;
+                  font-size: 13px;
                 }
               }
 

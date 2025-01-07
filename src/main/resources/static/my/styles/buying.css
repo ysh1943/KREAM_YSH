@@ -100,9 +100,8 @@
   top: 0;
   left: 0;
   position: relative;
-  height: 754px;
-  padding: 40px 40px 160px 40px;
-  margin: 0 auto;
+  box-sizing: border-box;
+  padding: 35px;
   max-width: 1280px;
   width: 100%;
 }
@@ -180,6 +179,7 @@
   letter-spacing: -0.15px;
   line-height: 18px;
   text-decoration: none;
+  cursor: pointer;
 }
 .container > .content > .snb_area > .snb > .snb_list > .snb_menu > .menu_item > .menu_link.requestPage {
   color: #222;
@@ -276,8 +276,10 @@
   flex-direction: row;
   gap: 0;
   justify-content: center;
+  width: 100%;
   position: relative;
-  border-bottom: 2px solid #ebebeb;
+  border-bottom: 0.0625rem solid #ebebeb;
+  cursor: pointer;
   padding-top: 12px;
   height: 68px;
   padding-bottom: 12px;
@@ -288,6 +290,15 @@
 .container > .content > .content_area > .my_Buying > .content_list > .bidding-header > .bidding > .purchase_list > .tab_item > .tab_link > .-spring {
   flex-grow: 1;
   flex-shrink: 1;
+}
+.container > .content > .content_area > .my_Buying > .content_list > .bidding-header > .bidding > .purchase_list > .tab_item > .tab_link.tab_on {
+  border-bottom: 0.125rem solid #222222;
+}
+.container > .content > .content_area > .my_Buying > .content_list > .bidding-header > .bidding > .purchase_list > .tab_item > .tab_link.tab_on > .tab_box > .title {
+  font-weight: bold;
+}
+.container > .content > .content_area > .my_Buying > .content_list > .bidding-header > .bidding > .purchase_list > .tab_item > .tab_link.tab_on > .tab_box > .count {
+  color: #ef6253;
 }
 .container > .content > .content_area > .my_Buying > .content_list > .bidding-header > .bidding > .purchase_list > .tab_item > .tab_link > .tab_box {
   align-items: center;
@@ -303,8 +314,7 @@
   flex-shrink: 1;
 }
 .container > .content > .content_area > .my_Buying > .content_list > .bidding-header > .bidding > .purchase_list > .tab_item > .tab_link > .tab_box > .title {
-  color: rgba(34, 34, 34, 0.5);
-  font-weight: 700;
+  font-weight: 200;
   font-size: 13px;
   text-align: center;
 }
@@ -454,11 +464,13 @@
 }
 .container > .content > .content_area > .my_Buying > .my_order_box > .layer > .layer_container > .content > .select_status > .status_list > .status_item > .status_link {
   list-style-type: none;
+  width: 100%;
   margin: 0;
   box-sizing: border-box;
   background-color: #ffffff;
   border: 1px solid #ebebeb;
   border-radius: 12px;
+  cursor: pointer;
   display: block;
   font-size: 14px;
   line-height: 20px;
@@ -467,6 +479,10 @@
   text-align: center;
   white-space: nowrap;
   text-decoration: none;
+}
+.container > .content > .content_area > .my_Buying > .my_order_box > .layer > .layer_container > .content > .select_status > .status_list > .status_item > .status_link:hover {
+  border: 0.0625rem solid #222;
+  font-weight: bold;
 }
 .container > .content > .content_area > .my_Buying > .my_order_box > .layer > .layer_container > .content > .select_status > .status_list > .status_item > .status_link > .text {
   color: rgb(34, 34, 34);
@@ -480,47 +496,25 @@
   display: block;
 }
 .container > .content > .content_area > .my_Buying > .my_order_box > .my_order_list {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  width: 100%;
 }
 .container > .content > .content_area > .my_Buying > .my_order_box > .my_order_list > .empty-page {
   align-items: center;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 0.7rem;
   justify-content: center;
-  min-height: 192px;
   padding: 56px 28px;
 }
 .container > .content > .content_area > .my_Buying > .my_order_box > .my_order_list > .empty-page > .-spring {
   flex-grow: 1;
   flex-shrink: 1;
 }
-.container > .content > .content_area > .my_Buying > .my_order_box > .my_order_list > .empty-page > .text_body {
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  gap: 0;
-  justify-content: center;
-  gap: 0 2px;
-  box-sizing: border-box;
-}
-.container > .content > .content_area > .my_Buying > .my_order_box > .my_order_list > .empty-page > .text_body > .-spring {
-  flex-grow: 1;
-  flex-shrink: 1;
-}
-.container > .content > .content_area > .my_Buying > .my_order_box > .my_order_list > .empty-page > .text_body > p {
+.container > .content > .content_area > .my_Buying > .my_order_box > .my_order_list > .empty-page > .text_body > .text {
   color: #222222;
   text-align: center;
-  width: inherit;
 }
 .container > .content > .content_area > .my_Buying > .my_order_box > .my_order_list > .empty-page > .button {
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  justify-content: center;
   color: #ffffff;
   text-decoration: none;
   box-sizing: border-box;
@@ -529,10 +523,6 @@
   background-color: rgb(255, 255, 255);
   box-shadow: rgb(34, 34, 34) 0 0 0 1px inset;
   cursor: pointer;
-}
-.container > .content > .content_area > .my_Buying > .my_order_box > .my_order_list > .empty-page > .button > .-spring {
-  flex-grow: 1;
-  flex-shrink: 1;
 }
 .container > .content > .content_area > .my_Buying > .my_order_box > .my_order_list > .empty-page > .button > .button_text {
   min-height: 20px;
@@ -550,35 +540,34 @@
   font-size: inherit;
   font-weight: 700;
 }
-.container > .content > .content_area > .my_Buying > .my_order_box > .my_order_list > .divider {
-  height: 8px;
-  margin: 0;
-  padding: 0;
-  background-color: #ebebeb;
-}
 .container > .content > .content_area > .my_Buying > .my_order_box > .my_order_list > .product_list {
+  width: 100%;
   padding: 16px;
   cursor: pointer;
-  min-height: 104px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   text-decoration: none;
   box-sizing: border-box;
 }
 .container > .content > .content_area > .my_Buying > .my_order_box > .my_order_list > .product_list > .content {
   align-items: center;
   display: flex;
-  gap: 8px;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  cursor: pointer;
+  flex-direction: row;
+  gap: 1rem;
+  justify-content: flex-start;
+}
+.container > .content > .content_area > .my_Buying > .my_order_box > .my_order_list > .product_list > .content > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
 }
 .container > .content > .content_area > .my_Buying > .my_order_box > .my_order_list > .product_list > .content > .content_thumbnail-text {
+  align-items: center;
   display: flex;
-  flex: 1 1 auto;
-  gap: 12px;
+  flex-direction: row;
+  gap: 0.5rem;
+  justify-content: flex-start;
+}
+.container > .content > .content_area > .my_Buying > .my_order_box > .my_order_list > .product_list > .content > .content_thumbnail-text > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
 }
 .container > .content > .content_area > .my_Buying > .my_order_box > .my_order_list > .product_list > .content > .content_thumbnail-text > .image {
   border-radius: 10px;
@@ -610,18 +599,23 @@
 }
 .container > .content > .content_area > .my_Buying > .my_order_box > .my_order_list > .product_list > .content > .content_thumbnail-text > .layout_list > .text {
   display: flex;
+  font-size: 13px;
   align-items: center;
   box-sizing: border-box;
   color: #222222;
 }
 .container > .content > .content_area > .my_Buying > .my_order_box > .my_order_list > .product_list > .content > .content_thumbnail-text > .layout_list > .size {
   color: #222222;
+  font-size: 13px;
+  font-weight: bold;
 }
 .container > .content > .content_area > .my_Buying > .my_order_box > .my_order_list > .product_list > .content > .text_body {
   color: #222222;
+  font-size: 13px;
 }
 .container > .content > .content_area > .my_Buying > .my_order_box > .my_order_list > .product_list > .content > .label_item {
   color: #222222;
+  font-size: 13px;
 }
 .container > .content > .content_area > .my_Buying > .my_order_box.-visible {
   display: block;

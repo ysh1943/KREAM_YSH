@@ -57,5 +57,12 @@ public interface OrderMapper {
                                                        @Param("color") String[] color,
                                                        @Param("price") String[] price);
 
+    List<OrderStateDTO> selectBuyerOrderByState(@Param(value = "userId") int userId,
+                                              @Param(value = "state") String state);
+
+    int selectBuyerOrderCountByPending(@Param(value = "userId") int userId);
+
+    int selectBuyerOrderCountByFinish(@Param(value = "userId") int userId);
+
     int selectOrderCountByUserId(int id);
 }

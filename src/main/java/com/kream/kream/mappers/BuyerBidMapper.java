@@ -1,9 +1,12 @@
 package com.kream.kream.mappers;
 
+import com.kream.kream.dtos.BidStateDTO;
+import com.kream.kream.dtos.OrderStateDTO;
 import com.kream.kream.entities.BuyerBidEntity;
-import com.kream.kream.entities.SellerBidEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 @Mapper
 public interface BuyerBidMapper {
@@ -13,6 +16,18 @@ public interface BuyerBidMapper {
                                                       @Param(value = "buyerBidId") int buyerBidId);
 
     BuyerBidEntity selectBuyerBidById(int buyerBidId);
+
+    List<BidStateDTO> selectBuyerBidByState(@Param(value = "userId") int userId,
+                                            @Param(value = "state") String state);
+
+    List<OrderStateDTO> selectBuyerBidByOrderState(@Param(value = "userId") int userId,
+                                                   @Param(value = "state") String state);
+
+    int selectBuyerBidCountByState(@Param(value = "userId") int userId);
+
+    int selectBuyerBidCountByPending(@Param(value = "userId") int userId);
+
+    int selectBuyerBidCountByFinish(@Param(value = "userId") int userId);
 
     int updateBuyerBid(BuyerBidEntity buyerBid);
 

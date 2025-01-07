@@ -10,6 +10,7 @@ import com.kream.kream.results.LoginResult;
 import com.kream.kream.results.Result;
 import com.kream.kream.results.user.SocialResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,30 +23,100 @@ import java.util.Objects;
 @Service
 public class MyService {
     private final UserMapper userMapper;
-    private final OrderMapper orderMapper;
     private final AddressMapper addressMapper;
     private final AccountMapper accountMapper;
+    private final BuyerBidMapper buyerBidMapper;
+    private final OrderMapper orderMapper;
     private final SellerBidMapper sellerBidMapper;
 
     @Autowired
-    public MyService(UserMapper userMapper, OrderMapper orderMapper, AddressMapper addressMapper, AccountMapper accountMapper, SellerBidMapper sellerBidMapper) {
+    public MyService(UserMapper userMapper, OrderMapper orderMapper, AddressMapper addressMapper, AccountMapper accountMapper, BuyerBidMapper buyerBidMapper, SellerBidMapper sellerBidMapper) {
         this.userMapper = userMapper;
-        this.orderMapper = orderMapper;
         this.addressMapper = addressMapper;
         this.accountMapper = accountMapper;
+        this.orderMapper = orderMapper;
+        this.buyerBidMapper = buyerBidMapper;
         this.sellerBidMapper = sellerBidMapper;
     }
 
-    public List<BuyingListDTO> getBuyingList(Integer userId, String state){
-        List<BuyingListDTO> buyings = this.userMapper.getBuyingsByUserOfState(userId, state);
-        if (buyings == null || buyings.isEmpty()){
+    public List<BidStateDTO> getBuyerBidList(Integer userId, String state){
+        if (state == null) {
+            state = "all";
+        }
+        List<BidStateDTO> buyerBids = this.buyerBidMapper.selectBuyerBidByState(userId, state);
+        if (buyerBids == null || buyerBids.isEmpty()){
             return new ArrayList<>();
         }
-        return buyings;
+        return buyerBids;
     }
 
-    public List<BuyingListDTO>getBuyings(Integer userId, String state){
-        return userMapper.getBuyingsByUserOfOrderState(state, userId);
+   public int getCountBuyerBid(Integer userId) {
+        if (userId == null) {
+            return 0;
+        }
+        return this.buyerBidMapper.selectBuyerBidCountByState(userId);
+   }
+
+   public int getCountBuyerPending(Integer userId) {
+        if (userId == null) {
+            return 0;
+        }
+        return this.buyerBidMapper.selectBuyerBidCountByPending(userId);
+   }
+
+   public int getCountOrderPending(Integer userId) {
+        if (userId == null){
+            return 0;
+        }
+        return this.orderMapper.selectBuyerOrderCountByPending(userId);
+   }
+
+   public int getCountOrderFinish(Integer userId) {
+        if (userId == null) {
+            return 0;
+        }
+        return this.orderMapper.selectBuyerOrderCountByFinish(userId);
+   }
+
+   public int getCountBuyerFinish(Integer userId) {
+        if (userId == null) {
+            return 0;
+        }
+        return this.buyerBidMapper.selectBuyerBidCountByFinish(userId);
+   }
+
+    public List<OrderStateDTO> getBuyerOrderList(Integer userId, String state){
+        if (state == null) {
+            state = "ALL";
+        }
+        List<OrderStateDTO> buyerBidOrders = this.buyerBidMapper.selectBuyerBidByOrderState(userId, state);
+        System.out.println(buyerBidOrders);
+        List<OrderStateDTO> buyerOrders = this.orderMapper.selectBuyerOrderByState(userId, state);
+        System.out.println(buyerOrders);
+        if (buyerBidOrders == null || buyerOrders == null){
+            return new ArrayList<>();
+        }
+        List<OrderStateDTO> combinedBuyerOrders = new ArrayList<>();
+        combinedBuyerOrders.addAll(buyerBidOrders);
+        combinedBuyerOrders.addAll(buyerOrders);
+
+        return combinedBuyerOrders;
+    }
+
+    public Result deleteBuyerBid(Integer buyerBidId) {
+        if (buyerBidId == null || buyerBidId < 1) {
+            return CommonResult.FAILURE;
+        }
+        BuyerBidEntity buyerBid = this.buyerBidMapper.selectBuyerBidById(buyerBidId);
+        if (buyerBid == null) {
+            return CommonResult.FAILURE;
+        } else {
+            buyerBid.setDeleted(true);
+
+        }
+        return this.buyerBidMapper.updateBuyerBid(buyerBid) > 0
+                ? CommonResult.SUCCESS
+                : CommonResult.FAILURE;
     }
 
     public Result resolveRecoverPassword(UserEntity user, String newPassword) {

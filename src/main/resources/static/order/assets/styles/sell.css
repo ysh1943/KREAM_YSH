@@ -793,6 +793,9 @@
   flex-grow: 1;
   flex-shrink: 1;
 }
+#form > .main > .order-container > .next-page > .order-button-wrap.disable-button {
+  cursor: not-allowed;
+}
 #form > .main > .order-container > .next-page > .order-button-wrap > .order-button {
   background-color: #41b979;
   width: 43.75rem;
@@ -800,6 +803,11 @@
   border-radius: 0.5rem;
   cursor: pointer;
   padding: 1rem;
+}
+#form > .main > .order-container > .next-page > .order-button-wrap > .order-button.disable-button {
+  background-color: rgba(34, 34, 34, 0.1882352941);
+  user-select: none;
+  pointer-events: none;
 }
 #form > .main > .order-container > .next-page > .order-button-wrap > .order-button > .order-button-text {
   color: #ffffff;
