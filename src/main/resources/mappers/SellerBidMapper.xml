@@ -8,9 +8,17 @@
     parameterType="com.kream.kream.entities.SellerBidEntity">
         INSERT INTO `kream`.`seller_bid` (`user_id`, `size_id`, `address_id`, `price`, `deadline`, `state`, `order_state`, `created_at`, `update_at`, `is_deleted`)
         VALUES (#{userId}, #{sizeId}, #{addressId}, #{price}, #{deadline}, #{state}, #{orderState} ,#{createdAt}, #{updatedAt}, #{isDeleted})
+        ON DUPLICATE KEY UPDATE
+                             `address_id` = #{addressId},
+                             `price` = #{price},
+                             `deadline` = #{deadline},
+                             `state` = 'BIDDING',
+                             `order_state` = NULL,
+                             `update_at` = NOW()
     </insert>
 
-    <select id="selectPriceBySizeIdAndSellerBidId" resultType="com.kream.kream.entities.SellerBidEntity">
+    <select id="selectPriceBySizeIdAndSellerBidId"
+            resultType="com.kream.kream.entities.SellerBidEntity">
         SELECT `id`         AS `id`,
                `user_id`    AS `userId`,
                `size_id`    AS `sizeId`,
@@ -46,6 +54,48 @@
           AND `seller_bid`.`is_deleted` = 0
     </select>
 
+    <select id="selectSellerBidByUserCount"
+            resultType="int">
+        SELECT COUNT(*)
+        FROM `kream`.`seller_bid`
+        WHERE `seller_bid`.`user_id` = #{id}
+          AND `seller_bid`.`is_deleted` = 0
+          AND (`order_state` != 'FAILED' OR `order_state` IS NULL)
+    </select>
+
+    <select id="selectSellerBidByUser"
+            resultType="com.kream.kream.dtos.SellingBidListDTO">
+        SELECT seller_bid.`id`             AS `id`,
+               `user_id`                   AS `userId`,
+               `image`.`data`              AS imageData,
+               `image`.type                AS imageType,
+               `product`.`id`              AS `productId`,
+               `product`.`product_name_en` AS `productNameEn`,
+               `size`.`type`               AS `sizeType`,
+               `price`                     AS `price`,
+               `deadline`                  AS `deadline`,
+               `state`                     AS `state`,
+               seller_bid.`created_at`     AS `createdAt`,
+               `update_at`                 AS `updatedAt`,
+               seller_bid.`is_deleted`     AS `isDeleted`
+        FROM `kream`.`seller_bid`
+                 LEFT JOIN `kream`.`size`
+                           ON seller_bid.size_id = size.id
+                 LEFT JOIN `kream`.`product`
+                           ON size.product_id = product.id
+                 LEFT JOIN `kream`.`image`
+                           ON product.id = image.product_id
+                               AND `is_primary` = 1
+        WHERE `user_id` = #{id}
+          AND `seller_bid`.`is_deleted` = 0
+            AND `state` != 'ORDER'
+        <if test="state != null and state.equals('bidding')">
+            AND `state` = #{state}
+        </if>
+        <if test="state != null and state.equals('deadline')">
+            AND `state` = #{state}
+        </if>
+    </select>
 
     <update id="updateSellerBid">
         UPDATE `kream`.`seller_bid`

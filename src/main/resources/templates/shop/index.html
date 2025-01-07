@@ -23,7 +23,7 @@
                     <a class="top-link" th:if="${user != null && user.isAdmin()}" th:href="@{'/admin/'}">관리자 페이지</a>
                 </li>
                 <li class="top-item">
-                    <a class="top-link" th:href="${user == null} ? '/login' : '/my'">마이페이지</a>
+                    <a class="top-link" th:href="${user == null} ? '/login' : '/my/'">마이페이지</a>
                 </li>
                 <li class="top-item">
                     <a class="top-link" th:href="${user == null} ? '/login' : '/logout'"
@@ -198,7 +198,7 @@
         <ul class="shop-products-list popular-list">
             <li class="products-item" th:if="${!popularProducts.isEmpty()}"
                 th:each="popularProduct : ${popularProducts}">
-                <a th:href="@{'/shop?keyword=' + ${popularProduct.getProductNameEn()}}" class="product-image">
+                <a th:href="@{'/product?id=' + ${popularProduct.getProductId()}}" class="product-image">
                     <span class="trading" th:if="${popularProduct.getTransactionCount() != 0}">
                         <span class="text">거래</span>
                         <span class="text" th:text="${popularProduct.getTransactionCount()}"></span>

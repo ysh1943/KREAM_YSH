@@ -9,15 +9,14 @@ import java.util.Base64;
 
 @Getter
 @Setter
-public class OrderProductDTO {
-    private int sizeId;
-    private int productId;
-    private String sizeType;
-    private String modelNumber;
-    private String productNameEn;
-    private String productNameKo;
+public class SellingOrderCompleteListDTO {
     private byte[] imageData;
     private String imageType;
+    private int productId;
+    private String productNameEn;
+    private String sizeType;
+    private int price;
+    private String state;
 
     public String getBase64Image() throws IOException {
         if (imageData != null && imageType != null) {

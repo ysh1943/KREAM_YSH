@@ -24,6 +24,7 @@ const $addressContainer = $nextPage.querySelector(':scope > .address-container')
 const $productContentWrap = $nextPage.querySelector(':scope > .order-product-container > .product-content-wrap');
 const $contentTextWrap = $nextPage.querySelector(':scope > .order-container > .order-content-wrap > .content-text-wrap');
 const $allPriceWrap = $nextPage.querySelector(':scope > .order-container > .all-price-wrap');
+const $lastOrderButtonWrap = $nextPage.querySelector(':scope > .order-button-wrap');
 const $lastOrderButton = $nextPage.querySelector(':scope > .order-button-wrap > .order-button');
 const $nextPageDeadline = $nextPage.querySelector(':scope > .order-container > .deadline-wrap');
 
@@ -182,8 +183,9 @@ function updateNextPage() {
                     </div>
         `, 'text/html').querySelector('.address-content-wrap');
             $addressContainer.append($emptyAddressContentWrap);
-            $lastOrderButton.style.cursor = 'not-allowed';
-            $lastOrderButton.style.userSelect = 'none';
+            $lastOrderButton.classList.add('disable');
+            $lastOrderButtonWrap.classList.add('disable');
+
 
         } else {
             const $addressContentWrap = new DOMParser().parseFromString(`
@@ -204,6 +206,8 @@ function updateNextPage() {
             </div>
         `, 'text/html').querySelector('.address-content-wrap');
             $addressContainer.append($addressContentWrap);
+            $lastOrderButton.classList.remove('disable');
+            $lastOrderButtonWrap.classList.remove('disable');
         }
     };
     xhr.open('GET', `/address`);
@@ -214,6 +218,224 @@ function updateNextPage() {
     $nextPage.style.display = 'flex';
 }
 
+//endregion
+
+//region 주소 dialog
+{
+    const $layer = document.querySelector('.layer');
+    const $cover = document.getElementById('cover');
+    const $allCancel = $layer.querySelector(':scope > .layer_container > .close');
+    const $addressForm = $layer.querySelector(':scope > .layer_container');
+    const $title = $addressForm.querySelector(':scope > .layer_header > .title');
+    const $addressList = $addressForm.querySelector(':scope > .address-list-container');
+    const $layerContent = $addressForm.querySelector(':scope > .layer_content');
+    const $cancel = $layerContent.querySelector(':scope > .layer_btn > .close');
+    const $addressButton = $nextPage.querySelector(':scope > .address-container > .address-title-wrap > .address-button');
+
+    function addressLoad() {
+        const $inputText = document.querySelectorAll('.input-text');
+        $inputText.forEach((x) => x.value = '');
+
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState !== XMLHttpRequest.DONE) {
+                return;
+            }
+            if (xhr.status < 200 || xhr.status >= 300) {
+                Dialog.defaultOk('오류', '요청을 전송하는 도중 오류가 발생하였습니다. 잠시 후 다시 시도해 주세요.', ($dialog) => Dialog.hide($dialog));
+                return;
+            }
+            const allAddress = JSON.parse(xhr.responseText);
+
+            $addressList.innerHTML = '';
+
+            const $addButton = document.createElement('button');
+            $addButton.classList.add('add-address');
+            $addButton.type = 'button';
+            const $text = document.createElement('span');
+            $text.classList.add('text');
+            $text.innerText = '+ 새 주소 추가하기';
+            $addButton.append($text);
+            $addressList.append($addButton);
+
+            $addButton.onclick = () => {
+                $title.innerText = '주소 추가하기'
+                $addressList.style.display = 'none';
+                $layerContent.style.display = 'flex';
+            }
+
+            if (allAddress.length === 0) {
+                $addButton.click();
+            }
+
+            for (const address of allAddress) {
+                const $addressItem = new DOMParser().parseFromString(`
+            <div class="address-item">
+                <label class="label">
+                <span class="address-info">
+                    <span class="name-wrap">
+                        <span class="name">${address['name']}</span>
+                    </span>
+                    <span class="text">(${address['postal']})${address['basicAddress']}${address['detailAddress']}</span>
+                    <span class="contact">${address['contact'].slice(0, 3)}-
+                                        ${address['contact'].slice(3, 7)}-
+                                        ${address['contact'].slice(7)}</span>
+                </span>
+                    <input class="_input" type="checkbox" name="check">
+                    <span class="_box"></span>
+                </label>
+            </div>`, "text/html").querySelector('.address-item');
+                $addressList.append($addressItem);
+
+                //주소 선택
+                $addressItem.onclick = () => {
+
+                    const $emptyAddressContentWrap = $addressContainer.querySelector
+                    (':scope > .address-content-wrap');
+                    if ($emptyAddressContentWrap) {
+                        $emptyAddressContentWrap.remove();
+                    }
+                    const $newAddressContentWrap = new DOMParser().parseFromString(`
+            <div class="address-content-wrap">
+                <input type="hidden" name="address-id" value="${address['id']}">
+                <label class="label">
+                    <span class="title">받는 분</span>
+                    <input readonly maxlength="10" minlength="1" type="text" name="name" class="name" value="${address['name']}">
+                </label>
+                <label class="label">
+                    <span class="title">연락처</span>
+                    <input readonly maxlength="11" minlength="10" type="tel" name="contact" class="contact" value="${address['contact'].slice(0, 3)}-${address['contact'].slice(3, 7)}-${address['contact'].slice(7)}">
+                </label>
+                <label class="label">
+                    <span class="title">주소</span>
+                    <input readonly maxlength=50 minlength="20" type="text" name="address" class="address" value="[${address['postal']}] ${address['basicAddress']}${address['detailAddress']}">
+                </label>
+            </div>
+        `, 'text/html').querySelector('.address-content-wrap');
+
+                    const $addressContentWrap = $addressContainer.querySelector
+                    (':scope > .address-content-wrap');
+                    if ($addressContentWrap) {
+                        $addressContentWrap.replaceWith($newAddressContentWrap);
+                    } else {
+                        $addressContainer.append($newAddressContentWrap);
+                    }
+
+                    $layer.hide();
+                    $lastOrderButton.classList.remove('disable');
+                    $lastOrderButtonWrap.classList.remove('disable');
+
+                }
+            }
+        }
+        xhr.open('GET', `./my/address/`);
+        xhr.send();
+    }
+
+    $addressButton.onclick = (e) => {
+        e.preventDefault();
+        $cover.onclick = () => $layer.hide();
+        $allCancel.onclick = () => $layer.hide();
+        addressLoad();
+        $layer.show();
+    }
+
+
+    $cancel.onclick = () => {
+        $addressList.style.display = 'flex';
+        $layerContent.style.display = 'none';
+    }
+
+    const $postalBtn = document.getElementById('btn');
+    $postalBtn.addEventListener('click', () => {
+        new daum.Postcode({
+            oncomplete: function (data) {
+                $addressForm['postal'].value = data.zonecode;
+                $addressForm['basicAddress'].value = data.address;
+                if (data.buildingName !== '') {
+                    $addressForm['basicAddress'].value += '(' + data.buildingName + ')';
+                }
+            }
+        }).open();
+    });
+
+    $addressForm.onsubmit = (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        formData.append('userId', $addressForm['userId'].value);
+        formData.append('name', $addressForm['name'].value);
+        formData.append('contact', $addressForm['contact'].value);
+        formData.append('postal', $addressForm['postal'].value);
+        formData.append('basicAddress', $addressForm['basicAddress'].value);
+        formData.append('detailAddress', $addressForm['detailAddress'].value);
+
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState !== XMLHttpRequest.DONE) {
+                return;
+            }
+            if (xhr.status < 200 || xhr.status >= 300) {
+                Dialog.show({
+                    title: '오류',
+                    content: '요청을 전송하는 도중 오류가 발생하였습니다 잠시 후 다시 시도해 주세요.',
+                    buttons: [{
+                        text: '확인',
+                        onclick: ($dialog) => Dialog.hide($dialog),
+                    }]
+                });
+                return;
+            }
+            const response = JSON.parse(xhr.responseText);
+            if (response['result'] === 'failure') {
+                Dialog.show({
+                    title: '주소록',
+                    content: '올바른 주소형식이 아닙니다 다시 입력해 주세요',
+                    buttons: [{
+                        text: '확인',
+                        onclick: ($dialog) => Dialog.hide($dialog),
+                    }]
+                });
+            }
+            if (response['result'] === 'failure_duplicate_address') {
+                Dialog.show({
+                    title: '주소록',
+                    content: '이미 존재하는 주소입니다. 다시 입력해 주세요',
+                    buttons: [{
+                        text: '확인',
+                        onclick: ($dialog) => Dialog.hide($dialog),
+                    }]
+                });
+            }
+            if (response['result'] === 'failure_duplicate_contact') {
+                Dialog.show({
+                    title: '주소록',
+                    content: '이미 존재하는 전화번호입니다. 다시 입력해 주세요',
+                    buttons: [{
+                        text: '확인',
+                        onclick: ($dialog) => Dialog.hide($dialog),
+
+                    }]
+                });
+            }
+            if (response['result'] === 'success') {
+                Dialog.show({
+                    title: '주소록',
+                    content: '새로운 주소를 등록합니다',
+                    buttons: [{
+                        text: '확인',
+                        onclick: ($dialog) => Dialog.hide($dialog),
+                    }]
+                });
+
+                $addressList.style.display = 'flex';
+                $layerContent.style.display = 'none';
+                addressLoad();
+            }
+        };
+        xhr.open('POST', '/my/address');
+        xhr.send(formData);
+    }
+}
 //endregion
 
 //region 구매 입찰
@@ -242,7 +464,7 @@ function bidFormSubmit() {
                 failure_price: ['구매 입찰', '가격이 20,000원 이하이거나 백원, 십원, 일원 단위가 포함되어있습니다. 가격을 다시 한번 확인해주세요', ($dialog) => {
                     Dialog.hide($dialog);
                 }],
-                success: ['구매 입찰', '구매 입찰이 완료되었습니다..', ($dialog) => {
+                success: ['구매 입찰', '구매 입찰이 완료되었습니다. 입찰상황은 구매내역에서 확인해 주세요.', ($dialog) => {
                     Dialog.hide($dialog);
                     location.href = './';
                 }],
@@ -271,63 +493,66 @@ function buyFormSubmit() {
         const sizeId = $form['size-id'].value;
         const price = Number($price.innerText.replace(/[^0-9]/g, '')) + 3000;
         const email = $form['user-email'].value;
+        const productId = $form['product-id'].value;
 
-        const xhr = new XMLHttpRequest();
-        const formData = new FormData();
-        formData.append("userId", $form['user-id'].value);
-        formData.append('type', type);
-        formData.append('sellerBidId', $form['seller-bid-id'].value);
-        formData.append('price', price.toString());
-        formData.append("addressId", $form['address-id'].value);
-        formData.append("sizeId", $form['size-id'].value);
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState !== XMLHttpRequest.DONE) {
-                return;
-            }
-            if (xhr.status < 200 || xhr.status >= 300) {
-                Dialog.defaultOk('오류', '요청을 전송하는 도중 오류가 발생하였습니다. 잠시 후 다시 시도해 주세요.', ($dialog) => Dialog.hide($dialog))
-                return;
-            }
-            const response = JSON.parse(xhr.responseText);
-            if (response['result'] === 'failure') {
-                    Dialog.defaultOk('즉시 구매', '알수 없는 이유로 구매에 실패하였습니다. 잠시 후 다시 시도해주세요.', ($dialog) => Dialog.hide($dialog));
-            } else if (response['result'] === 'failure_unsigned') {
-                Dialog.defaultOk('즉시 구매', '로그인에 문제가 있습니다. 확인 후 다시 시도해 주세요.', ($dialog) => {
-                    Dialog.hide($dialog);
-                })
-            } else if (response['result'] === 'failure_price') {
-                    Dialog.defaultOk('즉시 구매', '판매자가 올린 가격과 일치하지 않습니다. 가격 확인 후 다시 시도해주세요.', ($dialog) => {
-                        Dialog.hide($dialog);
-                    })
-            } else if (response['result'] === 'failure_address') {
-                Dialog.defaultOk('즉시 구매', '배송 주소에 문제가 있습니다. 주소 확인 후 다시 시도해 주세요.', ($dialog) => {
-                    Dialog.hide($dialog);
-                })
-            } else if (response['result'] === 'failure_sellerBid') {
-                Dialog.defaultOk('즉시 구매', '판매자가 확인이 안됩니다. 잠시 후 다시 시도해 주세요.', ($dialog) => {
-                    Dialog.hide($dialog);
-                })
-            } else if (response['result'] === 'success') {
-                IMP.request_pay({
-                    pg: "kakaopay.TC0ONETIME",
-                    merchant_uid: `${sizeId}-${new Date().getTime()}`,
-                    buyer_email: email,// 상점에서 생성한 고유 주문번호
-                    name: productName,
-                    amount: price,
-                }, function (rsp) {
-                    if (rsp.success) {
-                        Dialog.defaultOk('즉시 구매', '구매가 완료되었습니다. 진행상황은 구매내역에서 확인해 주세요,', ($dialog) => Dialog.hide($dialog));
-                        location.href = './';
-                    } else {
-                        alert("결제에 실패하였습니다: " + rsp.error_msg);
+        IMP.request_pay({
+            pg: "kakaopay.TC0ONETIME",
+            merchant_uid: `${sizeId}-${new Date().getTime()}`,
+            buyer_email: email,// 상점에서 생성한 고유 주문번호
+            name: productName,
+            amount: price,
+        }, function (rsp) {
+            if (rsp.success) {
+                const xhr = new XMLHttpRequest();
+                const formData = new FormData();
+                formData.append("userId", $form['user-id'].value);
+                formData.append('type', type);
+                formData.append('sellerBidId', $form['seller-bid-id'].value);
+                formData.append('price', price.toString());
+                formData.append("addressId", $form['address-id'].value);
+                formData.append("sizeId", $form['size-id'].value);
+                xhr.onreadystatechange = () => {
+                    if (xhr.readyState !== XMLHttpRequest.DONE) {
+                        return;
                     }
-                });
+                    if (xhr.status < 200 || xhr.status >= 300) {
+                        Dialog.defaultOk('오류', '요청을 전송하는 도중 오류가 발생하였습니다. 잠시 후 다시 시도해 주세요.', ($dialog) => Dialog.hide($dialog))
+                        return;
+                    }
+                    const response = JSON.parse(xhr.responseText);
+                    if (response['result'] === 'failure') {
+                        Dialog.defaultOk('즉시 구매', '알수 없는 이유로 구매에 실패하였습니다. 잠시 후 다시 시도해주세요.', ($dialog) => Dialog.hide($dialog));
+                    } else if (response['result'] === 'failure_unsigned') {
+                        Dialog.defaultOk('즉시 구매', '로그인에 문제가 있습니다. 확인 후 다시 시도해 주세요.', ($dialog) => {
+                            Dialog.hide($dialog);
+                        })
+                    } else if (response['result'] === 'failure_price') {
+                        Dialog.defaultOk('즉시 구매', '판매자가 올린 가격과 일치하지 않습니다. 가격 확인 후 다시 시도해주세요.', ($dialog) => {
+                            Dialog.hide($dialog);
+                        })
+                    } else if (response['result'] === 'failure_address') {
+                        Dialog.defaultOk('즉시 구매', '배송 주소에 문제가 있습니다. 주소 확인 후 다시 시도해 주세요.', ($dialog) => {
+                            Dialog.hide($dialog);
+                        })
+                    } else if (response['result'] === 'failure_sellerBid') {
+                        Dialog.defaultOk('즉시 구매', '판매자가 확인이 안됩니다. 잠시 후 다시 시도해 주세요.', ($dialog) => {
+                            Dialog.hide($dialog);
+                        })
+                    } else if (response['result'] === 'success') {
+                        Dialog.defaultOk('즉시 구매', '구매가 완료되었습니다. 진행상황은 구매내역에서 확인해 주세요.', ($dialog) => Dialog.hide($dialog));
+                        location.href = './';
+
+                    } else {
+                        Dialog.defaultOk('오류', '서버가 알 수 없는 응답을 반환하였습니다. 잠시 후 다시 시도해 주세요.', ($dialog) => Dialog.hide($dialog));
+                    }
+                };
+                xhr.open('POST', '/buy-order');
+                xhr.send(formData);
             } else {
-                Dialog.defaultOk('오류', '서버가 알 수 없는 응답을 반환하였습니다. 잠시 후 다시 시도해 주세요.', ($dialog) => Dialog.hide($dialog));
+                alert("결제에 실패하였습니다: " + rsp.error_msg);
+                location.href = `./product?id=${productId}`;
             }
-        };
-        xhr.open('POST', '/buy-order');
-        xhr.send(formData);
+        });
     }
 }
 

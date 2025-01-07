@@ -5,19 +5,27 @@ import lombok.Setter;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.Base64;
 
 @Getter
 @Setter
-public class OrderProductDTO {
-    private int sizeId;
+public class BidStateDTO {
+    public enum State {
+        BIDDING,
+        DEADLINE,
+        ORDER,
+    }
+
+    private int buyerBidId;
     private int productId;
-    private String sizeType;
-    private String modelNumber;
     private String productNameEn;
-    private String productNameKo;
+    private String sizeType;
     private byte[] imageData;
     private String imageType;
+    private int price;
+    private LocalDate deadline;
+    private State state;
 
     public String getBase64Image() throws IOException {
         if (imageData != null && imageType != null) {
@@ -32,4 +40,5 @@ public class OrderProductDTO {
             throw new RuntimeException("기본이미지를 찾는데 실패했습니다.", e);
         }
     }
+
 }

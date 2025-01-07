@@ -11,7 +11,6 @@
     <link rel="stylesheet" th:href="@{'/order/assets/styles/buy.css'}" type="text/css">
     <script defer src="/assets/scripts/common.js" type="text/javascript"></script>
     <script defer src="/order/assets/scripts/buy.js" type="text/javascript"></script>
-    <script defer src="/order/assets/scripts/dialog.js" type="text/javascript"></script>
     <script src="https://kit.fontawesome.com/20d32b3086.js" crossorigin="anonymous"></script>
     <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -29,7 +28,7 @@
                     <a class="top-link" th:if="${user != null && user.isAdmin()}" th:href="@{'/admin/'}">관리자 페이지</a>
                 </li>
                 <li class="top-item">
-                    <a class="top-link" th:href="${user == null} ? '/login' : '/my'">마이페이지</a>
+                    <a class="top-link" th:href="${user == null} ? '/login' : '/my/'">마이페이지</a>
                 </li>
                 <li class="top-item">
                     <a class="top-link" th:href="${user == null} ? '/login' : '/logout'"
@@ -45,7 +44,7 @@
             <nav class="menu">
                 <ul class="menu-list">
                     <li class="menu-item">
-                        <a class="menu-link bold" th:href="@{'/'}">HOEM</a>
+                        <a class="menu-link bold" th:href="@{'/'}">HOME</a>
                     </li>
                     <li class="menu-item">
                         <a class="menu-link" th:href="@{'/shop'}">SHOP</a>
@@ -175,6 +174,7 @@
 <form id="form">
     <input type="hidden" name="user-id" th:value="${user.getId()}">
     <input type="hidden" name="size-id" th:value="${orderProduct.getSizeId()}">
+    <input type="hidden" name="product-id" th:value="${orderProduct.getProductId()}">
     <input type="hidden" name="seller-bid-id" th:value="${productPrice.getSellerBidId()}">
     <input type="hidden" name="product-name" th:value="${orderProduct.getProductNameKo()}">
     <input type="hidden" name="user-email" th:value="${user.getEmail()}">

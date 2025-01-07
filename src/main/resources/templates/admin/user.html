@@ -86,7 +86,7 @@
                         <td th:if="${user.getSocialTypeCode()} == null">KREAM</td>
                         <td th:text="${user.getContact()}"></td>
                         <td th:text="${user.getNickname()}"></td>
-                        <td>-</td>
+                        <td th:text="${user.getUserOrderCount() + user.getUserSellerBidCount() + user.getUserBuyerBidCount()} + '건'"></td>
                         <td th:text="${#temporals.format(user.getCreatedAt(), 'yyyy-MM-dd')}"></td>
                         <td class="suspendTd">
                             <span th:if="${user.isSuspended() == false}">활동</span>

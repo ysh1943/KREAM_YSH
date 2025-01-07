@@ -48,17 +48,30 @@ public class AdminService {
         return this.orderMapper.selectOrderCounts();
     }
 
-    public UserEntity[] selectUserByLimit() {
-        UserEntity[] users = this.userMapper.selectUser();
+    public UserOrderCountEntity[] selectUserByLimit() {
+        UserOrderCountEntity[] users = this.userMapper.selectUser();
 
         // 5개만 담을 배열을 새로 생성
         int limit = Math.min(users.length, 5); // 원본 배열 길이와 5 중 작은 값 사용
-        UserEntity[] limitedUsers = new UserEntity[limit];
+        UserOrderCountEntity[] limitedUsers = new UserOrderCountEntity[limit];
 
-        // 배열을 5개까지만 할당
         for (int i = 0; i < limit; i++) {
-            limitedUsers[i] = users[i];
+            UserOrderCountEntity user = users[i]; // users 배열에서 하나씩 가져옴
+
+            // 각 사용자의 추가 정보를 계산
+            int orderCount = this.orderMapper.selectOrderCountByUserId(user.getId());
+            int sellerBidCount = this.sellerBidMapper.selectSellerBidByUserCount(user.getId());
+            int buyerBidCount = this.buyerBidMapper.selectBuyerBidUserCount(user.getId());
+
+            // 사용자 정보에 추가 데이터를 설정
+            user.setUserOrderCount(orderCount);
+            user.setUserSellerBidCount(sellerBidCount);
+            user.setUserBuyerBidCount(buyerBidCount);
+
+            // limitedUsers 배열에 설정된 데이터를 복사
+            limitedUsers[i] = user;
         }
+
         return limitedUsers;
     }
 
@@ -72,16 +85,24 @@ public class AdminService {
         return limitedOrders;
     }
 
-    public Pair<PageVo, UserEntity[]> selectUser(int page) {
+    public Pair<PageVo, UserOrderCountEntity[]> selectUser(int page) {
         page = Math.max(1, page);
         int totalCount = this.userMapper.selectUserCount();
         PageVo pageVo = new PageVo(page, totalCount);
-        UserEntity[] users = this.userMapper.selectUserByPage(pageVo.countPerPage,
+        UserOrderCountEntity[] users = this.userMapper.selectUserByPage(pageVo.countPerPage,
                 pageVo.offsetCount);
+        for (UserOrderCountEntity user : users) {
+            int orderCount = this.orderMapper.selectOrderCountByUserId(user.getId());
+            int sellerBidCount = this.sellerBidMapper.selectSellerBidByUserCount(user.getId());
+            int buyerBidCount = this.buyerBidMapper.selectBuyerBidUserCount(user.getId());
+            user.setUserOrderCount(orderCount);
+            user.setUserSellerBidCount(sellerBidCount);
+            user.setUserBuyerBidCount(buyerBidCount);
+        }
         return Pair.of(pageVo, users);
     }
 
-    public Pair<PageVo, UserEntity[]> searchUser(int page, String filter, String keyword) {
+    public Pair<PageVo, UserOrderCountEntity[]> searchUser(int page, String filter, String keyword) {
         page = Math.max(1, page);
         if (filter == null || !filter.equals("all") && !filter.equals("email") && !filter.equals("nickName") && !filter.equals("suspended")) {
             filter = "all";
@@ -91,7 +112,15 @@ public class AdminService {
         }
         int totalCount = this.userMapper.selectUserCountBySearch(filter, keyword);
         PageVo pageVo = new PageVo(page, totalCount);
-        UserEntity[] users = this.userMapper.selectUserBySearch(filter, keyword, pageVo.countPerPage, pageVo.offsetCount);
+        UserOrderCountEntity[] users = this.userMapper.selectUserBySearch(filter, keyword, pageVo.countPerPage, pageVo.offsetCount);
+        for (UserOrderCountEntity user : users) {
+            int orderCount = this.orderMapper.selectOrderCountByUserId(user.getId());
+            int sellerBidCount = this.sellerBidMapper.selectSellerBidByUserCount(user.getId());
+            int buyerBidCount = this.buyerBidMapper.selectBuyerBidUserCount(user.getId());
+            user.setUserOrderCount(orderCount);
+            user.setUserSellerBidCount(sellerBidCount);
+            user.setUserBuyerBidCount(buyerBidCount);
+        }
         return Pair.of(pageVo, users);
     }
 
@@ -224,7 +253,9 @@ public class AdminService {
             }
         }
         return CommonResult.SUCCESS;
-    };
+    }
+
+    ;
 
     public Pair<PageVo, OrderDTO[]> selectOrder(int page) {
         page = Math.max(1, page); // page = page < 1 ? 1 : page; 페이지 번호가 1보다 작으면 1로 설정 ( 페이지 번호는 1이상 이야함 )
@@ -280,6 +311,15 @@ public class AdminService {
                 this.orderMapper.updateOrder(order);
                 this.sellerBidMapper.updateSellerBid(sellerBid);
                 return CommonResult.SUCCESS;
+            } else if (state.equals("SETTLED")) {
+                order.setState("DELIVERED");
+                order.setUpdatedAt(LocalDateTime.now());
+                order.setDeletedAt(null);
+                sellerBid.setOrderState("SETTLED");
+                sellerBid.setUpdatedAt(LocalDateTime.now());
+                this.orderMapper.updateOrder(order);
+                this.sellerBidMapper.updateSellerBid(sellerBid);
+                return CommonResult.SUCCESS;
             }
             sellerBid.setOrderState(state);
             sellerBid.setUpdatedAt(LocalDateTime.now());
@@ -300,6 +340,15 @@ public class AdminService {
                 order.setUpdatedAt(LocalDateTime.now());
                 order.setDeletedAt(null);
                 buyerBid.setOrderState("IN_TRANSIT");
+                buyerBid.setUpdatedAt(LocalDateTime.now());
+                this.orderMapper.updateOrder(order);
+                this.buyerBidMapper.updateBuyerBid(buyerBid);
+                return CommonResult.SUCCESS;
+            } else if (state.equals("DELIVERED")) {
+                order.setState("SETTLED");
+                order.setUpdatedAt(LocalDateTime.now());
+                order.setDeletedAt(null);
+                buyerBid.setOrderState("DELIVERED");
                 buyerBid.setUpdatedAt(LocalDateTime.now());
                 this.orderMapper.updateOrder(order);
                 this.buyerBidMapper.updateBuyerBid(buyerBid);

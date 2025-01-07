@@ -37,7 +37,7 @@ public class AdminController {
         ModelAndView modelAndView = new ModelAndView();
         int userCount = this.adminService.selectUserCount();
         OrderCountDTO orderCounts = this.adminService.selectOrderCount();
-        UserEntity[] users = this.adminService.selectUserByLimit();
+        UserOrderCountEntity[] users = this.adminService.selectUserByLimit();
         OrderDTO[] orders = this.adminService.selectOrderByLimit();
         modelAndView.addObject("userCount", userCount);
         modelAndView.addObject("orderCounts", orderCounts);
@@ -57,11 +57,11 @@ public class AdminController {
         }
         ModelAndView modelAndView = new ModelAndView();
         if (filter == null && keyword == null) {
-            Pair<PageVo, UserEntity[]> pair = this.adminService.selectUser(page);
+            Pair<PageVo, UserOrderCountEntity[]> pair = this.adminService.selectUser(page);
             modelAndView.addObject("PageVo", pair.getLeft());
             modelAndView.addObject("users", pair.getRight());
         } else {
-            Pair<PageVo, UserEntity[]> pair = this.adminService.searchUser(page, filter, keyword);
+            Pair<PageVo, UserOrderCountEntity[]> pair = this.adminService.searchUser(page, filter, keyword);
             modelAndView.addObject("PageVo", pair.getLeft());
             modelAndView.addObject("users", pair.getRight());
             modelAndView.addObject("filter", filter);

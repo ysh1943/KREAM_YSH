@@ -1,9 +1,14 @@
 package com.kream.kream.controllers;
 
-import com.kream.kream.dtos.BuyingListDTO;
+import com.kream.kream.dtos.SellingBidListDTO;
+import com.kream.kream.dtos.SellingOrderCompleteListDTO;
+import com.kream.kream.dtos.SellingOrderListDTO;
+import com.kream.kream.entities.*;
+import com.kream.kream.results.CommonResult;
+import com.kream.kream.dtos.BidStateDTO;
+import com.kream.kream.dtos.OrderStateDTO;
 import com.kream.kream.entities.AccountEntity;
 import com.kream.kream.entities.AddressEntity;
-import com.kream.kream.entities.EmailTokenEntity;
 import com.kream.kream.entities.UserEntity;
 import com.kream.kream.results.Result;
 import com.kream.kream.services.MyService;
@@ -46,21 +51,56 @@ public class MyController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/buying/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/buying-bid", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String Buyings(@SessionAttribute(value = UserEntity.NAME_SINGULAR, required = false) UserEntity user,
-                          @RequestParam(value = "state", required = false) String state) throws IOException {
-
+    public String getBidBuying(@SessionAttribute(value = UserEntity.NAME_SINGULAR, required = false) UserEntity user,
+                               @RequestParam(value = "state", required = false) String state) throws IOException {
+        if (user == null) {
+            return "{\"result\":\"logout\"}";
+        }
         JSONArray response = new JSONArray();
-        List<BuyingListDTO> buyings = myService.getBuyingList(Objects.requireNonNull(user).getId(), state);
-        List<BuyingListDTO> buyingstate = myService.getBuyings(user.getId(), state);
-        for (BuyingListDTO buying : buyings) {
+        List<BidStateDTO> bidsState = myService.getBuyerBidList(user.getId(), state);
+        for (BidStateDTO bidState : bidsState) {
             JSONObject result = new JSONObject();
-            result.put("image", buying.getBase64Image());
-            result.put("size", buying.getSizeType());
-            result.put("baseName", buying.getBaseName());
-            result.put("price", buying.getPrice());
-            result.put("deadline", buying.getDeadline());
+            result.put("buyerBidId", bidState.getBuyerBidId());
+            result.put("productId", bidState.getProductId());
+            result.put("image", bidState.getBase64Image());
+            result.put("size", bidState.getSizeType());
+            result.put("baseName", bidState.getProductNameEn());
+            result.put("price", bidState.getPrice());
+            result.put("deadline", bidState.getDeadline());
+            result.put("state", bidState.getState());
+            response.put(result);
+        }
+        return response.toString();
+    }
+
+    @RequestMapping(value = "/buying-bid", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String deleteBidBuying(@RequestParam(value = "buyerBidId", required = false) Integer buyerBidId) {
+        Result result = this.myService.deleteBuyerBid(buyerBidId);
+        JSONObject response = new JSONObject();
+        response.put(Result.NAME, result.nameToLower());
+        return response.toString();
+    }
+
+    @RequestMapping(value = "/buying-order", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String getOrderBuying(@SessionAttribute(value = UserEntity.NAME_SINGULAR, required = false) UserEntity user,
+                                 @RequestParam(value = "state", required = false) String state) throws IOException {
+        if (user == null) {
+            return "{\"result\":\"logout\"}";
+        }
+        JSONArray response = new JSONArray();
+        List<OrderStateDTO> ordersState = myService.getBuyerOrderList(user.getId(), state);
+        for (OrderStateDTO orderState : ordersState) {
+            JSONObject result = new JSONObject();
+            result.put("productId", orderState.getProductId());
+            result.put("price", orderState.getPrice());
+            result.put("image", orderState.getBase64Image());
+            result.put("size", orderState.getSizeType());
+            result.put("baseName", orderState.getProductNameEn());
+            result.put("state", orderState.getState().getKoreaName());
             response.put(result);
         }
         return response.toString();
@@ -68,21 +108,72 @@ public class MyController {
 
     @RequestMapping(value = "/buying", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     @ResponseBody
-    public ModelAndView getBuying(@SessionAttribute(value = UserEntity.NAME_SINGULAR, required = false) UserEntity user,
-                                  @RequestParam(value = "state", required = false) String state
-    ) {
+
+    public ModelAndView getBuying(@SessionAttribute(value = UserEntity.NAME_SINGULAR, required = false) UserEntity user) {
         ModelAndView modelAndView = new ModelAndView();
         if (user == null) {
             modelAndView.setViewName("redirect:/login");
+        } else {
+            int countBuyerBid = this.myService.getCountBuyerBid(user.getId());
+            int countBuyerPending = this.myService.getCountBuyerPending(user.getId());
+            int countOrderPending = this.myService.getCountOrderPending(user.getId());
+            int countBuyerFinish = this.myService.getCountBuyerFinish(user.getId());
+            int countOrderFinish = this.myService.getCountOrderFinish(user.getId());
+            modelAndView.addObject("countBuyerBid", countBuyerBid);
+            modelAndView.addObject("countBuyerPending", countBuyerPending);
+            modelAndView.addObject("countOrderPending", countOrderPending);
+            modelAndView.addObject("countOrderFinish", countOrderFinish);
+            modelAndView.addObject("countBuyerFinish", countBuyerFinish);
+            modelAndView.addObject("user", user);
+            modelAndView.setViewName("/my/buying");
         }
-
-        List<BuyingListDTO> buyings = myService.getBuyingList(Objects.requireNonNull(user).getId(), state);
-        List<BuyingListDTO> buyingstate = myService.getBuyings(user.getId(), state);
-        modelAndView.addObject("buyingstate", buyingstate);
-        modelAndView.addObject("user", user);
-        modelAndView.addObject("buyings", buyings);
-        modelAndView.setViewName("/my/buying");
         return modelAndView;
+    }
+
+    @RequestMapping(value = "/selling", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
+    @ResponseBody
+    public ModelAndView getSelling(@SessionAttribute(value = "user", required = false) UserEntity user,
+                                   @RequestParam(value = "tab", required = false) String tab,
+                                   @RequestParam(value = "state", required = false) String state) {
+        ModelAndView modelAndView = new ModelAndView();
+        if (user == null) {
+            modelAndView.setViewName("redirect:/");
+            return modelAndView;
+        }
+        int sellerBidsCount = myService.getSellerBidListCount(user.getId());
+        SellingBidListDTO[] sellerBids = myService.getSellerBidList(user.getId(), tab, state);
+        int sellerOrdersCount = myService.getSellerOrderListCount(user.getId());
+        SellingOrderListDTO[] sellerOrders = myService.getSellerOrderList(user.getId(), tab, state);
+        int sellerOrdersCompleteCount = myService.getSellerOrderCompleteListCount(user.getId());
+        SellingOrderCompleteListDTO[] sellerOrdersComplete = myService.getSellerOrderCompleteList(user.getId(), tab, state);
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("tab", tab);
+        modelAndView.addObject("sellerBidsCount", sellerBidsCount);
+        modelAndView.addObject("sellerBids", sellerBids);
+        modelAndView.addObject("sellerOrdersCount", sellerOrdersCount);
+        modelAndView.addObject("sellerOrders", sellerOrders);
+        modelAndView.addObject("sellerOrdersCompleteCount", sellerOrdersCompleteCount);
+        modelAndView.addObject("sellerOrdersComplete", sellerOrdersComplete);
+        modelAndView.setViewName("/my/selling");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/selling", method = RequestMethod.DELETE)
+    @ResponseBody
+    public String deleteSellerBidId(@RequestParam(value = "id", required = false) Integer id) {
+        CommonResult result = this.myService.deleteSellerBid(id);
+        JSONObject response = new JSONObject();
+        response.put("result", result.name().toLowerCase());
+        return response.toString();
+    }
+
+    @RequestMapping(value = "/selling", method = RequestMethod.PATCH)
+    @ResponseBody
+    public String patchOrderState(@RequestParam(value = "id") Integer id) {
+        CommonResult result = this.myService.patchOrderState(id);
+        JSONObject response = new JSONObject();
+        response.put("result", result.name().toLowerCase());
+        return response.toString();
     }
 
     @RequestMapping(value = "/profile", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
