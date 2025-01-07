@@ -25,7 +25,7 @@ public class OrderDTO {
     private String sellerProductName;
     private String buyerProductName;
     private String buyerAddress;
-    private String orderUserAddress;
+    private String buyerBidAddress;
     private String state;
     private String sellerState;
     private String buyerState;

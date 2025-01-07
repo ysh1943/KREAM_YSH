@@ -1,14 +1,9 @@
 package com.kream.kream.services;
 
-import com.kream.kream.dtos.BuyingListDTO;
-import com.kream.kream.dtos.ShopProductDTO;
-import com.kream.kream.entities.AccountEntity;
-import com.kream.kream.entities.AddressEntity;
-import com.kream.kream.entities.UserEntity;
+import com.kream.kream.dtos.*;
+import com.kream.kream.entities.*;
 import com.kream.kream.exceptions.TransactionalException;
-import com.kream.kream.mappers.AccountMapper;
-import com.kream.kream.mappers.AddressMapper;
-import com.kream.kream.mappers.UserMapper;
+import com.kream.kream.mappers.*;
 import com.kream.kream.results.AddressResult;
 import com.kream.kream.results.CommonResult;
 import com.kream.kream.results.LoginResult;
@@ -27,14 +22,18 @@ import java.util.Objects;
 @Service
 public class MyService {
     private final UserMapper userMapper;
+    private final OrderMapper orderMapper;
     private final AddressMapper addressMapper;
     private final AccountMapper accountMapper;
+    private final SellerBidMapper sellerBidMapper;
 
     @Autowired
-    public MyService(UserMapper userMapper, AddressMapper addressMapper, AccountMapper accountMapper) {
+    public MyService(UserMapper userMapper, OrderMapper orderMapper, AddressMapper addressMapper, AccountMapper accountMapper, SellerBidMapper sellerBidMapper) {
         this.userMapper = userMapper;
+        this.orderMapper = orderMapper;
         this.addressMapper = addressMapper;
         this.accountMapper = accountMapper;
+        this.sellerBidMapper = sellerBidMapper;
     }
 
     public List<BuyingListDTO> getBuyingList(Integer userId, String state){
@@ -230,5 +229,61 @@ public class MyService {
         return CommonResult.SUCCESS;
     }
 
+    public int getSellerBidListCount(int id) {
+        return this.sellerBidMapper.selectSellerBidByUserCount(id);
+    }
 
+    public SellingBidListDTO[] getSellerBidList(int id, String tab, String state) {
+        return this.sellerBidMapper.selectSellerBidByUser(id, tab, state);
+    }
+
+    public CommonResult deleteSellerBid(Integer id) {
+        if (id == null || id < 1) {
+            return CommonResult.FAILURE;
+        }
+        SellerBidEntity sellerBid = this.sellerBidMapper.selectSellerBidById(id);
+        if (sellerBid == null) {
+            return CommonResult.FAILURE;
+        } else {
+            sellerBid.setDeleted(true);
+        }
+        return this.sellerBidMapper.updateSellerBid(sellerBid) > 0
+                ? CommonResult.SUCCESS
+                : CommonResult.FAILURE;
+    }
+
+    public int getSellerOrderListCount(int id) {
+        return this.orderMapper.selectOrderListByUserCount(id);
+    }
+
+    public SellingOrderListDTO[] getSellerOrderList(int id, String tab, String state) {
+        return this.orderMapper.selectOrderListByUser(id, tab, state);
+    }
+
+    public CommonResult patchOrderState(Integer id) {
+        if (id == null || id < 1) {
+            return CommonResult.FAILURE;
+        }
+        OrderEntity order = this.orderMapper.selectOrderById(id);
+        if (order == null) {
+            return CommonResult.FAILURE;
+        } else {
+            if (order.getSellerBidId() != null) {
+                SellerBidEntity sellerBid = this.sellerBidMapper.selectSellerBidById(order.getSellerBidId());
+                sellerBid.setOrderState("FAILED");
+                this.sellerBidMapper.updateSellerBid(sellerBid);
+            }
+            order.setState("FAILED");
+            this.orderMapper.updateOrder(order);
+        }
+        return CommonResult.SUCCESS;
+    }
+
+    public int getSellerOrderCompleteListCount(int id) {
+        return this.orderMapper.selectOrderCompleteListByUserCount(id);
+    }
+
+    public SellingOrderCompleteListDTO[] getSellerOrderCompleteList(int id, String tab, String state) {
+        return this.orderMapper.selectOrderCompleteListByUser(id, tab, state);
+    }
 }
