@@ -54,7 +54,7 @@ public class UserController extends AbstractGeneralController {
     public ModelAndView getIndex(@SessionAttribute(value = UserEntity.NAME_SINGULAR, required = false) UserEntity user) {
         ModelAndView modelAndView = new ModelAndView();
         if (user == null) { // 세션에 UserEntity 정보가 없을 경우
-            modelAndView.setViewName("/login"); // "user/index" 뷰를 설정
+            modelAndView.setViewName("login"); // "user/index" 뷰를 설정
             modelAndView.addObject("kakaoClientId", this.kakaoClientId); // 카카오 클라이언트 ID를 모델에 추가
             modelAndView.addObject("kakaoRedirectUri", this.kakaoRedirectUri); // 카카오 리다이렉트 URI를 모델에 추가
             modelAndView.addObject("naverClientId", this.naverClientId); // 네이버 클라이언트 ID를 모델에 추가
@@ -81,21 +81,21 @@ public class UserController extends AbstractGeneralController {
     }
 
     // 삭제
-    @RequestMapping(value = "/", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public String deleteIndex(HttpSession session,
-                              @SessionAttribute(value = UserEntity.NAME_SINGULAR, required = false) UserEntity user) throws URISyntaxException, IOException, InterruptedException {
-        // UserService를 사용해 현재 세션 사용자(user)의 계정을 삭제하는 로직 실행
-        Result result = this.userService.deleteUser(user);
-
-        // 삭제가 성공적으로 이루어진 경우 세션에서 사용자 정보를 제거
-        if (result == CommonResult.SUCCESS) {
-            session.setAttribute(UserEntity.NAME_SINGULAR, null);
-        }
-
-        // 삭제 결과를 REST 응답 형식(JSON)으로 변환하여 반환
-        return this.generateRestResponse(result).toString();
-    }
+//    @RequestMapping(value = "/", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+//    @ResponseBody
+//    public String deleteIndex(HttpSession session,
+//                              @SessionAttribute(value = UserEntity.NAME_SINGULAR, required = false) UserEntity user) throws URISyntaxException, IOException, InterruptedException {
+//        // UserService를 사용해 현재 세션 사용자(user)의 계정을 삭제하는 로직 실행
+//        Result result = this.userService.deleteUser(user);
+//
+//        // 삭제가 성공적으로 이루어진 경우 세션에서 사용자 정보를 제거
+//        if (result == CommonResult.SUCCESS) {
+//            session.setAttribute(UserEntity.NAME_SINGULAR, null);
+//        }
+//
+//        // 삭제 결과를 REST 응답 형식(JSON)으로 변환하여 반환
+//        return this.generateRestResponse(result).toString();
+//    }
 
     @RequestMapping(value = "/login/kakao", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getLoginKakao(HttpSession session,
@@ -106,10 +106,10 @@ public class UserController extends AbstractGeneralController {
             modelAndView.addObject("socialTypeCode", result.getPayload().getSocialTypeCode());
             modelAndView.addObject("socialId", result.getPayload().getSocialId());
             modelAndView.addObject("isSocialRegister", true);
-            modelAndView.setViewName("/join");
+            modelAndView.setViewName("join");
         } else if (result.getResult() == CommonResult.SUCCESS) {
             session.setAttribute(UserEntity.NAME_SINGULAR, result.getPayload());
-            modelAndView.setViewName("redirect:/my");
+            modelAndView.setViewName("redirect:/my/");
         } else {
             modelAndView.setViewName("redirect:https://kauth.kakao.com/oauth/authorize?response_type");
         }
@@ -133,7 +133,7 @@ public class UserController extends AbstractGeneralController {
             modelAndView.addObject("socialTypeCode", result.getPayload().getSocialTypeCode()); // 소셜 타입 코드
             modelAndView.addObject("socialId", result.getPayload().getSocialId()); // 소셜 사용자 ID
             modelAndView.addObject("isSocialRegister", true); // 소셜 회원가입 플래그
-            modelAndView.setViewName("/join"); // 다시 "user/login" 뷰로 이동
+            modelAndView.setViewName("join"); // 다시 "user/login" 뷰로 이동
             System.out.println("이건 소셜 타입 코드 :" + result.getPayload().getSocialTypeCode());
             System.out.println("이건 소셜 아이디 :" + result.getPayload().getSocialId());
 
@@ -156,7 +156,7 @@ public class UserController extends AbstractGeneralController {
     @ResponseBody
     public ModelAndView getJoin() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("/join");
+        modelAndView.setViewName("join");
         return modelAndView;
     }
 
@@ -180,7 +180,7 @@ public class UserController extends AbstractGeneralController {
         Result result = this.userService.validateEmailToken(emailToken);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject(Result.NAME, result.nameToLower());
-        modelAndView.setViewName("/user/validateEmailToken");
+        modelAndView.setViewName("user/validateEmailToken");
         return modelAndView;
     }
 
@@ -188,7 +188,7 @@ public class UserController extends AbstractGeneralController {
     @ResponseBody
     public ModelAndView getFindEmail() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("/findEmail");
+        modelAndView.setViewName("findEmail");
         return modelAndView;
     }
 
@@ -208,7 +208,7 @@ public class UserController extends AbstractGeneralController {
     @ResponseBody
     public ModelAndView getFindpassword() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("/findpassword");
+        modelAndView.setViewName("findpassword");
         return modelAndView;
     }
 

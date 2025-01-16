@@ -58,9 +58,9 @@
             resultType="int">
         SELECT COUNT(*)
         FROM `kream`.`seller_bid`
-        WHERE `seller_bid`.`user_id` = #{id}
-          AND `seller_bid`.`is_deleted` = 0
-          AND (`order_state` != 'FAILED' OR `order_state` IS NULL)
+        WHERE `seller_bid`.`user_id` = 10
+          AND `seller_bid`.`is_deleted` = FALSE
+          AND `seller_bid`.`state` != 'ORDER'
     </select>
 
     <select id="selectSellerBidByUser"

@@ -69,13 +69,12 @@
 }
 
 .cart-top-area {
-  @include flex(column, center, center);
-  top: 6rem;
+  @include flex(column, center, center, 2rem);
   position: relative;
   flex-wrap: wrap;
   margin: 0;
-  padding: 0;
   background-color: #f4f4f4;
+  padding-top: 6rem;
 
   > .box {
     @include flex(column, center, center, 2rem);
@@ -85,7 +84,7 @@
     padding: 0;
     background-color: #ffffff;
     box-sizing: border-box;
-    top: 25px;
+    top: 2rem;
 
 
     > .cart-title {
@@ -111,9 +110,9 @@
         border-bottom: 1px solid #ebebeb;
         cursor: pointer;
         height: 60px;
-        width: 50%;
+        width: 20%;
         position: relative;
-        padding: 9px 0 0 0;
+        padding: 9px 0 15px 0;
         z-index: 2;
 
         > .count {

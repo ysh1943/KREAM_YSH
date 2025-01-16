@@ -323,6 +323,25 @@ public class UserService {
             }
             user.setPassword("");
             user.setVerified(true);
+
+            if (this.userMapper.selectUserByEmail(user.getEmail()) != null) {
+                return LoginResult.FAILURE_DUPLICATE_EMAIL; // 이메일 중복
+            }
+            if (this.userMapper.selectUserByContact(user.getContact()) != null) {
+                return LoginResult.FAILURE_DUPLICATE_CONTACT; // 연락처 중복
+            }
+            if (this.userMapper.selectUserByNickname(user.getNickname()) != null) {
+                return LoginResult.FAILURE_DUPLICATE_NICKNAME; // 닉네임 중복
+            }
+            user.setCreatedAt(LocalDateTime.now());
+
+            // 4. 사용자 정보 데이터베이스에 삽입
+            if (this.userMapper.insertUser(user) == 0) {
+                throw new TransactionalException();
+            }
+            return LoginResult.SOCIAL_SUCCESS;
+
+
         } else {
             if (!UserRegex.checkPassword(user.getPassword())) {
                 return CommonResult.FAILURE;

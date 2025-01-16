@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" th:href="@{/user/styles/common.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/assets/styles/common.css}" type="text/css">
     <link rel="stylesheet" th:href="@{/user/styles/findEmail.css}" type="text/css">
     <script defer th:src="@{/assets/scripts/common.js}" type="text/javascript"></script>
     <script defer th:src="@{/user/scripts/findEmail.js}" type="text/javascript"></script>
@@ -15,48 +15,38 @@
             <ul class="top-list">
                 <li class="-spring"></li>
                 <li class="top-item">
-                    <a class="top-link" href="/my">마이페이지</a>
+                    <a class="top-link" th:href="@{'/admin/'}" th:if="${user != null && user.isAdmin()}">관리자 페이지</a>
                 </li>
                 <li class="top-item">
-                    <a class="top-link" href="/login">로그인</a>
+                    <a class="top-link" th:href="${user == null} ? '/login' : '/my/'">마이페이지</a>
                 </li>
-                <li class="top-item" hidden>
-                    <a class="top-link" href="/static">로그 아웃</a>
+                <li class="top-item">
+                    <a class="top-link" th:href="${user == null} ? '/login' : '/logout'"
+                       th:text="${user == null} ? '로그인' : '로그아웃'"></a>
                 </li>
             </ul>
         </div>
         <div class="main-inner">
-            <a class="logo" href="/static">
+            <a class="logo" th:href="@{'/'}">
                 <img alt="logo" class="logo-icon" src="/assets/images/logo.png">
             </a>
             <div class="-spring"></div>
             <nav class="menu">
                 <ul class="menu-list">
                     <li class="menu-item">
-                        <a class="menu-link bold" href="/static">HOME</a>
+                        <a class="menu-link bold" th:href="@{'/'}">HOME</a>
                     </li>
                     <li class="menu-item">
-                        <a class="menu-link" href="/shop">SHOP</a>
+                        <a class="menu-link" th:href="@{'/shop'}">SHOP</a>
                     </li>
                 </ul>
             </nav>
-            <button class="search" type="button">
-                <svg class="search-icon" fill-rule="nonzero" height="30px"
-                     viewBox="0,0,256,256" width="30px" xmlns="http://www.w3.org/2000/svg"
-                     xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <g fill="#000000" fill-rule="nonzero" font-family="none" font-size="none" font-weight="none"
-                       stroke="none" stroke-dasharray="" stroke-dashoffset="0" stroke-linecap="butt"
-                       stroke-linejoin="miter" stroke-miterlimit="10" stroke-width="1" style="mix-blend-mode: normal"
-                       text-anchor="none">
-                        <g transform="scale(8.53333,8.53333)">
-                            <path d="M13,3c-5.511,0 -10,4.489 -10,10c0,5.511 4.489,10 10,10c2.39651,0 4.59738,-0.85101 6.32227,-2.26367l5.9707,5.9707c0.25082,0.26124 0.62327,0.36648 0.97371,0.27512c0.35044,-0.09136 0.62411,-0.36503 0.71547,-0.71547c0.09136,-0.35044 -0.01388,-0.72289 -0.27512,-0.97371l-5.9707,-5.9707c1.41266,-1.72488 2.26367,-3.92576 2.26367,-6.32227c0,-5.511 -4.489,-10 -10,-10zM13,5c4.43012,0 8,3.56988 8,8c0,4.43012 -3.56988,8 -8,8c-4.43012,0 -8,-3.56988 -8,-8c0,-4.43012 3.56988,-8 8,-8z"></path>
-                        </g>
-                    </g>
-                </svg>
-            </button>
-            <a class="cart" href="/cart">
-
-                <img alt="bag" height="25" src="/assets/images/icons8-bag-64.png" width="25"/></a>
+            <a class="search" th:href="@{'/search'}">
+                <img alt="search-icon" class="search-icon" src="/home/assets/images/search-icon.png">
+            </a>
+            <a class="cart" th:href="${user == null} ? '/login' : '/cart/'">
+                <img alt="cart-icon" class="cart-icon" src="/home/assets/images/cart_icon.png">
+            </a>
         </div>
     </div>
 </header>

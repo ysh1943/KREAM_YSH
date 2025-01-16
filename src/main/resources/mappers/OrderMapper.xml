@@ -651,7 +651,7 @@
                    AND `order`.`state` != 'INSPECTION_PASSED'
                    AND `order`.`state` != 'INSPECTION_FAILED'
                    AND `order`.`state` != 'SETTLING'
-                   AND `order`.`state` != 'DELIVERED'
+                   AND `order`.`state` != 'SETTLED'
              ) AS countOrderComplete;
     </select>
 
@@ -729,7 +729,7 @@
         AND `order`.`state` != 'INSPECTION_PASSED'
         AND `order`.`state` != 'INSPECTION_FAILED'
         AND `order`.`state` != 'SETTLING'
-        AND `order`.`state` != 'DELIVERED'
+        AND `order`.`state` != 'SETTLED'
         <if test="state != null and state.equals('failed')">
             AND `order`.`state` = #{state}
         </if>

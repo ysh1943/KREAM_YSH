@@ -128,6 +128,7 @@ public class MyService {
             return CommonResult.FAILURE;
         }
         UserEntity dbUser = this.userMapper.selectUserByEmail(user.getEmail());
+
         if (dbUser == null) {
             return CommonResult.FAILURE;
         }
@@ -138,6 +139,7 @@ public class MyService {
         if (this.userMapper.contactUpdate(user) == 0) {
             throw new TransactionalException();
         }
+        System.out.println(user.getContact());
         return CommonResult.SUCCESS;
     }
 

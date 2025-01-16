@@ -22,6 +22,13 @@ $Modify.querySelector(':scope > .modify_btn > .button.cancel').onclick = (e) => 
     e.preventDefault();
     $Modify.hide();
 }
+const $unitContact = $ContentArea.querySelector(':scope > .my_profile > .profile_info > .profile_group.contact > .unit > .unit_content');
+const readContact = (x) => {
+    const $contact = new DOMParser().parseFromString(`<p class="desc contact">${x}</p>
+                                                          <button class="button" type="button">변경</button>`, "text/html").querySelector('.desc.contact');
+    $unitContact.append($contact);
+    return $contact;
+}
 
 $ContactForm.onsubmit = (e) => {
     e.preventDefault();
@@ -44,6 +51,7 @@ $ContactForm.onsubmit = (e) => {
             return;
         }
         const response = JSON.parse(xhr.responseText);
+
         if (response['result'] === 'failure') {
             Dialog.show({
                 title: '연락처',
@@ -72,11 +80,13 @@ $ContactForm.onsubmit = (e) => {
                 content: '연락처 수정에 성공했습니다.',
                 buttons: [{
                     text: '확인',
-                    onclick: ($dialog) => Dialog.hide($dialog),
+                    onclick: ($dialog) => Dialog.hide($dialog)
                 }]
             });
+            const responseContact = `${response['contact']}`;
+            $unitContact.innerHTML = '';
+            readContact(responseContact);
         }
-
     };
     xhr.open('PATCH', './modify-contact');
     xhr.send(formData);

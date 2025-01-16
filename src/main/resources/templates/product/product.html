@@ -16,7 +16,7 @@
 <body>
 <div class="cover"></div>
 <div class="dialog">
-    <input type="text" name="user-id" th:value="${user.getId()}">
+<!--    <input type="text" name="user-id" th:value="${user.getId()}">-->
 <!--    <div class="title-container">-->
 <!--        <button class="cancel">-->
 <!--            <img class="icon" src="/assets/images/cancel-icon.png" alt="cancel">-->
@@ -91,7 +91,7 @@
             <a class="search" th:href="@{'/search'}">
                 <img class="search-icon" alt="search-icon" src="/home/assets/images/search-icon.png">
             </a>
-            <a class="cart" th:href="${user == null} ? '/login' : '/cart'">
+            <a class="cart" th:href="${user == null} ? '/login' : '/cart/'">
                 <img class="cart-icon" alt="cart-icon" src="/home/assets/images/cart_icon.png">
             </a>
         </div>

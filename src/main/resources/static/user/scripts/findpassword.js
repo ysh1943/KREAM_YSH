@@ -11,6 +11,7 @@
             if (xhr.readyState !== XMLHttpRequest.DONE) {
                 return;
             }
+            Loading.hide();
             if (xhr.status < 200 || xhr.status >= 300) {
                 Dialog.show({
                     title: '오류',
@@ -26,9 +27,7 @@
 
             const [title, content, onclick] = {
                 failure: ['비밀번호 재설정', '입력하신 이메일과 계정 정보를 찾을 수 없습니다.', ($dialog) => Dialog.hide($dialog)],
-                success: ['비밀번호', '입력하신 이메일로 임시 비밀번호를 전송하였습니다.<br>로그인 후 반드시 비밀번호를 변경해 주세요. 임시비밀번호는 1시간 이후 만료됩니다.', ($dialog) => {
-                    Dialog.hide($dialog);
-                }],
+                success: ['비밀번호', '입력하신 이메일로 임시 비밀번호를 전송하였습니다.<br>로그인 후 반드시 비밀번호를 변경해 주세요. 임시비밀번호는 1시간 이후 만료됩니다.', () => {location.href = '/login'}],
             }[response['result']] || ['오류', '서버가 알 수 없는 응답을 반환하였습니다. 잠시 후 다시 시도해 주세요', ($dialog) => Dialog.hide($dialog)];
             Dialog.show({
                 title: title,
@@ -40,6 +39,7 @@
         };
         xhr.open('POST', `/find-password?contact=${$form['contact'].value}&email=${$form['email'].value}`);
         xhr.send();
+        Loading.show(0)
     };
 }
 

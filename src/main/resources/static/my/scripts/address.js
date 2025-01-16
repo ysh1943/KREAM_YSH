@@ -112,7 +112,6 @@ const ArrayAddress = (address) => {
 
         $form.onsubmit = (e) => {
             e.preventDefault();
-
             const formData = new FormData();
             formData.append('id', $form['id'].value);
             formData.append('name', $form['name'].value);
@@ -178,7 +177,7 @@ const ArrayAddress = (address) => {
                         content: '주소를 변경하였습니다.',
                         buttons: [{
                             text: '확인',
-                            onclick: ($dialog) => Dialog.hide($dialog),
+                            onclick: () => location.reload(),
                         }]
                     });
                 }

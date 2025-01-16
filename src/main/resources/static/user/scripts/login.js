@@ -44,6 +44,7 @@ $form.onsubmit = (e) => {
         if (xhr.readyState !== XMLHttpRequest.DONE) {
             return;
         }
+        Loading.hide();
         if (xhr.status < 200 || xhr.status >= 300) {
             Dialog.show({
                 title: '로그인',
@@ -80,6 +81,7 @@ $form.onsubmit = (e) => {
     };
     xhr.open('POST', '/login');
     xhr.send(formData);
+    Loading.show(0)
 };
 
 
