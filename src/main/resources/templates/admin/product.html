@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>KREAM Administrator</title>
+    <link rel="shortcut icon" th:href="@{'/assets/images/favicon.ico'}">
+    <link rel="stylesheet" type="text/css" th:href="@{'/assets/styles/common.css'}">
+    <link rel="stylesheet" type="text/css" th:href="@{'/admin/assets/styles/common.css'}">
+    <link rel="stylesheet" type="text/css" th:href="@{'/admin/assets/styles/product.css'}">
+    <script defer type="text/javascript" th:src="@{'/assets/scripts/common.js'}"></script>
+    <script defer type="text/javascript" th:src="@{'/admin/assets/scripts/product.js'}"></script>
+    <script src="https://kit.fontawesome.com/79ae8a0168.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<header>
+    <div class="header-top">
+        <div class="main-inner">
+            <h1>
+                <a th:href="@{./}" class="logo">KREAM</a>
+                <a class="logo" th:href="@{/admin/}">Administrator</a>
+            </h1>
+        </div>
+        <div class="-spring"></div>
+        <div class="header-right">
+            <nav class="link-container">
+                <a th:href="@{/logout}"><i class="icon fa-solid fa-arrow-right-from-bracket"></i></a>
+            </nav>
+        </div>
+    </div>
+    <nav class="header-menu">
+        <ul class="tabs">
+            <li class="tab"><a class="link" th:href="@{/admin/user}">회원관리</a></li>
+            <li class="tab"><a class="link -selected" th:href="@{/admin/product}">상품관리</a></li>
+            <li class="tab"><a class="link" th:href="@{/admin/order}">주문관리</a></li>
+        </ul>
+    </nav>
+</header>
+<div class="main-container">
+    <nav id="nav">
+        <i class="icon fa-solid fa-shirt"></i>
+        <h2>상품 관리</h2>
+        <ul class="menu">
+            <li class="item -selected" rel="product-list">상품 목록</li>
+            <li class="item" rel="product-register">상품 등록</li>
+        </ul>
+    </nav>
+    <main id="main">
+        <div class="content -visible" rel="product-list">
+            <h1>상품 목록</h1>
+            <form class="searchForm">
+                <button class="button" name="selectAll" type="button">전체 선택</button>
+                <button class="button" name="unselectAll" type="button">전체 선택 해제</button>
+                <label class="filter-label">
+                    <select name="filter">
+                        <option selected value="all" th:selected="${filter != null && filter.equals('all')}">전체</option>
+                        <option value="modelNum" th:selected="${filter != null && filter.equals('modelNum')}">모델번호
+                        </option>
+                        <option value="name" th:selected="${filter != null && filter.equals('name')}">상품명</option>
+                        <option value="brand" th:selected="${filter != null && filter.equals('brand')}">브랜드</option>
+                        <option value="category" th:selected="${filter != null && filter.equals('category')}">카테고리
+                        </option>
+                    </select>
+                </label>
+                <label class="input-label">
+                    <input class="input" name="keyword" placeholder="검색어" type="text" th:value="${keyword}">
+                </label>
+                <button class="button" type="submit">검색</button>
+                <div class="-spring"></div>
+                <button class="delete" name="delete" type="button">선택삭제</button>
+            </form>
+            <table>
+                <thead>
+                <tr>
+                    <th rowspan="2" style="width: 2rem"><!-- 체크 --></th>
+                    <th rowspan="2" style="width: 3rem">번호</th>
+                    <th rowspan="2" class="cover-th"><!-- 커버 --></th>
+                    <th rowspan="2" style="width: 3rem">모델번호</th>
+                    <th colspan="2" class="name-th">상품명</th>
+                    <th rowspan="2" style="width: 5rem">브랜드</th>
+                    <th rowspan="2" style="width: 4rem">카테고리</th>
+                    <th rowspan="2" style="width: 5.5rem">출시일</th>
+                    <th rowspan="2" style="width: 5rem">등록일</th>
+                    <th rowspan="2" style="width: 4rem">관리</th>
+                </tr>
+                <tr>
+                    <th style="width: 16rem;">Ko</th>
+                    <th style="width: 16rem;">En</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="product : ${products}" th:data-id="${product.getId()}"
+                    th:data-deleted="${product.isDeleted()}">
+                    <td>
+                        <!-- 상품별 선택 체크박스 -->
+                        <input type="checkbox" name="check" th:value="${product.getId()}">
+                    </td>
+                    <td th:text="${product.getId()}"></td>
+                    <td class="cover-td">
+                        <img class="cover" th:src="@{'/admin/image?id=' + ${product.getId()}}" alt="이미지">
+                    </td>
+                    <td th:text="${product.getModelNumber()}"></td>
+                    <td th:text="${product.getProductNameKo()}"></td>
+                    <td th:text="${product.getProductNameEn()}"></td>
+                    <td th:text="${product.getBrand()}"></td>
+                    <td th:if="${product.getCategory() == 'top'}">상의</td>
+                    <td th:if="${product.getCategory() == 'bottom'}">하의</td>
+                    <td th:if="${product.getCategory() == 'shoes'}">신발</td>
+                    <td th:if="${product.getCategory() == 'accessories'}">패션잡화</td>
+                    <td th:if="${product.getCategory() == ''}">-</td>
+                    <td th:if="${product.getReleaseDate() == null}">-</td>
+                    <td th:if="${product.getReleaseDate() != null}"
+                        th:text="${product.getReleaseDate()}"></td>
+                    <td th:text="${#temporals.format(product.getCreatedAt(), 'yyyy-MM-dd')}"></td>
+                    <td class="button-td">
+                        <button type="button" name="delete" class="btn-delete">삭제</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="move" th:if="${products != null && products.length > 0}">
+                <a class="page first"
+                   th:if="${ProductPageVo.requestPage > ProductPageVo.movableMinPage}"
+                   th:href="@{'/admin/product' (page=${ProductPageVo.movableMinPage}, filter=${filter}, keyword=${keyword})}"><i class="fa-solid fa-angles-left"></i></a>
+                <a class="page prev"
+                   th:if="${ProductPageVo.requestPage > ProductPageVo.movableMinPage}"
+                   th:href="@{'/admin/product' (page=${ProductPageVo.requestPage - 1}, filter=${filter}, keyword=${keyword})}"><i class="fa-solid fa-angle-left"></i></a>
+                <div class="page-container">
+                    <a class="page"
+                       th:if="${page >= ProductPageVo.movableMinPage}"
+                       th:each="page : ${#numbers.sequence(ProductPageVo.displayMinPage, ProductPageVo.displayMaxPage)}"
+                       th:text="${page}"
+                       th:href="@{'/admin/product' (page= ${page}, filter=${filter}, keyword=${keyword})}"
+                       th:classappend="${page == ProductPageVo.requestPage} ? 'selected'"></a>
+                    <!-- page = 반복값   pageVo.requestPage = 요청 페이지 -->
+                </div>
+                <a class="page next"
+                   th:if="${ProductPageVo.requestPage < ProductPageVo.movableMaxPage}"
+                   th:href="@{'/admin/product' (page=${ProductPageVo.requestPage + 1}, filter=${filter}, keyword=${keyword})}"><i class="fa-solid fa-angle-right"></i></a>
+                <a class="page last"
+                   th:if="${ProductPageVo.requestPage < ProductPageVo.movableMaxPage}"
+                   th:href="@{'/admin/product' (page=${ProductPageVo.movableMaxPage}, filter=${filter}, keyword=${keyword})}"><i class="fa-solid fa-angles-right"></i></a>
+            </div>
+        </div>
+        <div class="content " rel="product-register">
+            <h1>상품 등록</h1>
+            <form class="form">
+                <table>
+                    <tr>
+                        <th>모델번호</th>
+                        <td>
+                            <input required autocomplete="off" class="_input" maxlength="50"
+                                   minlength="1" name="modelNumber" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>기본 상품명</th>
+                        <td>
+                            <input required autocomplete="off" class="_input" maxlength="100"
+                                   minlength="1" name="baseName" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>상품명 (KO)</th>
+                        <td>
+                            <input required autocomplete="off" class="_input" maxlength="100"
+                                   minlength="1" name="productNameKo" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>상품명 (EN)</th>
+                        <td>
+                            <input required autocomplete="off" class="_input" maxlength="100"
+                                   minlength="1" name="productNameEn" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>브랜드</th>
+                        <td>
+                            <input required autocomplete="off" class="_input" maxlength="50"
+                                   minlength="1" name="brand" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>출시일</th>
+                        <td>
+                            <input autocomplete="off" class="_input" maxlength="50"
+                                   minlength="1" name="releaseDate" type="date">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>성별</th>
+                        <td>
+                            <select name="gender">
+                                <option value="all">전체</option>
+                                <option value="men">남성</option>
+                                <option value="women">여성</option>
+                                <option value="kids">키즈</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>카테고리</th>
+                        <td>
+                            <select name="category">
+                                <option value="" disabled selected>옵션을 선택하세요</option>
+                                <option value="top">상의</option>
+                                <option value="bottom">하의</option>
+                                <option value="shoes">신발</option>
+                                <option value="accessories">패션잡화</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>상세 카테고리</th>
+                        <td>
+                            <select name="top">
+                                <option value="" disabled selected>상의 옵션</option>
+                                <option value="outer">아우터</option>
+                                <option value="hoodie">후드티</option>
+                                <option value="tshirt">티셔츠</option>
+                            </select>
+                            <select name="bottom">
+                                <option value="" disabled selected>하의 옵션</option>
+                                <option value="pants">바지</option>
+                                <option value="shorts">반바지</option>
+                                <option value="skirt">스커트</option>
+                            </select>
+                            <select name="shoes">
+                                <option value="" disabled selected>신발 옵션</option>
+                                <option value="sneakers">스니커즈</option>
+                                <option value="boots">부츠</option>
+                                <option value="loafers">로퍼</option>
+                            </select>
+                            <select name="accessories">
+                                <option value="" disabled selected>패션잡화 옵션</option>
+                                <option value="ballCap">볼캡</option>
+                                <option value="necklace">목걸이</option>
+                                <option value="eyewear">아이웨어</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>색상</th>
+                        <td>
+                            <select name="color">
+                                <option value="black">블랙</option>
+                                <option value="gray">그레이</option>
+                                <option value="white">화이트</option>
+                                <option value="ivory">아이보리</option>
+                                <option value="beige">베이지</option>
+                                <option value="brown">브라운</option>
+                                <option value="navy">네이비</option>
+                                <option value="blue">블루</option>
+                                <option value="skyblue">스카이블루</option>
+                                <option value="red">레드</option>
+                                <option value="orange">오렌지</option>
+                                <option value="yellow">엘로우</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>사이즈</th>
+                        <td class="size-box">
+                            <div class="clothes-container">
+                                <span class="title">상의 . 하의</span>
+                                <div class="size-container">
+                                    <label class="check">
+                                        <input class="checkbox" type="checkbox" name="size" value="S">
+                                        <span class="_box">S</span>
+                                    </label>
+                                    <label class="check">
+                                        <input type="checkbox" name="size" value="M">
+                                        <span class="_box">M</span>
+                                    </label>
+                                    <label class="check">
+                                        <input type="checkbox" name="size" value="L">
+                                        <span class="_box">L</span>
+                                    </label>
+                                    <label class="check">
+                                        <input type="checkbox" name="size" value="XL">
+                                        <span class="_box">XL</span>
+                                    </label>
+                                    <label class="check">
+                                        <input type="checkbox" name="size" value="XXL">
+                                        <span class="_box">XXL</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="line"></div>
+                            <div class="shoes-container">
+                                <span class="title">신발</span>
+                                <div class="size-container">
+                                    <label class="check">
+                                        <input type="checkbox" name="size" value="230">
+                                        <span class="_box">230</span>
+                                    </label>
+                                    <label class="check">
+                                        <input type="checkbox" name="size" value="235">
+                                        <span class="_box">235</span>
+                                    </label>
+                                    <label class="check">
+                                        <input type="checkbox" name="size" value="240">
+                                        <span class="_box">240</span>
+                                    </label>
+                                    <label class="check">
+                                        <input type="checkbox" name="size" value="245">
+                                        <span class="_box">245</span>
+                                    </label>
+                                    <label class="check">
+                                        <input type="checkbox" name="size" value="250">
+                                        <span class="_box">250</span>
+                                    </label>
+                                    <label class="check">
+                                        <input type="checkbox" name="size" value="255">
+                                        <span class="_box">255</span>
+                                    </label>
+                                    <label class="check">
+                                        <input type="checkbox" name="size" value="260">
+                                        <span class="_box">260</span>
+                                    </label>
+                                    <label class="check">
+                                        <input type="checkbox" name="size" value="270">
+                                        <span class="_box">270</span>
+                                    </label>
+                                    <label class="check">
+                                        <input type="checkbox" name="size" value="275">
+                                        <span class="_box">275</span>
+                                    </label>
+                                    <label class="check">
+                                        <input type="checkbox" name="size" value="280">
+                                        <span class="_box">280</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="line"></div>
+                            <div class="oneSize-container">
+                                <span class="title">기타</span>
+                                <div class="size-container">
+                                    <label class="check">
+                                        <input type="checkbox" name="size" value="ONE SIZE">
+                                        <span class="_box">ONE SIZE</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>이미지</th>
+                        <td>
+                            <div class="row">
+                                <div class="preview-wrapper">
+                                    <span class="text">+</span>
+                                    <img alt="" class="image" src="" style="display: none;">
+                                    <input hidden accept="image/*" name="files" type="file">
+                                </div>
+                                <div class="preview-wrapper">
+                                    <span class="text">+</span>
+                                    <img alt="" class="image" src="" style="display: none;">
+                                    <input hidden accept="image/*" name="files" type="file">
+                                </div>
+                                <div class="preview-wrapper">
+                                    <span class="text">+</span>
+                                    <img alt="" class="image" src="" style="display: none;">
+                                    <input hidden accept="image/*" name="files" type="file">
+                                </div>
+                                <div class="preview-wrapper">
+                                    <span class="text">+</span>
+                                    <img alt="" class="image" src="" style="display: none;">
+                                    <input hidden accept="image/*" name="files" type="file">
+                                </div>
+                            </div>
+                            <div class="tip">
+                                <h3>이미지 업로드</h3>
+                                <ul>
+                                    <li>압축 형식(zip) 파일을 제외한 모든 유형의 파일을 등록할 수 있습니다.</li>
+                                    <li>파일 1개 당 크기는 10MB 초과할 수 없으며, 최대 4개까지 등록할 수 있습니다.</li>
+                                    <li>상품 이미지가 왜곡되지 않도록 비율에 맞춰 촬영해 주세요.</li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <button type="submit">상품 등록</button>
+            </form>
+        </div>
+    </main>
+</div>
+</body>
+</html>

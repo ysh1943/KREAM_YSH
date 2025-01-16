@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kream.kream.mappers.ProductMapper">
+
+    <insert id="insertProduct"
+            useGeneratedKeys="true"
+            keyColumn="id"
+            keyProperty="id"
+            parameterType="com.kream.kream.entities.ProductEntity">
+        INSERT INTO `kream`.`product` (`id`, `category_detail_id`, `base_name`, `product_name_ko`, `product_name_en`,
+                                       `model_number`, `release_date`, `color`, `brand`, `category`, `gender`,
+                                       `created_at`, `updated_at`, `is_deleted`)
+        VALUES (#{id}, #{categoryDetailId}, #{baseName}, #{productNameKo}, #{productNameEn}, #{modelNumber},
+                #{releaseDate}, #{color}, #{brand}, #{category}, #{gender}, #{createdAt}, #{updatedAt}, #{isDeleted})
+    </insert>
+
+    <select id="selectProductCount"
+            resultType="_int">
+        SELECT COUNT(0)
+        FROM `kream`.`product`
+        WHERE `is_deleted` = false
+    </select>
+
+    <select id="selectProductCountBySearch"
+            resultType="java.lang.Integer">
+        SELECT COUNT(0)
+        FROM `kream`.`product`
+        WHERE `is_deleted` = false
+        <if test="filter.equals('all')"> <!-- 참일떄만 붙여준다. -->
+            AND (`model_number` LIKE CONCAT('%', #{keyword}, '%') OR `product_name_ko` LIKE CONCAT('%', #{keyword}, '%')
+            OR `product_name_en` LIKE CONCAT('%', #{keyword}, '%') OR `brand` LIKE CONCAT('%', #{keyword}, '%') OR
+            `category` LIKE
+            CASE
+            WHEN #{keyword} LIKE '%상의%' THEN '%top%'
+            WHEN #{keyword} LIKE '%하의%' THEN '%bottom%'
+            WHEN #{keyword} LIKE '%신발%' THEN '%shoes%'
+            WHEN #{keyword} LIKE '%패션잡화%' THEN '%accessories%'
+            ELSE CONCAT('%', #{keyword}, '%')
+            END)
+        </if>
+        <if test="filter.equals('modelNum')">
+            AND `model_number` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter.equals('name')">
+            AND (`product_name_ko` LIKE CONCAT('%', #{keyword}, '%') OR `product_name_en` LIKE CONCAT('%', #{keyword},
+            '%'))
+        </if>
+        <if test="filter.equals('brand')">
+            AND `brand` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter.equals('category')">
+            AND `category` LIKE
+            CASE
+            WHEN #{keyword} LIKE '%상의%' THEN '%top%'
+            WHEN #{keyword} LIKE '%하의%' THEN '%bottom%'
+            WHEN #{keyword} LIKE '%신발%' THEN '%shoes%'
+            WHEN #{keyword} LIKE '%패션잡화%' THEN '%accessories%'
+            ELSE CONCAT('%', #{keyword}, '%')
+            END
+        </if>
+    </select>
+
+    <select id="selectProduct"
+            resultType="com.kream.kream.entities.ProductEntity">
+        SELECT `product`.`id`         AS `id`,
+               `category_detail_id`   AS `categoryDetailId`,
+               `base_name`            AS `baseName`,
+               `product_name_ko`      AS `productNameKo`,
+               `product_name_en`      AS `productNameEn`,
+               `model_number`         AS `modelNumber`,
+               `release_date`         AS `releaseDate`,
+               `color`                AS `color`,
+               `brand`                AS `brand`,
+               `category`             AS `category`,
+               `gender`               AS `gender`,
+               `product`.`created_at` AS `createdAt`,
+               `updated_at`           AS `updatedAt`,
+               `is_deleted`           AS `isDeleted`
+        FROM `kream`.`product`
+        WHERE is_deleted = FALSE
+        ORDER BY `id` DESC
+        LIMIT #{limitCount} OFFSET #{offsetCount}
+    </select>
+
+    <select id="selectProductById"
+            resultType="com.kream.kream.entities.ProductEntity">
+        SELECT `id`                 AS `id`,
+               `category_detail_id` AS `categoryDetailId`,
+               `base_name`            AS `baseName`,
+               `product_name_ko`    AS `productNameKo`,
+               `product_name_en`    AS `productNameEn`,
+               `model_number`       AS `modelNumber`,
+               `release_date`       AS `releaseDate`,
+               `color`              AS `color`,
+               `brand`              AS `brand`,
+               `category`           AS `category`,
+               `gender`             AS `gender`,
+               `created_at`         AS `createdAt`,
+               `updated_at`         AS `updatedAt`,
+               `is_deleted`         AS `isDeleted`
+        FROM `kream`.`product`
+        WHERE `id` = #{id}
+        LIMIT 1
+    </select>
+
+    <select id="selectProductBySearch"
+            resultType="com.kream.kream.entities.ProductEntity">
+        SELECT `id`                 AS `id`,
+                `category_detail_id` AS `categoryDetailId`,
+                `base_name`            AS `baseName`,
+                `product_name_ko`    AS `productNameKo`,
+                `product_name_en`    AS `productNameEn`,
+                `model_number`       AS `modelNumber`,
+                `release_date`       AS `releaseDate`,
+                `color`              AS `color`,
+                `brand`              AS `brand`,
+                `category`           AS `category`,
+                `gender`             AS `gender`,
+                `created_at`         AS `createdAt`,
+                `updated_at`         AS `updatedAt`,
+                `is_deleted`         AS `isDeleted`
+        FROM `kream`.`product`
+        WHERE `is_deleted` = FALSE
+        <if test="filter.equals('all')"> <!-- 참일떄만 붙여준다. -->
+            AND (`model_number` LIKE CONCAT('%', #{keyword}, '%') OR `product_name_ko` LIKE CONCAT('%', #{keyword}, '%')
+            OR `product_name_en` LIKE CONCAT('%', #{keyword}, '%') OR `brand` LIKE CONCAT('%', #{keyword}, '%') OR
+            `category` LIKE
+            CASE
+            WHEN #{keyword} LIKE '%상의%' THEN '%top%'
+            WHEN #{keyword} LIKE '%하의%' THEN '%bottom%'
+            WHEN #{keyword} LIKE '%신발%' THEN '%shoes%'
+            WHEN #{keyword} LIKE '%패션잡화%' THEN '%accessories%'
+            ELSE CONCAT('%', #{keyword}, '%')
+            END)
+        </if>
+        <if test="filter.equals('modelNum')">
+            AND `model_number` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter.equals('name')">
+            AND (`product_name_ko` LIKE CONCAT('%', #{keyword}, '%') OR `product_name_en` LIKE CONCAT('%', #{keyword},
+            '%'))
+        </if>
+        <if test="filter.equals('brand')">
+            AND `brand` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter.equals('category')">
+            AND `category` LIKE
+                CASE
+                    WHEN #{keyword} LIKE '%상의%' THEN '%top%'
+                    WHEN #{keyword} LIKE '%하의%' THEN '%bottom%'
+                    WHEN #{keyword} LIKE '%신발%' THEN '%shoes%'
+                    WHEN #{keyword} LIKE '%패션잡화%' THEN '%accessories%'
+                    ELSE CONCAT('%', #{keyword}, '%')
+                END
+        </if>
+        ORDER BY `id` DESC
+        LIMIT #{limitCount} OFFSET #{offsetCount}
+    </select>
+
+    <update id="updateProduct">
+        UPDATE `kream`.`product`
+        SET `category_detail_id` = #{product.categoryDetailId},
+            `base_name`          = #{product.baseName},
+            `product_name_ko`    = #{product.productNameKo},
+            `product_name_en`    = #{product.productNameEn},
+            `model_number`       = #{product.modelNumber},
+            `release_date`       = #{product.releaseDate},
+            `color`              = #{product.color},
+            `brand`              = #{product.brand},
+            `category`           = #{product.category},
+            `gender`             = #{product.gender},
+            `created_at`         = #{product.createdAt},
+            `updated_at`         = #{product.updatedAt},
+            `is_deleted`         = #{product.isDeleted}
+        WHERE `id` = #{product.id}
+        LIMIT 1
+    </update>
+
+    <select id="selectProductImagesByBaseName">
+        SELECT `product`.`id` AS productId,
+               `image`.`data` AS imageData,
+               `image`.`type` AS imageType
+        FROM `kream`.`product`
+                 LEFT JOIN `kream`.`image`
+                           ON `product`.`id` = `image`.`product_id`
+                               AND `image`.`is_primary` = 1
+        WHERE `product`.`base_name` = #{baseName}
+    </select>
+
+    <select id="selectPopularProducts"
+            resultType="com.kream.kream.dtos.ProductDTO">
+        SELECT `product`.`id`              AS productId,
+               `product`.`product_name_en` AS productNameEn,
+               `product`.`product_name_ko` AS productNameKo,
+               `product`.`brand`           AS brand,
+               `product`.`category`        AS category,
+               `image`.`data`              AS imageData,
+               `image`.`type`              AS imageType,
+               MIN(`seller_bid`.`price`)   AS lowestPrice,
+               COUNT(`order`.`id`)         AS transactionCount
+        FROM `kream`.`order`
+                 LEFT JOIN `kream`.`seller_bid`
+                           ON `seller_bid_id` = `seller_bid`.`id`
+                               AND `seller_bid`.`is_deleted` = 0
+                 LEFT JOIN `kream`.`buyer_bid`
+                           ON `buyer_bid_id` = `buyer_bid`.`id`
+                               AND `buyer_bid`.`is_deleted` = 0
+                 INNER JOIN `kream`.`size`
+                            ON `seller_bid`.`size_id` = `size`.`id`
+                                OR `buyer_bid`.`size_id` = `size`.`id`
+                 INNER JOIN `kream`.`product`
+                            ON `product_id` = `product`.`id`
+                 INNER JOIN `kream`.`image`
+                            ON `product`.`id` = `image`.`product_id`
+                                AND `image`.`is_primary` = 1
+        WHERE `order`.`state` = 'DELIVERED'
+        GROUP BY `product`.`id`
+        ORDER BY transactionCount DESC
+        LIMIT 20
+    </select>
+
+    <select id="selectNewProducts"
+            resultType="com.kream.kream.dtos.ProductDTO">
+        SELECT `product`.`id`                               AS productId,
+               `product`.`product_name_en`                  AS productNameEn,
+               `product`.`product_name_ko`                  AS productNameKo,
+               `product`.`brand`                            AS brand,
+               `product`.`category`                         AS category,
+               `product`.`release_date`                     AS releaseDate,
+               `image`.`data`                               AS imageData,
+               `image`.`type`                               AS imageType,
+               (SELECT MIN(`seller_bid`.`price`)
+                FROM `kream`.`seller_bid`
+                         INNER JOIN `kream`.`size`
+                                    ON `seller_bid`.`size_id` = `size`.`id`
+                WHERE `size`.`product_id` = `product`.`id`
+                  AND `seller_bid`.`state` = 'BIDDING'
+                  AND `seller_bid`.`is_deleted` = 0)     AS lowestPrice,
+               (SELECT COUNT(`order`.`id`)
+                FROM `kream`.`order`
+                         LEFT JOIN `kream`.`buyer_bid`
+                                   ON `order`.`buyer_bid_id` = `buyer_bid`.`id`
+                                       AND `buyer_bid`.`is_deleted` = 0
+                         LEFT JOIN `kream`.`seller_bid`
+                                   ON `order`.`seller_bid_id` = `seller_bid`.`id`
+                                       AND `seller_bid`.`is_deleted` = 0
+                         INNER JOIN `kream`.`size`
+                                    ON `buyer_bid`.`size_id` = `size`.`id`
+                                        OR `seller_bid`.`size_id` = `size`.`id`
+                WHERE `order`.`state` = 'DELIVERED'
+                  AND `size`.`product_id` = `product`.`id`) AS transactionCount
+        FROM `kream`.`product`
+                 LEFT JOIN `kream`.`image`
+                           ON `product`.`id` = `image`.`product_id`
+                               AND `image`.`is_primary` = 1
+        WHERE `product`.`is_deleted` = 0
+        ORDER BY `product`.`created_at` DESC
+        LIMIT 20
+    </select>
+
+    <select id="selectNewProductsByFilter"
+            resultType="com.kream.kream.dtos.ShopProductDTO">
+        SELECT  `product`.`id`              AS productId,
+                `product`.`product_name_en` AS productNameEn,
+                `product`.`product_name_ko` AS productNameKo,
+                `product`.`brand`           AS brand,
+                `product`.`gender`          AS gender,
+                `product`.`color`           AS color,
+                `product`.`category`        AS category,
+                `category-detail`.`type`    AS categoryDetail,
+                `product`.`release_date`    AS releaseDate,
+                `image`.`data`              AS imageData,
+                `image`.`type`              AS imageType,
+                (SELECT MIN(`seller_bid`.`price`)
+                FROM `kream`.`seller_bid`
+                    INNER JOIN `kream`.`size`
+                        ON `seller_bid`.`size_id` = `size`.`id`
+                WHERE `size`.`product_id` = `product`.`id`
+                    AND `seller_bid`.`state` = 'BIDDING') AS lowestPrice,
+                (SELECT COUNT(`order`.`id`)
+                FROM `kream`.`order`
+                    LEFT JOIN `kream`.`buyer_bid`
+                        ON `order`.`buyer_bid_id` = `buyer_bid`.`id`
+                    LEFT JOIN `kream`.`seller_bid`
+                        ON `order`.`seller_bid_id` = `seller_bid`.`id`
+                    INNER JOIN `kream`.`size`
+                        ON `buyer_bid`.`size_id` = `size`.`id`
+                        OR `seller_bid`.`size_id` = `size`.`id`
+                WHERE `order`.`state` = 'DELIVERED'
+                    AND `size`.`product_id` = `product`.`id`) AS transactionCount
+        FROM `kream`.`product`
+            LEFT JOIN `kream`.`image`
+                ON `product`.`id` = `image`.`product_id`
+                AND `image`.`is_primary` = 1
+            LEFT JOIN`kream`.`category_detail` AS `category-detail`
+                ON `category-detail`.`id` = `product`.`category_detail_id`
+        WHERE `product`.`is_deleted` = 0
+
+        <if test="filter != null and (filter.equals('top') or filter.equals('bottom') or filter.equals('shoes') or filter.equals('accessories'))">
+            AND `category` LIKE CONCAT('%', #{filter}, '%')
+        </if>
+
+        <if test="keyword != null">
+            AND (`product_name_en` LIKE CONCAT('%', #{keyword}, '%') OR `product_name_ko` LIKE CONCAT('%', #{keyword}, '%') OR `brand` LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+
+        <if test="brand != null">
+            AND `brand` LIKE CONCAT('%', #{brand}, '%')
+        </if>
+        <!-- category 조건 -->
+        <if test="category != null and category.length > 0">
+            AND `category-detail`.`type` IN
+            <foreach collection="category" item="category" open="(" separator="," close=")">
+                #{category}
+            </foreach>
+        </if>
+
+        <!-- gender 조건 -->
+        <if test="gender != null and gender.length > 0">
+            AND `gender` IN
+            <foreach collection="gender" item="gender" open="(" separator="," close=")">
+                #{gender}
+            </foreach>
+        </if>
+
+        <!-- color 조건 -->
+        <if test="color != null and color.length > 0">
+            AND `color` IN
+            <foreach collection="color" item="color" open="(" separator="," close=")">
+                #{color}
+            </foreach>
+        </if>
+
+        <!-- 가격 필터 조건 -->
+        <if test="price != null and price.length > 0">
+            HAVING
+            <foreach collection="price" item="price" open="(" separator="OR" close=")">
+                <!-- 개별 가격이 정확히 일치하는 경우 -->
+                <if test="price == '100000'">
+                    lowestPrice BETWEEN 0 AND 100000
+                </if>
+                <!-- 가격 범위가 지정된 경우 -->
+                <if test="price == '100000-200000'">
+                    lowestPrice BETWEEN 100000 AND 199999
+                </if>
+                <if test="price == '200000-300000'">
+                    lowestPrice BETWEEN 200000 AND 299999
+                </if>
+                <if test="price == '300000-400000'">
+                    lowestPrice BETWEEN 300000 AND 399999
+                </if>
+            </foreach>
+        </if>
+        ORDER BY `product`.`release_date` DESC
+    </select>
+
+</mapper>

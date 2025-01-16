@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>KREAM Administrator</title>
+    <link rel="shortcut icon" th:href="@{'/assets/images/favicon.ico'}">
+    <link rel="stylesheet" type="text/css" th:href="@{'/assets/styles/common.css'}">
+    <link rel="stylesheet" type="text/css" th:href="@{'/admin/assets/styles/common.css'}">
+    <link rel="stylesheet" type="text/css" th:href="@{'/admin/assets/styles/order.css'}">
+    <script defer type="text/javascript" th:src="@{'/assets/scripts/common.js'}"></script>
+    <script defer type="text/javascript" th:src="@{'/admin/assets/scripts/order.js'}"></script>
+    <script src="https://kit.fontawesome.com/79ae8a0168.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<header>
+    <div class="header-top">
+        <div class="main-inner">
+            <h1>
+                <a class="logo" th:href="@{../}">KREAM</a>
+                <a class="logo" th:href="@{/admin/}">Administrator</a>
+            </h1>
+        </div>
+        <div class="-spring"></div>
+        <div class="header-right">
+            <nav class="link-container">
+                <a th:href="@{/logout}"><i class="icon fa-solid fa-arrow-right-from-bracket"></i></a>
+            </nav>
+        </div>
+    </div>
+    <nav class="header-menu">
+        <ul class="tabs">
+            <li class="tab"><a class="link" th:href="@{/admin/user}">회원관리</a></li>
+            <li class="tab"><a class="link" th:href="@{/admin/product}">상품관리</a></li>
+            <li class="tab"><a class="link -selected" th:href="@{/admin/order}">주문관리</a></li>
+        </ul>
+    </nav>
+</header>
+<div class="main-container">
+    <nav id="nav">
+        <i class="icon fa-solid fa-cart-shopping"></i>
+        <h2>주문 관리</h2>
+    </nav>
+    <main id="main">
+        <div class="content -visible" rel="user-list">
+            <h1>주문 목록</h1>
+            <form class="searchForm">
+                <label class="filter-label">
+                    <select name="filter">
+                        <option selected value="all" th:selected="${filter != null && filter.equals('all')}">전체</option>
+                        <option value="productName" th:selected="${filter != null && filter.equals('productName')}">상품명</option>
+                        <option value="email" th:selected="${filter != null && filter.equals('email')}">이메일
+                        </option>
+                        <option value="state" th:selected="${filter != null && filter.equals('state')}">주문 상태
+                        </option>
+                    </select>
+                </label>
+                <label class="input-label">
+                    <input class="input" name="keyword" placeholder="검색어" type="text" th:value="${keyword}">
+                </label>
+                <button class="button" type="submit">검색</button>
+            </form>
+            <form class="tableForm">
+                <table>
+                    <thead>
+                    <tr>
+                        <th style="width: 2rem;">번호</th>
+                        <th></th>
+                        <th style="width: 12rem;">상품명</th>
+                        <th style="width: 6rem;">가격</th>
+                        <th>판매자 이메일</th>
+                        <th>구매자 이메일</th>
+                        <th style="width: 10rem;">구매자 주소</th>
+                        <th style="width: 6rem;">거래 날짜</th>
+                        <th style="width: 7rem;">판매자 주문 상태</th>
+                        <th style="width: 7rem;">구매자 주문 상태</th>
+                        <th style="width: 7rem;">주문 상태</th>
+                        <th style="width: 4rem;">관리</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="order : ${orders}" th:data-id="${order.getId()}">
+                        <td th:text="${order.getId()}"></td>
+                        <td class="cover-td">
+                            <img class="cover" alt="이미지" th:src="@{${order.getBase64Image()}}">
+                        </td>
+                        <td th:if="${order.getSellerProductName() == null}"
+                            th:text="${order.getBuyerProductName()}"></td>
+                        <td th:if="${order.getBuyerProductName() == null}"
+                            th:text="${order.getSellerProductName()}"></td>
+                        <td th:text="${#numbers.formatInteger(order.getPrice(), 0, 'COMMA') + '원'}"></td>
+                        <td th:if="${order.getType() == 'SELL'}"
+                            th:text="${order.getUserEmail()}"></td>
+                        <td th:if="${order.getType() != 'SELL'}"
+                            th:text="${order.getSellerUserEmail()}"></td>
+                        <td th:if="${order.getType() == 'BUY'}"
+                            th:text="${order.getUserEmail()}"></td>
+                        <td th:if="${order.getType() != 'BUY'}"
+                            th:text="${order.getBuyerUserEmail()}"></td>
+                        <td th:if="${order.getBuyerAddress() != null}"
+                            th:text="${order.getBuyerAddress()}"></td>
+                        <td th:if="${order.getBuyerBidAddress() != null}"
+                            th:text="${order.getBuyerBidAddress()}"></td>
+                        <td th:text="${#temporals.format(order.getCreatedAt(), 'yyyy-MM-dd')}"></td>
+                        <td th:if="${order.getType() == 'SELL'}">
+                            <span th:if="${order.getState() == 'PENDING'}">대기중</span>
+                            <span th:if="${order.getState() == 'INSPECTING'}">검수중</span>
+                            <span th:if="${order.getState() == 'INSPECTION_FAILED'}">검수불합격</span>
+                            <span th:if="${order.getState() == 'INSPECTION_PASSED'}">검수합격</span>
+                            <span th:if="${order.getState() == 'IN_TRANSIT'}">정산중</span>
+                            <span th:if="${order.getState() == 'SETTLING'}">정산중</span>
+                            <span th:if="${order.getState() == 'FAILED'}">거래실패</span>
+                            <span th:if="${order.getState() == 'SETTLED'}">정산완료</span>
+                        </td>
+                        <td th:if="${order.getSellerState() != null}">
+                            <span th:if="${order.getSellerState() == 'PENDING'}">대기중</span>
+                            <span th:if="${order.getSellerState() == 'INSPECTING'}">검수중</span>
+                            <span th:if="${order.getSellerState() == 'INSPECTION_FAILED'}">검수불합격</span>
+                            <span th:if="${order.getSellerState() == 'INSPECTION_PASSED'}">검수합격</span>
+                            <span th:if="${order.getSellerState() == 'SETTLING'}">정산중</span>
+                            <span th:if="${order.getSellerState() == 'FAILED'}">거래실패</span>
+                            <span th:if="${order.getSellerState() == 'DELIVERED'}">배송완료</span>
+                            <span th:if="${order.getSellerState() == 'SETTLED'}">정산완료</span>
+                        </td>
+                        <td th:if="${order.getType() == 'BUY'}">
+                            <span th:if="${order.getState() == 'PENDING'}">대기중</span>
+                            <span th:if="${order.getState() == 'INSPECTING'}">검수중</span>
+                            <span th:if="${order.getState() == 'INSPECTION_FAILED'}">검수불합격</span>
+                            <span th:if="${order.getState() == 'INSPECTION_PASSED'}">검수합격</span>
+                            <span th:if="${order.getState() == 'IN_TRANSIT'}">배송중</span>
+                            <span th:if="${order.getState() == 'SETTLING'}">배송중</span>
+                            <span th:if="${order.getState() == 'FAILED'}">거래실패</span>
+                            <span th:if="${order.getState() == 'DELIVERED'}">배송완료</span>
+                        </td>
+                        <td th:if="${order.getBuyerState() != null}">
+                            <span th:if="${order.getBuyerState() == 'PENDING'}">대기중</span>
+                            <span th:if="${order.getBuyerState() == 'INSPECTING'}">검수중</span>
+                            <span th:if="${order.getBuyerState() == 'INSPECTION_FAILED'}">검수불합격</span>
+                            <span th:if="${order.getBuyerState() == 'INSPECTION_PASSED'}">검수합격</span>
+                            <span th:if="${order.getBuyerState() == 'IN_TRANSIT'}">배송중</span>
+                            <span th:if="${order.getBuyerState() == 'FAILED'}">거래실패</span>
+                            <span th:if="${order.getBuyerState() == 'DELIVERED'}">배송완료</span>
+                            <span th:if="${order.getBuyerState() == 'SETTLED'}">정산완료</span>
+                        </td>
+                        <td>
+                            <select class="stateSelect">
+                                <option value="" disabled selected>- -</option>
+                                <option value="PENDING">대기중</option>
+                                <option value="INSPECTING">검수중</option>
+                                <option value="INSPECTION_FAILED">검수불합격</option>
+                                <option value="INSPECTION_PASSED">검수합격</option>
+                                <option value="IN_TRANSIT">배송중</option>
+                                <option value="SETTLING">정산중</option>
+                                <option value="FAILED">거래실패</option>
+                                <option value="DELIVERED">배송완료</option>
+                                <option value="SETTLED">정산완료</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button type="button" name="update">변경</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+            <div class="move" th:if="${orders != null && orders.length > 0}">
+                <a class="page first"
+                   th:if="${PageVo.requestPage > PageVo.movableMinPage}"
+                   th:href="@{'/admin/order' (page=${PageVo.movableMinPage}, filter=${filter}, keyword=${keyword})}"><i class="fa-solid fa-angles-left"></i></a>
+                <a class="page prev"
+                   th:if="${PageVo.requestPage > PageVo.movableMinPage}"
+                   th:href="@{'/admin/order' (page=${PageVo.requestPage - 1}, filter=${filter}, keyword=${keyword})}"><i class="fa-solid fa-angle-left"></i></a>
+                <div class="page-container">
+                    <a class="page"
+                       th:if="${page >= PageVo.movableMinPage}"
+                       th:each="page : ${#numbers.sequence(PageVo.displayMinPage, PageVo.displayMaxPage)}"
+                       th:text="${page}"
+                       th:href="@{'/admin/order' (page= ${page}, filter=${filter}, keyword=${keyword})}"
+                       th:classappend="${page == PageVo.requestPage} ? 'selected'"></a>
+                    <!-- page = 반복값   pageVo.requestPage = 요청 페이지 -->
+                </div>
+                <a class="page next"
+                   th:if="${PageVo.requestPage < PageVo.movableMaxPage}"
+                   th:href="@{'/admin/order' (page=${PageVo.requestPage + 1}, filter=${filter}, keyword=${keyword})}"><i class="fa-solid fa-angle-right"></i></a>
+                <a class="page last"
+                   th:if="${PageVo.requestPage < PageVo.movableMaxPage}"
+                   th:href="@{'/admin/order' (page=${PageVo.movableMaxPage}, filter=${filter}, keyword=${keyword})}"><i class="fa-solid fa-angles-right"></i></a>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

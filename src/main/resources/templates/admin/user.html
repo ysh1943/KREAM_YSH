@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>KREAM Administrator</title>
+    <link rel="shortcut icon" th:href="@{'/assets/images/favicon.ico'}">
+    <link rel="stylesheet" type="text/css" th:href="@{'/assets/styles/common.css'}">
+    <link rel="stylesheet" type="text/css" th:href="@{'/admin/assets/styles/common.css'}">
+    <link rel="stylesheet" type="text/css" th:href="@{'/admin/assets/styles/user.css'}">
+    <script defer type="text/javascript" th:src="@{'/assets/scripts/common.js'}"></script>
+    <script defer type="text/javascript" th:src="@{'/admin/assets/scripts/user.js'}"></script>
+    <script src="https://kit.fontawesome.com/79ae8a0168.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<header>
+    <div class="header-top">
+        <div class="main-inner">
+            <h1>
+                <a class="logo" th:href="@{../}">KREAM</a>
+                <a class="logo" th:href="@{/admin/}">Administrator</a>
+            </h1>
+        </div>
+        <div class="-spring"></div>
+        <div class="header-right">
+            <nav class="link-container">
+                <a th:href="@{/logout}"><i class="icon fa-solid fa-arrow-right-from-bracket"></i></a>
+            </nav>
+        </div>
+    </div>
+    <nav class="header-menu">
+        <ul class="tabs">
+            <li class="tab"><a class="link -selected" th:href="@{/admin/user}">회원관리</a></li>
+            <li class="tab"><a class="link" th:href="@{/admin/product}">상품관리</a></li>
+            <li class="tab"><a class="link" th:href="@{/admin/order}">주문관리</a></li>
+        </ul>
+    </nav>
+</header>
+<div class="main-container">
+    <nav id="nav">
+        <i class="icon fa-solid fa-user"></i>
+        <h2>회원 관리</h2>
+    </nav>
+    <main id="main">
+        <div class="content -visible" rel="user-list">
+            <h1>회원 목록</h1>
+            <form class="searchForm">
+                <label class="filter-label">
+                    <select name="filter">
+                        <option selected value="all" th:selected="${filter != null && filter.equals('all')}">전체</option>
+                        <option value="email" th:selected="${filter != null && filter.equals('email')}">이메일</option>
+                        <option value="nickname" th:selected="${filter != null && filter.equals('nickname')}">닉네임
+                        </option>
+                        <option value="suspended" th:selected="${filter != null && filter.equals('suspended')}">계정 상태
+                        </option>
+                    </select>
+                </label>
+                <label class="input-label">
+                    <input class="input" name="keyword" placeholder="검색어" type="text" th:value="${keyword}">
+                </label>
+                <button class="button" type="submit">검색</button>
+            </form>
+            <form class="tableForm">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>이메일</th>
+                        <th>소셜 타입</th>
+                        <th>전화번호</th>
+                        <th>닉네임</th>
+                        <th>거래량</th>
+                        <th>가입일시</th>
+                        <th style="width: 10rem;">계정 상태</th>
+                        <th style="width: 4rem;">관리</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user : ${users}" th:data-email="${user.getEmail()}">
+                        <td th:text="${user.getId()}"></td>
+                        <td th:text="${user.getEmail()}"></td>
+                        <td th:if="${user.getSocialTypeCode() != null}"
+                            th:text="${user.getSocialTypeCode()}"></td>
+                        <td th:if="${user.getSocialTypeCode()} == null">KREAM</td>
+                        <td th:text="${user.getContact()}"></td>
+                        <td th:text="${user.getNickname()}"></td>
+                        <td th:text="${user.getUserOrderCount() + user.getUserSellerBidCount() + user.getUserBuyerBidCount()} + '건'"></td>
+                        <td th:text="${#temporals.format(user.getCreatedAt(), 'yyyy-MM-dd')}"></td>
+                        <td class="suspendTd">
+                            <span th:if="${user.isSuspended() == false}">활동</span>
+                            <span th:if="${user.isSuspended() == true}">정지</span>
+                            <select class="suspendSelect">
+                                <option disabled selected>- -</option>
+                                <option value="false">활동</option>
+                                <option value="true">정지</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button type="button" name="update">변경</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+            <div class="move" th:if="${users != null && users.length > 0}">
+                <a class="page first"
+                   th:if="${PageVo.requestPage > PageVo.movableMinPage}"
+                   th:href="@{'/admin/user' (page=${PageVo.movableMinPage}, filter=${filter}, keyword=${keyword})}"><i class="fa-solid fa-angles-left"></i></a>
+                <a class="page prev"
+                   th:if="${PageVo.requestPage > PageVo.movableMinPage}"
+                   th:href="@{'/admin/user' (page=${PageVo.requestPage - 1}, filter=${filter}, keyword=${keyword})}"><i class="fa-solid fa-angle-left"></i></a>
+                <div class="page-container">
+                    <a class="page"
+                       th:if="${page >= PageVo.movableMinPage}"
+                       th:each="page : ${#numbers.sequence(PageVo.displayMinPage, PageVo.displayMaxPage)}"
+                       th:text="${page}"
+                       th:href="@{'/admin/user' (page= ${page}, filter=${filter}, keyword=${keyword})}"
+                       th:classappend="${page == PageVo.requestPage} ? 'selected'"></a>
+                    <!-- page = 반복값   pageVo.requestPage = 요청 페이지 -->
+                </div>
+                <a class="page next"
+                   th:if="${PageVo.requestPage < PageVo.movableMaxPage}"
+                   th:href="@{'/admin/user' (page=${PageVo.requestPage + 1}, filter=${filter}, keyword=${keyword})}"><i class="fa-solid fa-angle-right"></i></a>
+                <a class="page last"
+                   th:if="${PageVo.requestPage < PageVo.movableMaxPage}"
+                   th:href="@{'/admin/user' (page=${PageVo.movableMaxPage}, filter=${filter}, keyword=${keyword})}"><i class="fa-solid fa-angles-right"></i></a>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

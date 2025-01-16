@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kream.kream.mappers.AccountMapper">
+    <insert id="insertAccount"
+            parameterType="com.kream.kream.entities.AccountEntity">
+        INSERT INTO `kream`.`account`(`id`, `user_id`, `bank_name`, `account_number`, `account_owner`, `created_at`,
+                                      `updated_at`, `is_deleted`)
+        VALUES (#{id}, #{userId}, #{bankName}, #{accountNumber}, #{accountOwner}, #{createdAt}, #{updatedAt},
+                #{isDeleted})
+    </insert>
+
+    <select id="selectAccount"
+            resultType="com.kream.kream.entities.AccountEntity">
+        SELECT `id`             AS `id`,
+               `user_id`        AS `userId`,
+               `bank_name`      AS `bankName`,
+               `account_number` AS `accountNumber`,
+               `account_owner`  AS `accountOwner`,
+               `created_at`     AS `createdAt`,
+               `is_deleted`     AS `isDeleted`
+        FROM `kream`.`account`
+        WHERE `user_id` = #{userId}
+          AND `is_deleted` = false
+        LIMIT 1
+    </select>
+
+    <select id="selectdelete"
+            resultType="com.kream.kream.entities.AccountEntity">
+        SELECT `id`             AS id,
+               `user_id`        AS userId,
+               `bank_name`      AS bankName,
+               `account_number` AS accountNumber,
+               `account_owner`  AS accountOwner,
+               `created_at`     AS createdAt,
+               `is_deleted`     AS isDeleted
+        FROM `kream`.`account`
+        WHERE `user_id` = #{userId}
+    </select>
+
+    <delete id="deleteAccount">
+        DELETE
+        FROM `kream`.`account`
+        WHERE `user_id` = #{userId}
+        LIMIT 1
+    </delete>
+
+    <select id="selectAccountByUserId"
+            resultType="com.kream.kream.entities.AccountEntity">
+        SELECT `id`             AS id,
+               `user_id`        AS userId,
+               `bank_name`      AS bankName,
+               `account_number` AS accountNumber,
+               `account_owner`  AS accountOwner,
+               `created_at`     AS createdAt,
+               `updated_at`      AS updatedAt,
+               `is_deleted`     AS isDeleted
+        FROM `kream`.`account`
+        WHERE `user_id` = #{userId}
+          AND `is_deleted` = false
+    </select>
+
+    <update id="updateAccount"
+            parameterType="com.kream.kream.entities.AccountEntity">
+        UPDATE `kream`.`account`
+        SET `bank_name`      = #{bankName},
+            `account_number` = #{accountNumber},
+            `account_owner`  = #{accountOwner},
+            `updated_at`      = #{updatedAt}
+        WHERE `user_id` = #{userId}
+    </update>
+
+</mapper>

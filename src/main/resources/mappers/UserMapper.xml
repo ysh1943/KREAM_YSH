@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kream.kream.mappers.UserMapper">
+
+    <delete id="deleteUserByEmail">
+        DELETE
+        FROM `kream`.`user`
+        WHERE `email` = #{email}
+        LIMIT 1
+    </delete>
+
+    <insert id="insertUser"
+            useGeneratedKeys="true"
+            keyColumn="id"
+            keyProperty="id"
+            parameterType="com.kream.kream.entities.UserEntity">
+        INSERT INTO `kream`.`user`(`email`, `password`, `contact`, `nickname`, `is_admin`, `is_suspended`,
+                                   `is_verified`, `temporary_password_expiry`,`social_type_code`, `social_id`, `created_at`, `updated_at`,
+                                   deleted_at)
+        VALUES (#{email}, #{password}, #{contact}, #{nickname}, #{isAdmin}, #{isSuspended}, #{isVerified},#{temporaryPassword},
+                #{socialTypeCode}, #{socialId}, #{createdAt},
+                #{updatedAt}, #{deletedAt})
+    </insert>
+
+
+    <select id="selectUserById"
+            resultType="com.kream.kream.entities.UserEntity">
+        SELECT `id`                        AS `id`,
+               `email`                     AS `email`,
+               `password`                  AS `password`,
+               `contact`                   AS `contact`,
+               `nickname`                  AS `nickname`,
+               `is_admin`                  AS `isAdmin`,
+               `is_suspended`              AS `isSuspended`,
+               `is_verified`               AS `isVerified`,
+               `temporary_password_expiry` AS `temporaryPassword`,
+               `social_type_code`          AS `socialTypeCode`,
+               `social_id`                 AS `socialId`,
+               `created_at`                AS `createdAt`,
+               `updated_at`                AS `updatedAt`,
+               `deleted_at`                AS `deletedAt`
+        FROM `kream`.`user`
+        WHERE `id` = #{id}
+          AND `is_verified` = true
+          AND `deleted_at` IS NULL
+        ORDER BY `id` DESC
+    </select>
+
+    <select id="selectUserCount" resultType="int">
+        SELECT COUNT(*)
+        FROM `kream`.`user`
+        WHERE `deleted_at` IS NULL
+          AND `is_verified` = 1
+    </select>
+
+    <select id="selectUserCountBySearch"
+            resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM `kream`.`user`
+        WHERE `deleted_at` IS NULL
+          AND `is_verified` = 1
+        <if test="filter.equals('all')">
+            AND (`email` LIKE CONCAT('%', #{keyword}, '%') OR `nickname` LIKE CONCAT('%', #{keyword}, '%') OR `contact` LIKE CONCAT('%', #{keyword}, '%') OR `social_type_code` LIKE CONCAT('%', #{keyword}, '%'))
+            <if test="keyword.equals('정지')">
+                OR `is_suspended` = true
+                AND `is_verified` = true
+            </if>
+            <if test="keyword.equals('활동')">
+                OR `is_suspended` = false
+                AND `is_verified` = true
+            </if>
+        </if>
+        <if test="filter.equals('email')">
+            AND `email` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter.equals('nickname')">
+            AND (`nickname` LIKE CONCAT('%', #{keyword}, '%') OR `product_name_en` LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        <if test="filter.equals('suspended')">
+            <if test="keyword.equals('정지')">
+                AND `is_suspended` = true
+            </if>
+            <if test="keyword.equals('활동')">
+                AND `is_suspended` = false
+            </if>
+        </if>
+    </select>
+
+    <select id="selectUser"
+            resultType="com.kream.kream.entities.UserOrderCountEntity">
+        SELECT `id`                        AS `id`,
+               `email`                     AS `email`,
+               `password`                  AS `password`,
+               `contact`                   AS `contact`,
+               `nickname`                  AS `nickname`,
+               `is_admin`                  AS `isAdmin`,
+               `is_suspended`              AS `isSuspended`,
+               `is_verified`               AS `isVerified`,
+               `temporary_password_expiry` AS `temporaryPassword`,
+               `social_type_code`          AS `socialTypeCode`,
+               `social_id`                 AS `socialId`,
+               `created_at`                AS `createdAt`,
+               `updated_at`                AS `updatedAt`,
+               `deleted_at`                AS `deletedAt`
+        FROM `kream`.`user`
+        WHERE `is_verified` = true
+          AND `deleted_at` IS NULL
+        ORDER BY `id` DESC
+    </select>
+
+    <select id="selectUserByPage"
+            resultType="com.kream.kream.entities.UserOrderCountEntity">
+        SELECT `id`                        AS `id`,
+               `email`                     AS `email`,
+               `password`                  AS `password`,
+               `contact`                   AS `contact`,
+               `nickname`                  AS `nickname`,
+               `is_admin`                  AS `isAdmin`,
+               `is_suspended`              AS `isSuspended`,
+               `is_verified`               AS `isVerified`,
+               `temporary_password_expiry` AS `temporaryPassword`,
+               `social_type_code`          AS `socialTypeCode`,
+               `social_id`                 AS `socialId`,
+               `created_at`                AS `createdAt`,
+               `updated_at`                AS `updatedAt`,
+               `deleted_at`                AS `deletedAt`
+        FROM `kream`.`user`
+        WHERE `is_verified` = true
+          AND `deleted_at` IS NULL
+        ORDER BY `id` DESC
+        LIMIT #{limitCount} OFFSET #{offsetCount}
+    </select>
+
+    <select id="selectUserBySearch"
+            resultType="com.kream.kream.entities.UserOrderCountEntity">
+        SELECT  `id`                        AS `id`,
+                `email`                     AS `email`,
+                `password`                  AS `password`,
+                `contact`                   AS `contact`,
+                `nickname`                  AS `nickname`,
+                `is_admin`                  AS `isAdmin`,
+                `is_suspended`              AS `isSuspended`,
+                `is_verified`               AS `isVerified`,
+                `temporary_password_expiry` AS `temporaryPassword`,
+                `social_type_code`          AS `socialTypeCode`,
+                `social_id`                 AS `socialId`,
+                `created_at`                AS `createdAt`,
+                `updated_at`                AS `updatedAt`,
+                `deleted_at`                AS `deletedAt`
+        FROM `kream`.`user`
+        WHERE `is_verified` = true
+            AND `deleted_at` IS NULL
+        <if test="filter.equals('all')">
+            AND (`email` LIKE CONCAT('%', #{keyword}, '%') OR `nickname` LIKE CONCAT('%', #{keyword}, '%') OR `contact` LIKE CONCAT('%', #{keyword}, '%') OR `social_type_code` LIKE CONCAT('%', #{keyword}, '%'))
+            <if test="keyword.equals('정지')">
+                OR `is_suspended` = true
+                AND `is_verified` = true
+            </if>
+            <if test="keyword.equals('활동')">
+                OR `is_suspended` = false
+                AND `is_verified` = true
+            </if>
+        </if>
+        <if test="filter.equals('email')">
+            AND `email` LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        <if test="filter.equals('nickname')">
+            AND (`nickname` LIKE CONCAT('%', #{keyword}, '%') OR `product_name_en` LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        <if test="filter.equals('suspended')">
+            <if test="keyword.equals('정지')">
+                AND `is_suspended` = true
+            </if>
+            <if test="keyword.equals('활동')">
+                AND `is_suspended` = false
+            </if>
+        </if>
+        ORDER BY `id` DESC
+        LIMIT #{limitCount} OFFSET #{offsetCount}
+    </select>
+
+    <select id="selectUserByEmail"
+            resultType="com.kream.kream.entities.UserEntity">
+        SELECT `id`                        AS `id`,
+               `email`                     AS `email`,
+               `password`                  AS `password`,
+               `contact`                   AS `contact`,
+               `nickname`                  AS `nickname`,
+               `is_admin`                  AS `isAdmin`,
+               `is_suspended`              AS `isSuspended`,
+               `is_verified`               AS `isVerified`,
+               `temporary_password_expiry` AS `temporaryPassword`,
+               `social_type_code`          AS `socialTypeCode`,
+               `social_id`                 AS `socialId`,
+               `created_at`                AS `createdAt`,
+               `updated_at`                AS `updatedAt`,
+               `deleted_at`                AS `deletedAt`
+        FROM `kream`.`user`
+        WHERE `email` = #{email}
+        LIMIT 1
+    </select>
+
+    <select id="selectUserByContact"
+            resultType="com.kream.kream.entities.UserEntity">
+        SELECT `id`               AS `id`,
+               `email`            AS `email`,
+               `password`         AS `password`,
+               `contact`          AS `contact`,
+               `nickname`         AS `nickname`,
+               `is_admin`         AS `isAdmin`,
+               `is_suspended`     AS `isSuspended`,
+               `is_verified`      AS `isVerified`,
+               `social_type_code` AS `socialTypeCode`,
+               `social_id`        AS `socialId`,
+               `created_at`       AS `createdAt`,
+               `updated_at`       AS `updatedAt`,
+               `deleted_at`       AS `deletedAt`
+        FROM `kream`.`user`
+        WHERE `contact` = #{contact}
+        LIMIT 1
+    </select>
+
+    <select id="selectContact"
+            resultType="com.kream.kream.entities.UserEntity">
+        SELECT `id`               AS `id`,
+               `email`            AS `email`,
+               `password`         AS `password`,
+               `contact`          AS `contact`,
+               `nickname`         AS `nickname`,
+               `is_admin`         AS `isAdmin`,
+               `is_suspended`     AS `isSuspended`,
+               `is_verified`      AS `isVerified`,
+               `social_type_code` AS `socialTypeCode`,
+               `social_id`        AS `socialId`,
+               `created_at`       AS `createdAt`,
+               `updated_at`       AS `updatedAt`,
+               `deleted_at`       AS `deletedAt`
+        FROM `kream`.`user`
+        WHERE `contact` = #{contact}
+    </select>
+
+    <select id="selectUserByNickname"
+            resultType="com.kream.kream.entities.UserEntity">
+        SELECT `id`               AS `id`,
+               `email`            AS `email`,
+               `password`         AS `password`,
+               `contact`          AS `contact`,
+               `nickname`         AS `nickname`,
+               `is_admin`         AS `isAdmin`,
+               `is_suspended`     AS `isSuspended`,
+               `is_verified`      AS `isVerified`,
+               `social_type_code` AS `socialTypeCode`,
+               `social_id`        AS `socialId`,
+               `created_at`       AS `createdAt`,
+               `updated_at`       AS `updatedAt`,
+               `deleted_at`       AS `deletedAt`
+        FROM `kream`.`user`
+        WHERE `nickname` = #{nickname}
+        LIMIT 1
+    </select>
+
+    <select id="selectUserBySocialTypeCodeAndSocialId"
+            resultType="com.kream.kream.entities.UserEntity">
+        SELECT `id`                        AS `id`,
+               `email`                     AS `email`,
+               `password`                  AS `password`,
+               `contact`                   AS `contact`,
+               `nickname`                  AS `nickname`,
+               `is_admin`                  AS `isAdmin`,
+               `is_suspended`              AS `isSuspended`,
+               `is_verified`               AS `isVerified`,
+               `temporary_password_expiry` AS `temporaryPassword`,
+               `social_type_code`          AS `socialTypeCode`,
+               `social_id`                 AS `socialId`,
+               `created_at`                AS `createdAt`,
+               `updated_at`                AS `updatedAt`,
+               `deleted_at`                AS `deletedAt`
+        FROM `kream`.`user`
+        WHERE `social_type_code` = #{socialTypeCode}
+          AND `social_id` = #{socialId}
+        LIMIT 1
+    </select>
+
+    <update id="contactUpdate"
+            parameterType="com.kream.kream.entities.UserEntity">
+        UPDATE `kream`.`user`
+        SET `contact` = #{contact}
+        WHERE `email` = #{email}
+    </update>
+
+    <update id="updateUser"
+            parameterType="com.kream.kream.entities.UserEntity">
+        UPDATE `kream`.`user`
+        SET `password`                  = #{password},
+            `contact`                   = #{contact},
+            `nickname`                  = #{nickname},
+            `is_admin`                  = #{isAdmin},
+            `is_suspended`              = #{isSuspended},
+            `is_verified`               = #{isVerified},
+            `temporary_password_expiry` = #{temporaryPassword},
+            `social_type_code`          = #{socialTypeCode},
+            `social_id`                 = #{socialId},
+            `created_at`                = #{createdAt},
+            `updated_at`                = #{updatedAt},
+            `deleted_at`                = #{deletedAt}
+        WHERE `id` = #{id}
+            AND `email` = #{email}
+        LIMIT 1
+    </update>
+
+</mapper>

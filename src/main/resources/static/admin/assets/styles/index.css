@@ -1,0 +1,129 @@
+#main {
+  width: 100%;
+  height: auto;
+  opacity: 1;
+  pointer-events: all;
+  transform: scale(100%);
+  margin-top: 8rem;
+  box-sizing: border-box;
+  padding: 1rem;
+}
+#main > .box-container {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 3rem;
+  justify-content: center;
+}
+#main > .box-container > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+#main > .box-container > .box {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  justify-content: flex-start;
+  width: 30%;
+  height: 6rem;
+  background-color: #222;
+  border-radius: 0.5rem;
+  color: #ffffff;
+  font-weight: bold;
+  margin: 2rem 1.5rem 2rem 1rem;
+  padding: 0.5rem;
+  position: relative;
+}
+#main > .box-container > .box > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+#main > .box-container > .box > .icon {
+  padding: 0 0.5rem;
+}
+#main > .box-container > .box > .count {
+  top: 50%;
+  left: 50%;
+  font-size: 3rem;
+  transform: translate(-50%, -50%);
+  position: absolute;
+}
+#main > .table-container {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  justify-content: flex-start;
+  border: #222 solid 0.1rem;
+  border-radius: 0.2rem;
+  margin: 1rem 1.5rem 0 1rem;
+  padding: 0.8rem;
+}
+#main > .table-container > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+#main > .table-container > .table-header {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  justify-content: flex-start;
+  width: 100%;
+  border-left: 4px solid #222;
+  font-size: 0.875rem;
+  word-break: break-all;
+}
+#main > .table-container > .table-header > .-spring {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+#main > .table-container > .table-header > .title {
+  font-weight: bold;
+  padding-left: 0.5rem;
+}
+#main > .table-container > .table-header > a {
+  background-color: #222;
+  border-radius: 0.3rem;
+  color: #ffffff;
+  text-decoration: none;
+  padding: 0.2rem 0.5rem;
+  margin-right: 0.2rem;
+}
+#main > .table-container > .table-main > table {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 14px;
+  margin-top: 0.5rem;
+}
+#main > .table-container > .table-main > table > thead > tr > th {
+  border: 1px solid #ddd;
+  font-weight: 800;
+  text-align: center;
+  padding: 10px;
+  overflow: hidden;
+}
+#main > .table-container > .table-main > table > tbody > tr > .cover-td {
+  width: 3rem;
+  height: 3rem;
+  padding: 0.1rem;
+}
+#main > .table-container > .table-main > table > tbody > tr > .cover-td > .cover {
+  background-color: #eeeeee;
+  width: 3rem;
+  height: 3rem;
+  object-fit: cover;
+  object-position: center;
+}
+#main > .table-container > .table-main > table > tbody > tr > td {
+  border: 1px solid #ddd;
+  font-weight: 400;
+  text-align: center;
+  padding: 10px;
+  overflow: hidden;
+}
+
+/*# sourceMappingURL=index.css.map */

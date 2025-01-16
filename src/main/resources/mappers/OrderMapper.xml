@@ -1,0 +1,837 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kream.kream.mappers.OrderMapper">
+
+    <insert id="insertOrder"
+    parameterType="com.kream.kream.entities.OrderEntity">
+        INSERT INTO `kream`.`order` (user_id, type, seller_bid_id, buyer_bid_id, price, address_id, state, delivery_note, created_at, updated_at, deleted_at)
+        VALUES (#{userId}, #{type}, #{sellerBidId}, #{buyerBidId}, #{price}, #{addressId}, #{state}, #{deliveryNote}, #{createdAt}, #{updatedAt}, #{deletedAt})
+    </insert>
+
+    <select id="selectOrderCountsByPage"
+            resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM `kream`.`order`
+        WHERE `deleted_at` IS NULL
+    </select>
+
+    <select id="selectOrderCountsBySearch"
+            resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM `kream`.`order`
+        LEFT JOIN
+        `kream`.`user` AS `user`
+        ON `order`.user_id = `user`.id
+        LEFT JOIN
+        `kream`.`buyer_bid` AS `buyer_bid`
+        ON `order`.buyer_bid_id = `buyer_bid`.id
+        LEFT JOIN
+        `kream`.`seller_bid` AS `seller_bid`
+        ON `order`.seller_bid_id = `seller_bid`.id
+        LEFT JOIN
+        `kream`.`user` AS `seller_user`
+        ON `seller_bid`.`user_id` = `seller_user`.id
+        LEFT JOIN
+        `kream`.`user` AS `buyer_user`
+        ON `buyer_bid`.`user_id` = `buyer_user`.id
+        LEFT JOIN
+        `kream`.`size` AS `seller_size`
+        ON `seller_bid`.`size_id` = `seller_size`.id
+        LEFT JOIN
+        `kream`.`product` AS `seller_product`
+        ON `seller_size`.`product_id` = `seller_product`.id
+        LEFT JOIN
+        `kream`.`image` AS `sellerImage`
+        ON `seller_product`.`id` = `sellerImage`.`product_id`
+        AND `sellerImage`.`is_primary` = 1
+        LEFT JOIN
+        `kream`.`size` AS `buyer_size`
+        ON `buyer_bid`.`size_id` = `buyer_size`.id
+        LEFT JOIN
+        `kream`.`product` AS `buyer_product`
+        ON `buyer_size`.`product_id` = `buyer_product`.id
+        LEFT JOIN
+        `kream`.`image` AS `buyerImage`
+        ON `buyer_product`.`id` = `buyerImage`.`product_id`
+        AND `buyerImage`.`is_primary` = 1
+        LEFT JOIN
+        `kream`.`address` AS `address_buyer`
+        ON address_buyer.user_id = buyer_bid.user_id
+        AND address_buyer.is_default = 1
+        LEFT JOIN
+        `kream`.`address` AS `address_order_user`
+        ON address_order_user.user_id = `order`.user_id
+        AND `order`.`type` = 'BUY'
+        AND address_order_user.is_default = 1
+        WHERE `order`.deleted_at IS NULL
+        <if test="filter.equals('all')">
+            AND (`seller_product`.`product_name_ko` LIKE CONCAT('%', #{keyword}, '%') OR `buyer_product`.`product_name_ko` LIKE CONCAT('%', #{keyword}, '%') OR `user`.`email` LIKE CONCAT('%', #{keyword}, '%') OR `seller_user`.`email` LIKE CONCAT('%', #{keyword}, '%') OR `buyer_user`.`email` LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+
+        <if test="filter.equals('productName')">
+            AND (`seller_product`.`product_name_ko` LIKE CONCAT('%', #{keyword}, '%') OR `buyer_product`.`product_name_ko` LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+
+        <if test="filter.equals('email')">
+            AND (`user`.`email` LIKE CONCAT('%', #{keyword}, '%') OR `seller_user`.`email` LIKE CONCAT('%', #{keyword}, '%') OR `buyer_user`.`email` LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+    </select>
+
+    <select id="selectOrderCounts"
+            resultType="com.kream.kream.dtos.OrderCountDTO">
+        SELECT
+            COUNT(*) AS allOrder,
+            COUNT(CASE WHEN `state` = 'PENDING' THEN 1 END) AS statePending,
+            COUNT(CASE WHEN `state` = 'INSPECTING' THEN 1 END) AS stateInspecting
+        FROM `kream`.`order`
+        WHERE `deleted_at` IS NULL
+    </select>
+
+    <select id="selectPopularProducts"
+            resultType="com.kream.kream.dtos.ProductDTO">
+        SELECT `product`.`id`              AS productId,
+               `product`.`product_name_en` AS productNameEn,
+               `product`.`product_name_ko` AS productNameKo,
+               `product`.`brand`           AS brand,
+               `product`.`category`        AS category,
+               `image`.`data`              AS imageData,
+               `image`.`type`              AS imageType,
+               (SELECT MIN(`seller_bid`.`price`)
+                FROM `kream`.`seller_bid`
+                         INNER JOIN `kream`.`size`
+                                    ON `seller_bid`.`size_id` = `size`.`id`
+                WHERE `size`.`product_id` = `product`.`id`
+                  AND `seller_bid`.`is_deleted` = 0
+                  AND `seller_bid`.`state` = 'BIDDING')     AS lowestPrice,
+               COUNT(`order`.`id`)         AS transactionCount
+        FROM `kream`.`order`
+                 LEFT JOIN `kream`.`seller_bid`
+                           ON `seller_bid_id` = `seller_bid`.`id`
+                               AND `seller_bid`.`is_deleted` = 0
+                 LEFT JOIN `kream`.`buyer_bid`
+                           ON `buyer_bid_id` = `buyer_bid`.`id`
+                               AND `buyer_bid`.`is_deleted` = 0
+                 INNER JOIN `kream`.`size`
+                            ON `seller_bid`.`size_id` = `size`.`id`
+                                OR `buyer_bid`.`size_id` = `size`.`id`
+                 INNER JOIN `kream`.`product`
+                            ON `product_id` = `product`.`id`
+                 INNER JOIN `kream`.`image`
+                            ON `product`.`id` = `image`.`product_id`
+                                AND `image`.`is_primary` = 1
+        WHERE `order`.`state` = 'DELIVERED'
+            OR `order`.`state` = 'SETTLED'
+        GROUP BY `product`.`id`
+        ORDER BY transactionCount DESC
+        LIMIT 20
+    </select>
+
+    <select id="selectOrder"
+            resultType="com.kream.kream.dtos.OrderDTO">
+        SELECT `order`.id                         AS id,
+               `order`.price                      AS price,
+               `user`.`email`                     AS userEmail,
+               `order`.type                       AS type,
+               `seller_user`.`email`              AS sellerUserEmail,
+               `buyer_user`.`email`               AS buyerUserEmail,
+               `seller_product`.`product_name_ko` AS sellerProductName,
+               `buyer_product`.`product_name_ko`  AS buyerProductName,
+               `address`.`basic_address`          AS buyerAddress,
+               `buyerBidAddress`.`basic_address`  AS buyerBidAddress,
+               `order`.state                      AS state,
+               `seller_bid`.`order_state`         AS sellerState,
+               `buyer_bid`.`order_state`          AS buyerState,
+               `order`.created_at                 AS createdAt,
+               `sellerImage`.`data`               AS sellerImageData,
+               `sellerImage`.`type`               AS sellerImageType,
+               `buyerImage`.`data`                AS buyerImageData,
+               `buyerImage`.`type`                AS buyerImageType
+        FROM `kream`.`order`
+                 LEFT JOIN
+             `kream`.`user` AS `user`
+             ON `order`.user_id = `user`.id
+                 LEFT JOIN
+             `kream`.`buyer_bid` AS `buyer_bid`
+             ON `order`.buyer_bid_id = `buyer_bid`.id
+                 LEFT JOIN
+             `kream`.`seller_bid` AS `seller_bid`
+             ON `order`.seller_bid_id = `seller_bid`.id
+                 LEFT JOIN
+             `kream`.`user` AS `seller_user`
+             ON `seller_bid`.`user_id` = `seller_user`.id
+                 LEFT JOIN
+             `kream`.`user` AS `buyer_user`
+             ON `buyer_bid`.`user_id` = `buyer_user`.id
+                 LEFT JOIN
+             `kream`.`size` AS `seller_size`
+             ON `seller_bid`.`size_id` = `seller_size`.id
+                 LEFT JOIN
+             `kream`.`product` AS `seller_product`
+             ON `seller_size`.`product_id` = `seller_product`.id
+                 LEFT JOIN
+             `kream`.`image` AS `sellerImage`
+             ON `seller_product`.`id` = `sellerImage`.`product_id`
+                 AND `sellerImage`.`is_primary` = 1
+                 LEFT JOIN
+             `kream`.`size` AS `buyer_size`
+             ON `buyer_bid`.`size_id` = `buyer_size`.id
+                 LEFT JOIN
+             `kream`.`product` AS `buyer_product`
+             ON `buyer_size`.`product_id` = `buyer_product`.id
+                 LEFT JOIN
+             `kream`.`image` AS `buyerImage`
+             ON `buyer_product`.`id` = `buyerImage`.`product_id`
+                 AND `buyerImage`.`is_primary` = 1
+                 LEFT JOIN
+             `kream`.`address` AS `address`
+             ON `order`.`address_id` = `address`.`id`
+                 AND `order`.`type` = 'BUY'
+                 LEFT JOIN
+             `kream`.`address` AS `buyerBidAddress`
+             ON `order`.`buyer_bid_id` = `buyer_bid`.`id`
+                 AND `buyer_bid`.`address_id` = `buyerBidAddress`.`id`
+                 AND `order`.`type` = 'SELL'
+        WHERE `order`.deleted_at IS NULL
+        ORDER BY `order`.`id` DESC
+    </select>
+
+    <select id="selectOrderByPage"
+            resultType="com.kream.kream.dtos.OrderDTO">
+        SELECT `order`.id                         AS id,
+               `order`.price                      AS price,
+               `user`.`email`                     AS userEmail,
+               `order`.type                       AS type,
+               `seller_user`.`email`              AS sellerUserEmail,
+               `buyer_user`.`email`               AS buyerUserEmail,
+               `seller_product`.`product_name_ko` AS sellerProductName,
+               `buyer_product`.`product_name_ko`  AS buyerProductName,
+               `address`.`basic_address`          AS buyerAddress,
+               `buyerBidAddress`.`basic_address`  AS buyerBidAddress,
+               `order`.state                      AS state,
+               `seller_bid`.`order_state`         AS sellerState,
+               `buyer_bid`.`order_state`          AS buyerState,
+               `order`.created_at                 AS createdAt,
+               `sellerImage`.`data`               AS sellerImageData,
+               `sellerImage`.`type`               AS sellerImageType,
+               `buyerImage`.`data`                AS buyerImageData,
+               `buyerImage`.`type`                AS buyerImageType
+        FROM `kream`.`order`
+                 LEFT JOIN
+             `kream`.`user` AS `user`
+             ON `order`.user_id = `user`.id
+                 LEFT JOIN
+             `kream`.`buyer_bid` AS `buyer_bid`
+             ON `order`.buyer_bid_id = `buyer_bid`.id
+                 LEFT JOIN
+             `kream`.`seller_bid` AS `seller_bid`
+             ON `order`.seller_bid_id = `seller_bid`.id
+                 LEFT JOIN
+             `kream`.`user` AS `seller_user`
+             ON `seller_bid`.`user_id` = `seller_user`.id
+                 LEFT JOIN
+             `kream`.`user` AS `buyer_user`
+             ON `buyer_bid`.`user_id` = `buyer_user`.id
+                 LEFT JOIN
+             `kream`.`size` AS `seller_size`
+             ON `seller_bid`.`size_id` = `seller_size`.id
+                 LEFT JOIN
+             `kream`.`product` AS `seller_product`
+             ON `seller_size`.`product_id` = `seller_product`.id
+                 LEFT JOIN
+             `kream`.`image` AS `sellerImage`
+             ON `seller_product`.`id` = `sellerImage`.`product_id`
+                 AND `sellerImage`.`is_primary` = 1
+                 LEFT JOIN
+             `kream`.`size` AS `buyer_size`
+             ON `buyer_bid`.`size_id` = `buyer_size`.id
+                 LEFT JOIN
+             `kream`.`product` AS `buyer_product`
+             ON `buyer_size`.`product_id` = `buyer_product`.id
+                 LEFT JOIN
+             `kream`.`image` AS `buyerImage`
+             ON `buyer_product`.`id` = `buyerImage`.`product_id`
+                 AND `buyerImage`.`is_primary` = 1
+                 LEFT JOIN
+             `kream`.`address` AS `address`
+             ON `order`.`address_id` = `address`.`id`
+                 AND `order`.`type` = 'BUY'
+                 LEFT JOIN
+             `kream`.`address` AS `buyerBidAddress`
+             ON `order`.`buyer_bid_id` = `buyer_bid`.`id`
+                 AND `buyer_bid`.`address_id` = `buyerBidAddress`.`id`
+                 AND `order`.`type` = 'SELL'
+        WHERE `order`.deleted_at IS NULL
+        ORDER BY `order`.`id` DESC
+        LIMIT #{limitCount} OFFSET #{offsetCount}
+    </select>
+
+    <select id="selectOrderBySearch"
+            resultType="com.kream.kream.dtos.OrderDTO">
+        SELECT `order`.id                         AS id,
+        `order`.price                      AS price,
+        `user`.`email`                     AS userEmail,
+        `order`.type                       AS type,
+        `seller_user`.`email`              AS sellerUserEmail,
+        `buyer_user`.`email`               AS buyerUserEmail,
+        `seller_product`.`product_name_ko` AS sellerProductName,
+        `buyer_product`.`product_name_ko`  AS buyerProductName,
+        `address`.`basic_address`          AS buyerAddress,
+        `buyerBidAddress`.`basic_address`  AS buyerBidAddress,
+        `order`.state                      AS state,
+        `seller_bid`.`order_state`         AS sellerState,
+        `buyer_bid`.`order_state`          AS buyerState,
+        `order`.created_at                 AS createdAt,
+        `sellerImage`.`data`               AS sellerImageData,
+        `sellerImage`.`type`               AS sellerImageType,
+        `buyerImage`.`data`                AS buyerImageData,
+        `buyerImage`.`type`                AS buyerImageType
+        FROM `kream`.`order`
+        LEFT JOIN
+        `kream`.`user` AS `user`
+        ON `order`.user_id = `user`.id
+        LEFT JOIN
+        `kream`.`buyer_bid` AS `buyer_bid`
+        ON `order`.buyer_bid_id = `buyer_bid`.id
+        LEFT JOIN
+        `kream`.`seller_bid` AS `seller_bid`
+        ON `order`.seller_bid_id = `seller_bid`.id
+        LEFT JOIN
+        `kream`.`user` AS `seller_user`
+        ON `seller_bid`.`user_id` = `seller_user`.id
+        LEFT JOIN
+        `kream`.`user` AS `buyer_user`
+        ON `buyer_bid`.`user_id` = `buyer_user`.id
+        LEFT JOIN
+        `kream`.`size` AS `seller_size`
+        ON `seller_bid`.`size_id` = `seller_size`.id
+        LEFT JOIN
+        `kream`.`product` AS `seller_product`
+        ON `seller_size`.`product_id` = `seller_product`.id
+        LEFT JOIN
+        `kream`.`image` AS `sellerImage`
+        ON `seller_product`.`id` = `sellerImage`.`product_id`
+        AND `sellerImage`.`is_primary` = 1
+        LEFT JOIN
+        `kream`.`size` AS `buyer_size`
+        ON `buyer_bid`.`size_id` = `buyer_size`.id
+        LEFT JOIN
+        `kream`.`product` AS `buyer_product`
+        ON `buyer_size`.`product_id` = `buyer_product`.id
+        LEFT JOIN
+        `kream`.`image` AS `buyerImage`
+        ON `buyer_product`.`id` = `buyerImage`.`product_id`
+        AND `buyerImage`.`is_primary` = 1
+        LEFT JOIN
+        `kream`.`address` AS `address`
+        ON `order`.`address_id` = `address`.`id`
+        AND `order`.`type` = 'BUY'
+        LEFT JOIN
+        `kream`.`address` AS `buyerBidAddress`
+        ON `order`.`buyer_bid_id` = `buyer_bid`.`id`
+        AND `buyer_bid`.`address_id` = `buyerBidAddress`.`id`
+        AND `order`.`type` = 'SELL'
+        WHERE `order`.deleted_at IS NULL
+        <if test="filter.equals('all')">
+            AND (`seller_product`.`product_name_ko` LIKE CONCAT('%', #{keyword}, '%') OR `buyer_product`.`product_name_ko` LIKE CONCAT('%', #{keyword}, '%') OR `user`.`email` LIKE CONCAT('%', #{keyword}, '%') OR `seller_user`.`email` LIKE CONCAT('%', #{keyword}, '%') OR `buyer_user`.`email` LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+
+        <if test="filter.equals('productName')">
+            AND (`seller_product`.`product_name_ko` LIKE CONCAT('%', #{keyword}, '%') OR `buyer_product`.`product_name_ko` LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+
+        <if test="filter.equals('email')">
+            AND (`user`.`email` LIKE CONCAT('%', #{keyword}, '%') OR `seller_user`.`email` LIKE CONCAT('%', #{keyword}, '%') OR `buyer_user`.`email` LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        ORDER BY `order`.`id` DESC
+        LIMIT #{limitCount} OFFSET #{offsetCount}
+    </select>
+    <select id="selectOrderById"
+            resultType="com.kream.kream.entities.OrderEntity">
+        SELECT `id`           AS `id`,
+               `user_id`      AS `userId`,
+               `type`          AS `type`,
+               `seller_bid_id` AS `sellerBidId`,
+               `buyer_bid_id`  AS `buyerBidId`,
+               `price`         AS `price`,
+               `address_id`    AS `addressId`,
+               `state`         AS `state`,
+               `delivery_note` AS `deliveryNote`,
+               `created_at`    AS `createdAt`,
+               `updated_at`    AS `updatedAt`,
+               `deleted_at`    AS `deletedAt`
+        FROM `kream`.`order`
+        WHERE `id` = #{id}
+        LIMIT 1
+    </select>
+    <update id="updateOrder"
+            parameterType="com.kream.kream.entities.OrderEntity">
+        UPDATE `kream`.`order`
+        SET `user_id`           = #{userId},
+            `type`              = #{type},
+            `seller_bid_id`     = #{sellerBidId},
+            `buyer_bid_id`      = #{buyerBidId},
+            `price`             = #{price},
+            `address_id`        = #{addressId},
+            `state`             = #{state},
+            `delivery_note`     = #{deliveryNote},
+            `created_at`        = #{createdAt},
+            `updated_at`        = #{updatedAt},
+            `deleted_at`        = #{deletedAt}
+        WHERE `id` = #{id}
+        LIMIT 1
+    </update>
+
+    <select id="selectPopularProductsByFilter"
+            resultType="com.kream.kream.dtos.ShopProductDTO">
+        SELECT  `product`.`id`              AS productId,
+                `product`.`product_name_en` AS productNameEn,
+                `product`.`product_name_ko` AS productNameKo,
+                `product`.`brand`           AS brand,
+                `product`.`gender`          AS gender,
+                `product`.`color`           AS color,
+                `product`.`category`        AS category,
+                `category-detail`.`type`    AS categoryDetail,
+                `image`.`data`              AS imageData,
+                `image`.`type`              AS imageType,
+                (SELECT MIN(`seller_bid`.`price`)
+                FROM `kream`.`seller_bid`
+                    INNER JOIN `kream`.`size`
+                        ON `seller_bid`.`size_id` = `size`.`id`
+                WHERE `size`.`product_id` = `product`.`id`
+                    AND `seller_bid`.`state` = 'BIDDING') AS lowestPrice,
+                COUNT(`order`.`id`)         AS transactionCount
+        FROM `kream`.`order`
+            LEFT JOIN `kream`.`seller_bid`
+                ON `seller_bid_id` = `seller_bid`.`id`
+            LEFT JOIN `kream`.`buyer_bid`
+                ON `buyer_bid_id` = `buyer_bid`.`id`
+            INNER JOIN `kream`.`size`
+                ON `seller_bid`.`size_id` = `size`.`id`
+                OR `buyer_bid`.`size_id` = `size`.`id`
+            INNER JOIN `kream`.`product`
+                ON `product_id` = `product`.`id`
+            LEFT JOIN`kream`.`category_detail` AS `category-detail`
+                ON `category-detail`.`id` = `product`.`category_detail_id`
+            INNER JOIN `kream`.`image`
+                ON `product`.`id` = `image`.`product_id`
+                AND `image`.`is_primary` = 1
+        WHERE (
+        (`order`.`state` = 'DELIVERED' AND `seller_bid`.`order_state` = 'SETTLED')
+        OR (`order`.`state` = 'SETTLED' AND `buyer_bid`.`order_state` = 'DELIVERED')
+        )
+
+        <if test="filter != null and (filter.equals('top') or filter.equals('bottom') or filter.equals('shoes') or filter.equals('accessories'))">
+            AND `category` LIKE CONCAT('%', #{filter}, '%')
+        </if>
+
+        <if test="keyword != null">
+            AND (
+            `product_name_en` LIKE CONCAT('%', #{keyword}, '%') OR
+            `product_name_ko` LIKE CONCAT('%', #{keyword}, '%') OR
+            `brand` LIKE CONCAT('%', #{keyword}, '%')
+            )
+        </if>
+
+        <if test="brand != null">
+            AND `brand` LIKE CONCAT('%', #{brand}, '%')
+        </if>
+        <!-- category 조건 -->
+        <if test="category != null and category.length > 0">
+            AND `category-detail`.`type` IN
+            <foreach collection="category" item="category" open="(" separator="," close=")">
+                #{category}
+            </foreach>
+        </if>
+
+        <!-- gender 조건 -->
+        <if test="gender != null and gender.length > 0">
+            AND `gender` IN
+            <foreach collection="gender" item="gender" open="(" separator="," close=")">
+                #{gender}
+            </foreach>
+        </if>
+
+        <!-- color 조건 -->
+        <if test="color != null and color.length > 0">
+            AND `color` IN
+            <foreach collection="color" item="color" open="(" separator="," close=")">
+                #{color}
+            </foreach>
+        </if>
+        GROUP BY `product`.`id`
+        <!-- 가격 필터 조건 -->
+        <if test="price != null and price.length > 0">
+            HAVING
+            <foreach collection="price" item="price" open="(" separator="OR" close=")">
+                <if test="price == '100000'">
+                    lowestPrice BETWEEN 0 AND 100000
+                </if>
+                <if test="price == '100000-200000'">
+                    lowestPrice BETWEEN 100000 AND 200000
+                </if>
+                <if test="price == '200000-300000'">
+                    lowestPrice BETWEEN 200000 AND 300000
+                </if>
+                <if test="price == '300000-400000'">
+                    lowestPrice BETWEEN 300000 AND 400000
+                </if>
+            </foreach>
+        </if>
+        ORDER BY transactionCount DESC
+    </select>
+
+    <select id="selectOrderListByUserCount"
+            resultType="int">
+        SELECT COUNT(*)
+        FROM (SELECT `order`.`id` AS `id`
+              FROM `kream`.`order`
+                       LEFT JOIN `kream`.`buyer_bid` ON buyer_bid.id = `order`.`buyer_bid_id`
+                       LEFT JOIN `kream`.`size` ON buyer_bid.size_id = size.id
+                       LEFT JOIN `kream`.`product` ON size.product_id = product.id
+                       LEFT JOIN `kream`.image ON product.id = image.product_id AND `is_primary` = 1
+              WHERE `order`.`user_id` = #{id}
+                AND `order`.`deleted_at` IS NULL
+                AND `order`.`type` = 'SELL'
+                AND `order`.`state` != 'IN_TRANSIT'
+                AND `order`.`state` != 'DELIVERED'
+                AND `order`.`state` != 'FAILED'
+                AND `order`.`state` != 'SETTLED'
+
+              UNION ALL
+
+              SELECT `order`.`id` AS `id`
+              FROM `kream`.`order`
+                       LEFT JOIN `kream`.`seller_bid` ON seller_bid.id = `order`.`seller_bid_id`
+                       LEFT JOIN `kream`.`size` ON seller_bid.size_id = size.id
+                       LEFT JOIN `kream`.`product` ON size.product_id = product.id
+                       LEFT JOIN `kream`.image ON product.id = image.product_id AND `is_primary` = 1
+              WHERE seller_bid.user_id = #{id}
+                AND `order`.`deleted_at` IS NULL
+                AND `order`.`type` = 'BUY'
+                AND `order`.`state` != 'IN_TRANSIT'
+                AND `order`.`state` != 'DELIVERED'
+                AND `order`.`state` != 'FAILED'
+                AND `order`.`state` != 'SETTLED') AS countOrder;
+    </select>
+
+    <select id="selectOrderListByUser"
+            resultType="com.kream.kream.dtos.SellingOrderListDTO">
+        SELECT `order`.`id`                AS `id`,
+        `order`.`user_id`           AS `userId`,
+        `image`.`data`              AS imageData,
+        `image`.type                AS imageType,
+        `product`.`id`              AS `productId`,
+        `product`.`product_name_en` AS `productNameEn`,
+        `size`.`type`               AS `sizeType`,
+        `order`.`price`             AS `price`,
+        `order`.`state`             AS `state`,
+        `order`.`created_at`        AS `createdAt`,
+        `order`.`updated_at`        AS `updatedAt`,
+        `order`.`deleted_at`        AS `deletedAt`
+        FROM `kream`.`order`
+        LEFT JOIN `kream`.`buyer_bid`
+        ON buyer_bid.id = `order`.`buyer_bid_id`
+        LEFT JOIN `kream`.`size`
+        ON buyer_bid.size_id = size.id
+        LEFT JOIN `kream`.`product`
+        ON size.product_id = product.id
+        LEFT JOIN `kream`.image
+        ON product.id = image.product_id
+        AND `is_primary` = 1
+        WHERE `order`.`user_id` = #{id}
+        AND `order`.`deleted_at` IS NULL
+        AND `order`.`type` = 'SELL'
+        AND `order`.`state` != 'IN_TRANSIT'
+        AND `order`.`state` != 'DELIVERED'
+        AND `order`.`state` != 'FAILED'
+        AND `order`.`state` != 'SETTLED'
+
+        <if test="state != null and state.equals('pending')">
+            AND `order`.`state` = #{state}
+        </if>
+        <if test="state != null and state.equals('inspecting')">
+            AND `order`.`state` = #{state}
+        </if>
+        <if test="state != null and state.equals('inspection_passed')">
+            AND `order`.`state` = #{state}
+        </if>
+        <if test="state != null and state.equals('inspection_failed')">
+            AND `order`.`state` = #{state}
+        </if>
+        <if test="state != null and state.equals('settling')">
+            AND `order`.`state` = #{state}
+        </if>
+
+        UNION ALL
+
+        SELECT
+        `order`.`id`                AS `id`,
+        `seller_bid`.`user_id`      AS `userId`,
+        `image`.`data`              AS `imageData`,
+        `image`.`type`              AS `imageType`,
+        `product`.`id`              AS `productId`,
+        `product`.`product_name_en` AS `productNameEn`,
+        `size`.`type`               AS `sizeType`,
+        `order`.`price`             AS `price`,
+        `seller_bid`.`order_state` AS  `state`,
+        `order`.`created_at`        AS `createdAt`,
+        `order`.`updated_at`        AS `updatedAt`,
+        `order`.`deleted_at`        AS `deletedAt`
+        FROM
+        `kream`.`order`
+        LEFT JOIN `kream`.`seller_bid`
+        ON seller_bid.id = `order`.`seller_bid_id`
+        LEFT JOIN `kream`.`size`
+        ON seller_bid.size_id = size.id
+        LEFT JOIN `kream`.`product`
+        ON size.product_id = product.id
+        LEFT JOIN `kream`.image
+        ON product.id = image.product_id AND `is_primary` = 1
+        WHERE
+        seller_bid.user_id = #{id}
+        AND `order`.`deleted_at` IS NULL
+        AND `order`.`type` = 'BUY'
+        AND `order`.`state` != 'IN_TRANSIT'
+        AND `order`.`state` != 'DELIVERED'
+        AND `order`.`state` != 'FAILED'
+        AND `order`.`state` != 'SETTLED'
+
+        <if test="state != null and state.equals('pending')">
+            AND `order`.`state` = #{state}
+        </if>
+        <if test="state != null and state.equals('inspecting')">
+            AND `order`.`state` = #{state}
+        </if>
+        <if test="state != null and state.equals('inspection_passed')">
+            AND `order`.`state` = #{state}
+        </if>
+        <if test="state != null and state.equals('inspection_failed')">
+            AND `order`.`state` = #{state}
+        </if>
+        <if test="state != null and state.equals('settling')">
+            AND `order`.`state` = #{state}
+        </if>
+    </select>
+
+    <select id="selectOrderCompleteListByUserCount"
+            resultType="int">
+        SELECT COUNT(*)
+        FROM (
+                 SELECT `order`.`id` AS `id`
+                 FROM `kream`.`order`
+                          LEFT JOIN `kream`.`buyer_bid` ON buyer_bid.id = `order`.`buyer_bid_id`
+                          LEFT JOIN `kream`.`size` ON buyer_bid.size_id = size.id
+                          LEFT JOIN `kream`.`product` ON size.product_id = product.id
+                          LEFT JOIN `kream`.image ON product.id = image.product_id AND `is_primary` = 1
+                 WHERE `order`.`user_id` = #{id}
+                   AND `order`.`deleted_at` IS NULL
+                   AND `order`.`type` = 'SELL'
+                   AND `order`.`state` != 'PENDING'
+                   AND `order`.`state` != 'INSPECTING'
+                   AND `order`.`state` != 'INSPECTION_PASSED'
+                   AND `order`.`state` != 'INSPECTION_FAILED'
+                   AND `order`.`state` != 'SETTLING'
+                   AND `order`.`state` != 'DELIVERED'
+
+                 UNION ALL
+
+                 SELECT `order`.`id` AS `id`
+                 FROM `kream`.`order`
+                          LEFT JOIN `kream`.`seller_bid` ON seller_bid.id = `order`.`seller_bid_id`
+                          LEFT JOIN `kream`.`size` ON seller_bid.size_id = size.id
+                          LEFT JOIN `kream`.`product` ON size.product_id = product.id
+                          LEFT JOIN `kream`.image ON product.id = image.product_id AND `is_primary` = 1
+                 WHERE seller_bid.user_id = #{id}
+                   AND `order`.`deleted_at` IS NULL
+                   AND `order`.`type` = 'BUY'
+                   AND `order`.`state` != 'PENDING'
+                   AND `order`.`state` != 'INSPECTING'
+                   AND `order`.`state` != 'INSPECTION_PASSED'
+                   AND `order`.`state` != 'INSPECTION_FAILED'
+                   AND `order`.`state` != 'SETTLING'
+                   AND `order`.`state` != 'SETTLED'
+             ) AS countOrderComplete;
+    </select>
+
+    <select id="selectOrderCompleteListByUser"
+            resultType="com.kream.kream.dtos.SellingOrderCompleteListDTO">
+        SELECT `order`.`id`                AS `id`,
+        `order`.`user_id`           AS `userId`,
+        `image`.`data`              AS imageData,
+        `image`.type                AS imageType,
+        `product`.`id`              AS `productId`,
+        `product`.`product_name_en` AS `productNameEn`,
+        `size`.`type`               AS `sizeType`,
+        `order`.`price`             AS `price`,
+        `order`.`state`             AS `state`,
+        `order`.`created_at`        AS `createdAt`,
+        `order`.`updated_at`        AS `updatedAt`,
+        `order`.`deleted_at`        AS `deletedAt`
+        FROM `kream`.`order`
+        LEFT JOIN `kream`.`buyer_bid`
+        ON buyer_bid.id = `order`.`buyer_bid_id`
+        LEFT JOIN `kream`.`size`
+        ON buyer_bid.size_id = size.id
+        LEFT JOIN `kream`.`product`
+        ON size.product_id = product.id
+        LEFT JOIN `kream`.image
+        ON product.id = image.product_id
+        AND `is_primary` = 1
+        WHERE `order`.`user_id` = #{id}
+        AND `order`.`deleted_at` IS NULL
+        AND `order`.`type` = 'SELL'
+        AND `order`.`state` != 'PENDING'
+        AND `order`.`state` != 'INSPECTING'
+        AND `order`.`state` != 'INSPECTION_PASSED'
+        AND `order`.`state` != 'INSPECTION_FAILED'
+        AND `order`.`state` != 'SETTLING'
+        AND `order`.`state` != 'DELIVERED'
+        <if test="state != null and state.equals('failed')">
+            AND `order`.`state` = #{state}
+        </if>
+        <if test="state != null and state.equals('settled')">
+            AND `order`.`state` = #{state}
+        </if>
+
+        UNION ALL
+
+        SELECT
+        `order`.`id`                AS `id`,
+        `seller_bid`.`user_id`      AS `userId`,
+        `image`.`data`              AS `imageData`,
+        `image`.`type`              AS `imageType`,
+        `product`.`id`              AS `productId`,
+        `product`.`product_name_en` AS `productNameEn`,
+        `size`.`type`               AS `sizeType`,
+        `order`.`price`             AS `price`,
+        `seller_bid`.`order_state` AS  `state`,
+        `order`.`created_at`        AS `createdAt`,
+        `order`.`updated_at`        AS `updatedAt`,
+        `order`.`deleted_at`        AS `deletedAt`
+        FROM
+        `kream`.`order`
+        LEFT JOIN `kream`.`seller_bid`
+        ON seller_bid.id = `order`.`seller_bid_id`
+        LEFT JOIN `kream`.`size`
+        ON seller_bid.size_id = size.id
+        LEFT JOIN `kream`.`product`
+        ON size.product_id = product.id
+        LEFT JOIN `kream`.image
+        ON product.id = image.product_id AND `is_primary` = 1
+        WHERE
+        seller_bid.user_id = #{id}
+        AND `order`.`deleted_at` IS NULL
+        AND `order`.`type` = 'BUY'
+        AND `order`.`state` != 'PENDING'
+        AND `order`.`state` != 'INSPECTING'
+        AND `order`.`state` != 'INSPECTION_PASSED'
+        AND `order`.`state` != 'INSPECTION_FAILED'
+        AND `order`.`state` != 'SETTLING'
+        AND `order`.`state` != 'SETTLED'
+        <if test="state != null and state.equals('failed')">
+            AND `order`.`state` = #{state}
+        </if>
+        <if test="state != null and state.equals('settled')">
+            AND `order`.`state` = #{state}
+        </if>
+    </select>
+
+    <select id="selectOrderByProductId"
+            resultType="com.kream.kream.dtos.OrderChartDTO">
+        SELECT `order`.`id`         AS `orderId`,
+               `size`.`type`        AS `sizeType`,
+               `order`.`price`      AS `orderPrice`,
+               `order`.`created_at` AS `orderDate`
+        FROM `kream`.`order`
+                 LEFT JOIN `kream`.`seller_bid`
+                           ON `order`.`seller_bid_id` = `seller_bid`.`id`
+                 LEFT JOIN `kream`.`buyer_bid`
+                           ON `order`.`buyer_bid_id` = `buyer_bid`.`id`
+                 LEFT JOIN `kream`.`size`
+                           ON (`seller_bid`.`size_id` = `size`.`id`
+                               OR `buyer_bid`.`size_id` = `size`.`id`)
+        WHERE (`order`.`state` = 'DELIVERED'
+            OR `order`.`state` = 'SETTLED')
+          AND `size`.product_id = #{id}
+        ORDER BY `order`.`created_at` DESC
+        LIMIT 5
+    </select>
+
+
+    <select id="selectBuyerOrderByState" resultType="com.kream.kream.dtos.OrderStateDTO">
+        SELECT `product`.`product_name_en` AS `productNameEn`,
+               `product`.`id` AS `productId`,
+               `size`.`type` AS `sizeType`,
+               `image`.`data` AS `imageData`,
+               `image`.`type` AS `imageType`,
+               `order`.`state` AS `state`,
+               `order`.`price` AS `price`
+        FROM `kream`.`order`
+        INNER JOIN `kream`.`seller_bid`
+        ON `order`.`seller_bid_id` = `seller_bid`.`id`
+        INNER JOIN `kream`.`size`
+        ON seller_bid.size_id = size.id
+        INNER JOIN `kream`.`product`
+        ON size.product_id = product.id
+        INNER JOIN `kream`.`image`
+        ON product.id = image.product_id
+        AND `image`.`is_primary` = 1
+        WHERE `order`.`user_id` = #{userId}
+        AND `order`.`deleted_at` IS NULL
+        <if test="state == 'pending-all'">
+            AND (`order`.`state` = 'PENDING' OR `order`.`state` = 'INSPECTING' OR
+            `order`.`state` = 'INSPECTION_FAILED' OR `order`.`state` = 'INSPECTION_PASSED' OR
+            `order`.`state` = 'IN_TRANSIT')
+        </if>
+        <if test="state == 'finish-all'">
+            AND (`order`.`state` = 'FAILED' OR `order`.`state` = 'DELIVERED')
+        </if>
+        <if test="state != 'pending-all' and state != 'finish-all'">
+            AND `order`.`state` = #{state}
+        </if>
+    </select>
+
+    <select id="selectBuyerOrderCountByPending" resultType="java.lang.Integer">
+        SELECT COUNT(0)
+        FROM `kream`.`order`
+                 INNER JOIN `kream`.`seller_bid`
+                            ON `order`.`seller_bid_id` = `seller_bid`.`id`
+                 INNER JOIN `kream`.`size`
+                            ON seller_bid.size_id = size.id
+                 INNER JOIN `kream`.`product`
+                            ON size.product_id = product.id
+                 INNER JOIN `kream`.`image`
+                            ON product.id = image.product_id
+                                AND `image`.`is_primary` = 1
+        WHERE `order`.`user_id` = #{userId}
+          AND `order`.`deleted_at` IS NULL
+          AND (`order`.`state` != 'FAILED' AND `order`.`state` != 'DELIVERED' AND `order`.`state` != 'SETTLING' AND `order`.`state` != 'SETTLED')
+    </select>
+
+    <select id="selectBuyerOrderCountByFinish" resultType="java.lang.Integer">
+        SELECT COUNT(0)
+        FROM `kream`.`order`
+                 INNER JOIN `kream`.`seller_bid`
+                            ON `order`.`seller_bid_id` = `seller_bid`.`id`
+                 INNER JOIN `kream`.`size`
+                            ON seller_bid.size_id = size.id
+                 INNER JOIN `kream`.`product`
+                            ON size.product_id = product.id
+                 INNER JOIN `kream`.`image`
+                            ON product.id = image.product_id
+                                AND `image`.`is_primary` = 1
+        WHERE `order`.`user_id` = #{userId}
+          AND `order`.`deleted_at` IS NULL
+          AND (`order`.`state` = 'FAILED' OR `order`.`state` = 'DELIVERED')
+    </select>
+
+    <select id="selectOrderCountByUserId"
+            resultType="java.lang.Integer">
+    SELECT COUNT(*)
+    FROM `kream`.`order`
+    WHERE `user_id` = #{id}
+    AND `deleted_at` IS NULL
+    </select>
+</mapper>

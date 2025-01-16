@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kream.kream.mappers.BuyerBidMapper">
+
+
+    <insert id="insertBuyerBid"
+    parameterType="com.kream.kream.entities.BuyerBidEntity">
+        INSERT INTO `kream`.`buyer_bid` (`user_id`, `size_id`, `address_id`, `price`, `deadline`, `state`, `order_state`, `created_at`, `update_at`, `is_deleted`)
+        VALUES (#{userId}, #{sizeId}, #{addressId}, #{price}, #{deadline}, #{state}, #{orderState} ,#{createdAt}, #{updatedAt}, #{isDeleted})
+        ON DUPLICATE KEY UPDATE
+        `address_id` = #{addressId},
+        `price` = #{price},
+        `deadline` = #{deadline},
+        `state` = 'BIDDING',
+        `order_state` = NULL,
+        `update_at` = NOW()
+    </insert>
+
+    <select id="selectPriceBySizeIdAndBuyerBidId" resultType="com.kream.kream.entities.BuyerBidEntity">
+        SELECT `id`         AS `id`,
+               `user_id`    AS `userId`,
+               `size_id`    AS `sizeId`,
+               `address_id` AS `addressId`,
+               `price`      AS `price`,
+               `deadline`   AS `deadline`,
+               `state`      AS `state`,
+               `order_state`AS `orderState`,
+               `created_at` AS `createdAt`,
+               `update_at`  AS `updatedAt`,
+               `is_deleted` AS `isDeleted`
+        FROM `kream`.`buyer_bid`
+        WHERE `buyer_bid`.`id` = #{buyerBidId}
+          AND `buyer_bid`.`size_id` = #{sizeId}
+          AND `buyer_bid`.`state` = 'BIDDING'
+          AND `buyer_bid`.`is_deleted` = 0
+    </select>
+
+    <select id="selectBuyerBidById"
+            resultType="com.kream.kream.entities.BuyerBidEntity">
+        SELECT `id`         AS `id`,
+               `user_id`    AS `userId`,
+               `size_id`    AS `sizeId`,
+               `address_id` AS `addressId`,
+               `price`      AS `price`,
+               `deadline`   AS `deadline`,
+               `state`      AS `state`,
+               `created_at` AS `createdAt`,
+               `update_at`  AS `updatedAt`,
+               `is_deleted` AS `isDeleted`
+        FROM `kream`.`buyer_bid`
+        WHERE `buyer_bid`.`id` = #{buyerBidId}
+          AND `buyer_bid`.`is_deleted` = 0
+    </select>
+    <select id="selectBuyerBidUserCount"
+            resultType="int">
+        SELECT COUNT(*)
+        FROM `kream`.`buyer_bid`
+        WHERE `buyer_bid`.`user_id` = #{id}
+          AND `buyer_bid`.`is_deleted` = 0
+          AND `order_state` != 'FAILED'
+    </select>
+
+    <select id="selectBuyerBidByState" resultType="com.kream.kream.dtos.BidStateDTO">
+        SELECT `buyer_bid`.`id`            AS `buyerBidId`,
+               `product`.`product_name_en` AS `productNameEn`,
+               `product`.`id`              AS `productId`,
+               `size`.`type`               AS `sizeType`,
+               `image`.`data`              AS `imageData`,
+               `image`.`type`              AS `imageType`,
+               `buyer_bid`.`price`         AS `price`,
+               `buyer_bid`.`deadline`      AS `deadline`,
+               `buyer_bid`.`state`         AS `state`
+        FROM `kream`.`buyer_bid`
+                 INNER JOIN `kream`.`size`
+                            ON buyer_bid.size_id = size.id
+                 INNER JOIN `kream`.`product`
+                            ON size.product_id = product.id
+                 INNER JOIN `kream`.`image`
+                            ON product.id = image.product_id
+                                AND `image`.`is_primary` = 1
+        WHERE `buyer_bid`.`user_id` = #{userId}
+        AND `buyer_bid`.`is_deleted` = 0
+        <if test="state == 'ALL'">
+            AND (`buyer_bid`.`state` = 'DEADLINE' OR `buyer_bid`.`state` = 'BIDDING')
+        </if>
+        <if test="state == 'BIDDING'">
+            AND `buyer_bid`.`state` = 'BIDDING'
+        </if>
+        <if test="state == 'DEADLINE'">
+            AND `buyer_bid`.`state` = 'DEADLINE'
+        </if>
+
+    </select>
+
+    <select id="selectBuyerBidByOrderState" resultType="com.kream.kream.dtos.OrderStateDTO">
+        SELECT `product`.`product_name_en` AS `productNameEn`,
+        `product`.`id` AS `productId`,
+        `size`.`type` AS `sizeType`,
+        `image`.`data` AS `imageData`,
+        `image`.`type` AS `imageType`,
+        `buyer_bid`.`order_state` AS `state`,
+        `buyer_bid`.`price`  AS `price`
+        FROM `kream`.`buyer_bid`
+        INNER JOIN `kream`.`size`
+        ON buyer_bid.size_id = size.id
+        INNER JOIN `kream`.`product`
+        ON size.product_id = product.id
+        INNER JOIN `kream`.`image`
+        ON product.id = image.product_id
+        AND `image`.`is_primary` = 1
+        WHERE `buyer_bid`.`user_id` = #{userId}
+        AND `buyer_bid`.`is_deleted` = 0
+        <if test="state == 'pending-all'">
+            AND (`buyer_bid`.`order_state` = 'PENDING' OR `buyer_bid`.`order_state` = 'INSPECTING' OR
+            `buyer_bid`.`order_state` = 'INSPECTION_FAILED' OR `buyer_bid`.`order_state` = 'INSPECTION_PASSED' OR
+            `buyer_bid`.`order_state` = 'IN_TRANSIT')
+        </if>
+        <if test="state == 'finish-all'">
+            AND (`buyer_bid`.`order_state` = 'FAILED' OR `buyer_bid`.`order_state` = 'DELIVERED')
+        </if>
+        <if test="state != 'pending-all' and state != 'finish-all'">
+            AND `buyer_bid`.`order_state` = #{state}
+        </if>
+
+
+    </select>
+    <select id="selectBuyerBidCountByState" resultType="_int">
+        SELECT COUNT(0)
+        FROM `kream`.`buyer_bid`
+                 INNER JOIN `kream`.`size`
+                            ON buyer_bid.size_id = size.id
+                 INNER JOIN `kream`.`product`
+                            ON size.product_id = product.id
+                 INNER JOIN `kream`.`image`
+                            ON product.id = image.product_id
+                                AND `image`.`is_primary` = 1
+        WHERE `buyer_bid`.`user_id` = #{userId}
+        AND `buyer_bid`.`state` != 'ORDER'
+        AND `buyer_bid`.`is_deleted` = 0
+    </select>
+
+
+    <select id="selectBuyerBidCountByPending" resultType="java.lang.Integer">
+        SELECT COUNT(0)
+        FROM `kream`.`buyer_bid`
+                 INNER JOIN `kream`.`size`
+                            ON buyer_bid.size_id = size.id
+                 INNER JOIN `kream`.`product`
+                            ON size.product_id = product.id
+                 INNER JOIN `kream`.`image`
+                            ON product.id = image.product_id
+                                AND `image`.`is_primary` = 1
+        WHERE `buyer_bid`.`user_id` = #{userId}
+          AND `buyer_bid`.`is_deleted` = 0
+          AND (`buyer_bid`.`order_state` != 'FAILED' AND `buyer_bid`.`order_state` != 'DELIVERED')
+    </select>
+
+    <select id="selectBuyerBidCountByFinish" resultType="java.lang.Integer">
+        SELECT COUNT(0)
+        FROM `kream`.`buyer_bid`
+                 INNER JOIN `kream`.`size`
+                            ON buyer_bid.size_id = size.id
+                 INNER JOIN `kream`.`product`
+                            ON size.product_id = product.id
+                 INNER JOIN `kream`.`image`
+                            ON product.id = image.product_id
+                                AND `image`.`is_primary` = 1
+        WHERE `buyer_bid`.`user_id` = #{userId}
+          AND `buyer_bid`.`is_deleted` = 0
+          AND (`buyer_bid`.`order_state` = 'FAILED' OR `buyer_bid`.`order_state` = 'DELIVERED')
+    </select>
+
+    <update id="updateBuyerBid">
+        UPDATE `kream`.`buyer_bid`
+        SET `user_id`    = #{userId},
+            `size_id`    = #{sizeId},
+            `address_id` = #{addressId},
+            `price`      = #{price},
+            `deadline`   = #{deadline},
+            `state`      = #{state},
+            `order_state`= #{orderState},
+            `created_at` = #{createdAt},
+            `update_at`  = #{updatedAt},
+            `is_deleted` = #{isDeleted}
+        WHERE `id` = #{id}
+        LIMIT 1
+    </update>
+</mapper>

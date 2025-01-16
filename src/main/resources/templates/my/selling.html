@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>KREAM</title>
+    <link rel="stylesheet" th:href="@{/assets/styles/common.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/my/styles/selling.css}" type="text/css">
+    <script defer th:src="@{/assets/scripts/common.js}" type="text/javascript"></script>
+    <script defer th:src="@{/my/scripts/selling.js}" type="text/javascript"></script>
+    <script src="https://kit.fontawesome.com/79ae8a0168.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<header id="header">
+    <div class="header-container">
+        <div class="top-inner">
+            <ul class="top-list">
+                <li class="-spring"></li>
+                <li class="top-item">
+                    <a class="top-link" th:href="@{'/admin/'}"
+                       th:if="${session.user != null && session.user.isAdmin()}">관리자 페이지</a>
+                </li>
+                <li class="top-item">
+                    <a class="top-link" th:href="${session.user == null} ? '/login' : '/my'">마이페이지</a>
+                </li>
+                <li class="top-item">
+                    <a class="top-link" th:href="${session.user == null} ? '/login' : '/logout'"
+                       th:text="${session.user == null} ? '로그인' : '로그아웃'"></a>
+                </li>
+            </ul>
+        </div>
+        <div class="main-inner">
+            <a class="logo" th:href="@{'/'}">
+                <img alt="logo" class="logo-icon" src="/assets/images/logo.png">
+            </a>
+            <div class="-spring"></div>
+            <nav class="menu">
+                <ul class="menu-list">
+                    <li class="menu-item">
+                        <a class="menu-link bold" th:href="@{'/'}">HOME</a>
+                    </li>
+                    <li class="menu-item">
+                        <a class="menu-link" th:href="@{'/shop'}">SHOP</a>
+                    </li>
+                </ul>
+            </nav>
+            <a class="search" th:href="@{'/search'}">
+                <img alt="search-icon" class="search-icon" src="/home/assets/images/search-icon.png">
+            </a>
+            <a class="cart" th:href="${session.user == null} ? '/login' : '/cart/'">
+                <img alt="cart-icon" class="cart-icon" src="/home/assets/images/cart_icon.png">
+            </a>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="content">
+        <div class="snb_area">
+            <a class="nuxt-link-active" href="/my/">
+                <h2 class="title">마이 페이지</h2>
+            </a>
+            <nav class="snb">
+                <div class="snb_list">
+                    <strong class="snb_title">쇼핑정보</strong>
+                    <ul class="snb_menu">
+                        <li class="menu_item">
+                            <a class="menu_link" href="/my/buying">구매 내역</a>
+                        </li>
+                        <li class="menu_item">
+                            <a class="menu_link requestPage" href="/my/selling">판매 내역</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="snb_list">
+                    <strong class="snb_title">내 정보</strong>
+                    <ul class="snb_menu">
+                        <li class="menu_item">
+                            <a class="menu_link" href="/my/profile">로그인 정보</a>
+                        </li>
+                        <li class="menu_item">
+                            <a class="menu_link" href="/my/address">주소록</a>
+                        </li>
+                        <li class="menu_item">
+                            <a class="menu_link" href="/my/account">판매 정산 계좌</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <div class="content_area">
+            <div class="my_Buying">
+                <div class="content_title">
+                    <div class="title">
+                        <h3>판매 내역</h3>
+                    </div>
+                </div>
+                <div class="content_list">
+                    <div class="bidding-header">
+                        <div class="bidding">
+                            <div class="purchase_list">
+                                <div class="tab_item">
+                                    <a class="tab_link" th:href="@{/my/selling(tab=${'bidding'})}" rel="content1"
+                                       th:classappend="${tab == null || tab == 'bidding' ? 'tab_on' : ''}">
+                                        <div class="tab_box">
+                                            <dt class="title">판매입찰</dt>
+                                            <dd class="count" th:text="${sellerBidsCount}"></dd>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <!-- 진행중 탭 -->
+                                <div class="tab_item">
+                                    <a class="tab_link" th:href="@{/my/selling(tab=${'order'})}" rel="content2"
+                                       th:classappend="${tab == 'order' ? 'tab_on' : ''}">
+                                        <div class="tab_box">
+                                            <dt class="title">진행중</dt>
+                                            <dd class="count" th:text="${sellerOrdersCount}"></dd>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <!-- 완료 탭 -->
+                                <div class="tab_item">
+                                    <a class="tab_link" th:href="@{/my/selling(tab=${'completed'})}" rel="content3"
+                                       th:classappend="${tab == 'completed' ? 'tab_on' : ''}">
+                                        <div class="tab_box">
+                                            <dt class="title">완료</dt>
+                                            <dd class="count" th:text="${sellerOrdersCompleteCount}"></dd>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="purchase_head">
+                                <div class="head_product">
+                                    <button class="btn_filter">전체
+                                        <img alt="downbutton" class="image" src="/my/images/icons8-down-button-50.png">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="my_order_box -visible" id="content1" th:if="${tab == null || tab == 'bidding'}">
+                    <div class="layer">
+                        <div class="layer_background"></div>
+                        <div class="layer_container">
+                            <button class="layer_close" type="button">
+                                <img alt="close" class="image" src="/my/images/icons8-close.svg">
+                            </button>
+                            <div class="layer_header">
+                                <h2 class="title">선택한 상태 보기</h2>
+                            </div>
+                            <form class="content">
+                                <div class="select_status">
+                                    <ul class="status_list">
+                                        <li class="status_item">
+                                            <a class="status_link" href="/my/selling?tab=bidding">
+                                                <span class="text">전체</span>
+                                            </a>
+                                        </li>
+                                        <li class="status_item">
+                                            <a class="status_link" href="/my/selling?tab=bidding&state=bidding">
+                                                <span class="text">입찰 중</span>
+                                            </a>
+                                        </li>
+                                        <li class="status_item">
+                                            <a class="status_link" href="/my/selling?tab=bidding&state=deadline">
+                                                <span class="text" style="color: red">기한만료</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <th:block></th:block>
+                    <div class="my_order_list">
+                        <th:block th:if="${sellerBids == null || sellerBids.length == 0}">
+                            <div class="empty-page">
+                                <div class="text_body">
+                                    <p>KREAM을 통해 상품을 판매해 보세요.</p>
+                                </div>
+                                <a class="button" href="/shop">
+                                    <div class="button_text">
+                                        <div class="going-shop">판매하기</div>
+                                    </div>
+                                </a>
+                            </div>
+                        </th:block>
+                        <th:block th:if="${sellerBids != null}">
+                            <a class="product_list" th:href="@{'/product?id=' + ${sellerBid.productId}}"
+                               th:each="sellerBid: ${sellerBids}">
+                                <div class="content">
+                                    <div class="content_thumbnail-text">
+                                        <div class="image">
+                                            <img alt="" class="images" th:src="${sellerBid.getBase64Image()}">
+                                        </div>
+                                        <div class="layout_list">
+                                            <div class="text" th:text="${sellerBid.getProductNameEn()}"></div>
+                                            <div class="size" th:text="${sellerBid.getSizeType()}"></div>
+                                        </div>
+                                    </div>
+                                    <div class="text_body"
+                                         th:text="${#numbers.formatInteger(sellerBid.getPrice(), 0, 'COMMA') + '원'}"></div>
+                                    <div class="label_item" style="color: #222; width: 5rem;"
+                                         th:if="${sellerBid.getState() == 'BIDDING'}" th:text="${sellerBid.getDeadline()}">
+                                    </div>
+                                    <div class="label_item" style="color: red; width: 5rem;"
+                                         th:if="${sellerBid.getState() == 'DEADLINE'}">기한만료
+                                    </div>
+                                    <div class="delete_button" th:if="${sellerBid.getState() == 'BIDDING'}" th:data-id="${sellerBid.getId()}">
+                                        <i class="icon fa-solid fa-trash-can"></i>
+                                    </div>
+                                    <div class="unDelete_button" th:if="${sellerBid.getState() == 'DEADLINE'}">
+                                    </div>
+                                </div>
+                            </a>
+                        </th:block>
+                    </div>
+                </div>
+                <div class="my_order_box -visible" id="content2" th:if="${tab == 'order'}">
+                    <div class="layer">
+                        <div class="layer_background"></div>
+                        <div class="layer_container">
+                            <button class="layer_close" type="button">
+                                <img alt="close" class="image" src="/my/images/icons8-close.svg">
+                            </button>
+                            <div class="layer_header">
+                                <h2 class="title">선택한 상태 보기</h2>
+                            </div>
+                            <form class="content">
+                                <div class="select_status">
+                                    <ul class="status_list">
+                                        <li class="status_item">
+                                            <a class="status_link" href="/my/selling?tab=order">
+                                                <span class="text">전체</span>
+                                            </a>
+                                        </li>
+                                        <li class="status_item">
+                                            <a class="status_link" href="/my/selling?tab=order&state=pending">
+                                                <span class="text">대기중</span>
+                                            </a>
+                                        </li>
+                                        <li class="status_item">
+                                            <a class="status_link" href="/my/selling?tab=order&state=inspecting">
+                                                <span class="text">검수중</span>
+                                            </a>
+                                        </li>
+                                        <li class="status_item">
+                                            <a class="status_link" href="/my/selling?tab=order&state=inspection_passed">
+                                                <span class="text">검수 합격</span>
+                                            </a>
+                                        </li>
+                                        <li class="status_item">
+                                            <a class="status_link" href="/my/selling?tab=order&state=inspection_failed">
+                                                <span class="text" style="color: red">검수 불합격</span>
+                                            </a>
+                                        </li>
+                                        <li class="status_item">
+                                            <a class="status_link" href="/my/selling?tab=order&state=settling">
+                                                <span class="text">정산중</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="my_order_list">
+                        <th:block th:if="${sellerOrders == null || sellerOrders.length == 0}">
+                            <div class="empty-page">
+                                <div class="text_body">
+                                    <p>KREAM을 통해 상품을 판매해 보세요.</p>
+                                </div>
+                                <a class="button" href="/shop">
+                                    <div class="button_text">
+                                        <div class="going-shop">판매하기</div>
+                                    </div>
+                                </a>
+                            </div>
+                        </th:block>
+                        <th:block th:if="${sellerOrders != null}">
+                            <a class="product_list order_product_list" th:href="@{'/product?id=' + ${sellerOrder.productId}}"
+                               th:each="sellerOrder: ${sellerOrders}">
+                                <div class="content">
+                                    <div class="content_thumbnail-text">
+                                        <div class="image">
+                                            <img alt="" class="images" th:src="${sellerOrder.getBase64Image()}">
+                                        </div>
+                                        <div class="layout_list">
+                                            <div class="text" th:text="${sellerOrder.getProductNameEn()}"></div>
+                                            <div class="size" th:text="${sellerOrder.sizeType}"></div>
+                                        </div>
+                                    </div>
+                                    <div class="text_body"
+                                         th:text="${#numbers.formatInteger(sellerOrder.getPrice(), 0, 'COMMA') + '원'}"></div>
+                                    <div class="label_item"
+                                         th:if="${sellerOrder.getState() == 'PENDING'}">대기중</div>
+                                    <div class="label_item" style="color: #01d345;"
+                                         th:if="${sellerOrder.getState() == 'INSPECTING'}">검수중
+                                    </div>
+                                    <div class="label_item" style="color: red;"
+                                         th:if="${sellerOrder.getState() == 'INSPECTION_FAILED'}">검수불합격
+                                    </div>
+                                    <div class="label_item" style="color: #01d345;"
+                                         th:if="${sellerOrder.getState() == 'INSPECTION_PASSED'}">검수합격
+                                    </div>
+                                    <div class="label_item" style="color: #01d345"
+                                         th:if="${sellerOrder.getState() == 'SETTLING'}">정산중
+                                    </div>
+                                    <div class="update_button" th:if="${sellerOrder.getState() == 'INSPECTION_FAILED'}" th:data-id="${sellerOrder.getId()}">
+                                        <i class="icon fa-solid fa-trash-can"></i>
+                                    </div>
+                                    <div class="unDelete_button" th:if="${sellerOrder.getState() != 'INSPECTION_FAILED'}">
+                                    </div>
+                                </div>
+                            </a>
+                        </th:block>
+                    </div>
+                </div>
+                <div class="my_order_box -visible" id="content3" th:if="${tab == 'completed'}">
+                    <div class="layer">
+                        <div class="layer_background"></div>
+                        <div class="layer_container">
+                            <button class="layer_close" type="button">
+                                <img alt="close" class="image" src="/my/images/icons8-close.svg">
+                            </button>
+                            <div class="layer_header">
+                                <h2 class="title">선택한 상태 보기</h2>
+                            </div>
+                            <form class="content">
+                                <div class="select_status">
+                                    <ul class="status_list">
+                                        <li class="status_item">
+                                            <a class="status_link" href="/my/selling?tab=completed">
+                                                <span class="text">전체</span>
+                                            </a>
+                                        </li>
+                                        <li class="status_item">
+                                            <a class="status_link" href="/my/selling?tab=completed&state=failed">
+                                                <span class="text" style="color: red">취소완료</span>
+                                            </a>
+                                        </li>
+                                        <li class="status_item">
+                                            <a class="status_link" href="/my/selling?tab=completed&state=settled">
+                                                <span class="text">정산완료</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="my_order_list">
+                        <th:block th:if="${sellerOrdersComplete == null || sellerOrdersComplete.length == 0}">
+                            <div class="empty-page">
+                                <div class="text_body">
+                                    <p>KREAM을 통해 상품을 판매해 보세요.</p>
+                                </div>
+                                <a class="button" href="/shop">
+                                    <div class="button_text">
+                                        <div class="going-shop">판매하기</div>
+                                    </div>
+                                </a>
+                            </div>
+                        </th:block>
+                        <th:block th:if="${sellerOrders != null}">
+                            <a class="product_list" th:href="@{'/product?id=' + ${sellerOrderComplete.productId}}"
+                               th:each="sellerOrderComplete: ${sellerOrdersComplete}">
+                                <div class="content">
+                                    <div class="content_thumbnail-text">
+                                        <div class="image">
+                                            <img alt="" class="images" th:src="${sellerOrderComplete.getBase64Image()}">
+                                        </div>
+                                        <div class="layout_list">
+                                            <div class="text" th:text="${sellerOrderComplete.getProductNameEn()}"></div>
+                                            <div class="size" th:text="${sellerOrderComplete.sizeType}"></div>
+                                        </div>
+                                    </div>
+                                    <div class="text_body"
+                                         th:text="${#numbers.formatInteger(sellerOrderComplete.getPrice(), 0, 'COMMA') + '원'}"></div>
+                                    <div class="label_item" style="color: red;"
+                                         th:if="${sellerOrderComplete.getState() == 'FAILED'}">취소완료
+                                    </div>
+                                    <div class="label_item" style="color: #01d345;"
+                                         th:if="${sellerOrderComplete.getState() == 'SETTLED'}">정산완료
+                                    </div>
+                                </div>
+                            </a>
+                        </th:block>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer id="footer">
+    <div class="footer-container">
+        <div class="service-area">
+            <div class="footer-menu">
+                <div class="menu-box">
+                    <span class="menu-title">이용안내</span>
+                    <ul class="menu-list">
+                        <li class="menu-item">검수기준</li>
+                        <li class="menu-item">이용정책</li>
+                        <li class="menu-item">페널티 정책</li>
+                        <li class="menu-item">커뮤니티 가이드라인</li>
+                    </ul>
+                </div>
+                <div class="menu-box">
+                    <span class="menu-title">고객지원</span>
+                    <ul class="menu-list">
+                        <li class="menu-item">공지사항</li>
+                        <li class="menu-item">서비스 소개</li>
+                        <li class="menu-item">스토어 안내</li>
+                        <li class="menu-item">판매자 방문접수</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="-spring"></div>
+            <div class="customer-service">
+                <span class="service-title">고객센터 1588-7813</span>
+                <span class="service-time">
+                    <span class="time-term">운영시간 평일 10:00 - 18:00 (토•일, 공휴일 휴무)</span>
+                    <span class="time-term">점심시간 평일 13:00 - 14:00</span>
+                </span>
+                <span class="service-noti">1:1 문의하기는 앱에서만 가능합니다.</span>
+            </div>
+        </div>
+        <div class="corporation-are">
+            <ul class="term-list">
+                <li class="term-item">회사소개</li>
+                <li class="term-item">인재채용</li>
+                <li class="term-item">제휴제안</li>
+                <li class="term-item">이용약관</li>
+                <li class="term-item bold">개인정보처리방침</li>
+            </ul>
+            <span class="business-info">크림 주식회사 · 대표 김창욱사업자등록번호 : 570-88-01618 사업자정보확인통신판매업 : 제 2021-성남분당C-0093호사업장소재지 : 경기도 성남시 분당구 분당내곡로 131 판교테크원 타워1, 7층호스팅 서비스 : 네이버 클라우드 ㈜</span>
+        </div>
+        <div class="notice-guarantee">
+            <span class="title">신한은행 채무지급보증 안내</span>
+            <span class="description">당사는 고객님의 현금 결제 금액에 대해 신한은행과 채무지급보증 계약을 체결하여 안전거래를 보장하고 있습니다.서비스가입 사실 확인</span>
+        </div>
+        <div class="notice-area">
+            <span class="notice">크림(주)는 통신판매 중개자로서 통신판매의 당사자가 아닙니다. 본 상품은 개별판매자가 등록한 상품으로 상품, 상품정보, 거래에 관한 의무와 책임은 각 판매자에게 있습니다. 단, 이용약관 및 정책, 기타 거래 체결 과정에서 고지하는 내용 등에 따라 검수하고 보증하는 내용에 대한 책임은 크림(주)에 있습니다.</span>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

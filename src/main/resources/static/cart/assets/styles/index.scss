@@ -1,0 +1,755 @@
+@charset "UTF-8";
+@import "../../../assets/styles/global";
+
+#header {
+  background-color: #ffffff;
+  top: 0;
+
+  width: 100%;
+  height: 6rem;
+  position: fixed;
+  //border-bottom: 0.0625rem solid #a0a0a0;
+  z-index: 9;
+
+  > .header-container {
+    width: 100%;
+    max-width: 80rem;
+    margin: 0 auto;
+
+
+
+    > .top-inner {
+      height: 1.5rem;
+
+      > .top-list {
+        @include flex(row, center, flex-start, 1.5rem);
+        box-sizing: border-box;
+        padding: 1rem 1.5rem;
+        font-size: 0.75rem;
+
+        > .top-item > .top-link {
+          color: #745b39;
+          text-decoration: none;
+        }
+      }
+    }
+
+    > .main-inner {
+      @include flex(row, center, flex-start, 1.6rem);
+      height: 4.5rem;
+      box-sizing: border-box;
+      padding: 1.25rem 1.5rem;
+
+      > .logo > .logo-icon {
+        width: 10rem;
+      }
+
+      > .menu > .menu-list {
+        @include flex(row, center, flex-start, 1.6rem);
+
+        > .menu-item > .menu-link {
+          font-size: 1.15rem;
+          text-decoration: none;
+          color: inherit;
+
+          &.bold {
+            font-weight: 700;
+          }
+        }
+      }
+
+      > .search > .search-icon,
+      > .cart > .cart-icon {
+        width: 1.3rem;
+        line-height: 1;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.cart-top-area {
+  @include flex(column, center, center, 2rem);
+  position: relative;
+  flex-wrap: wrap;
+  margin: 0;
+  background-color: #f4f4f4;
+  padding-top: 6rem;
+
+  > .box {
+    @include flex(column, center, center, 2rem);
+    position: sticky;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    top: 2rem;
+
+
+    > .cart-title {
+      padding: 16px 0;
+      text-align: center;
+      width: 100%;
+      font-size: 1.5rem;
+      font-weight: bold;
+      background-color: #ffffff;
+    }
+
+    > .cart-tab {
+      @include flex(column, center, center);
+      height: 60px;
+      width: 100%;
+      background-color: #ffffff;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+
+      > .tab-item {
+        @include flex(column, center, center);
+        border-bottom: 1px solid #ebebeb;
+        cursor: pointer;
+        height: 60px;
+        width: 20%;
+        position: relative;
+        padding: 9px 0 15px 0;
+        z-index: 2;
+
+        > .count {
+          font-weight: 700;
+          font-size: 16px;
+          box-sizing: border-box;
+          cursor: pointer;
+
+        }
+
+
+      }
+      > .cart-header {
+        top: 145px;
+        background-color: #ffffff;
+        position: sticky;
+        z-index: 1;
+        width: 100%;
+
+        > .wrapper {
+          @include flex(row, center, space-between);
+          margin: 0 auto;
+          width: 700px;
+          padding: 30px 16px 12px 16px;
+          box-sizing: border-box;
+
+          > .group {
+            @include flex(row, center, center);
+            margin: 0;
+            padding: 0;
+
+            > .--obj-label {
+              cursor: pointer;
+              margin-right: 8px;
+
+              > .uncheck {
+                display: flex;
+                width: 24px;
+                height: 24px;
+              }
+
+              > .check {
+                display: none;
+                width: 24px;
+                height: 24px;
+              }
+
+              > .checkbox {
+                display: none;
+                width: 24px;
+                height: 24px;
+              }
+
+              > input[type="checkbox"]:checked + .uncheck {
+                display: none;
+              }
+
+              > input[type="checkbox"]:checked ~ .check {
+                display: flex;
+              }
+
+            }
+
+            > .text {
+              @include flex(row, center, center);
+              text-align: left;
+              color: #222222;
+              font-size: 0.986rem;
+              font-weight: bold;
+
+            }
+
+            > .button {
+              background-color: rgb(255, 255, 255);
+              border-radius: 100px;
+              padding: 4px 10px;
+              margin-left: 6px;
+              width: 76px;
+              height: 24px;
+              border: 1px solid #222222;
+              cursor: pointer;
+              box-shadow: rgb(235, 235, 235) 0 0 0 1px inset;
+              font-size: 0.8rem;
+              font-weight: 700;
+
+            }
+
+          }
+        }
+      }
+    }
+  }
+
+  > .cart-screen {
+    box-sizing: border-box;
+    margin: 0;
+    padding-top: 3rem;
+    width: 700px;
+
+
+
+
+    > .cart-content {
+      background-color: rgb(244, 244, 244);
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+
+      > .cart-max-width {
+        margin: 0 auto;
+        width: 700px;
+        padding: 0;
+
+        > .layout1 {
+          @include flex(column, center, center, 1.5rem);
+          background-color: rgb(244, 244, 244);
+          margin: 0;
+          padding: 0;
+          height: 392px;
+          text-align: center;
+
+          > .text {
+            color: #222222;
+            font-size: 15px;
+          }
+
+          > .button {
+            border-radius: 10px;
+            margin: 10px 0 0;
+            padding: 5px 8px;
+            background-color: rgb(255, 255, 255);
+            box-shadow: rgb(34, 34, 34) 0 0 0 1px inset;
+            cursor: pointer;
+            text-decoration: none;
+            color: #222222;
+            font-weight: 800;
+          }
+
+        }
+
+        > .layout {
+          @include flex(column, flex-start, center);
+          background-color: rgb(244, 244, 244);
+          margin: 0;
+          padding: 0;
+
+          > .div {
+            height: 24px;
+            margin: 0;
+            padding: 0;
+          }
+
+          > .text-header {
+            @include flex(row, center, space-between);
+            border-radius: 10px 10px 0 0;
+            padding: 20px 16px 10px 16px;
+            background-color: #ffffff;
+            margin: 0;
+            width: 100%;
+            height: 45px;
+            box-sizing: border-box;
+
+            > .group {
+              @include flex(row, center, center);
+
+              > .--obj-label {
+                cursor: pointer;
+                margin-right: 8px;
+
+                > .uncheck {
+                  display: flex;
+                  width: 24px;
+                  height: 24px;
+                }
+
+                > .check {
+                  display: none;
+                  width: 24px;
+                  height: 24px;
+                }
+
+                > .checkbox {
+                  display: none;
+                  width: 24px;
+                  height: 24px;
+                }
+
+                > input[type="checkbox"]:checked + .uncheck {
+                  display: none;
+                }
+
+                > input[type="checkbox"]:checked ~ .check {
+                  display: flex;
+                }
+
+              }
+
+              > .button {
+                border: 1px solid #a0a0a0;
+                border-radius: 999rem;
+                width: 56px;
+                height: 20px;
+                padding-top: 1px;
+                cursor: pointer;
+              }
+            }
+          }
+
+          > .product-list {
+            @include flex(row, flex-start, flex-start);
+            padding: 0 16px 20px 16px;
+            background-color: rgb(255, 255, 255);
+            cursor: pointer;
+            text-decoration: none;
+            box-sizing: border-box;
+            width: 100%;
+
+            > .content-image {
+              width: 80px;
+              height: 80px;
+              margin: 0;
+              padding: 0;
+              background-color: rgba(0, 0, 0, .1);
+              border-radius: 0.5rem;
+
+            }
+
+            > .content {
+              @include flex(column, flex-start, flex-start);
+              margin-left: 16px;
+
+              > .text1 {
+                gap: 0 2px;
+                margin: 0;
+                padding: 0;
+                text-align: left;
+                overflow: hidden;
+                font-size: 14px;
+                color: #222222;
+
+              }
+
+              > .text2 {
+                gap: 0 2px;
+                margin: 0;
+                padding: 0;
+                text-align: left;
+                overflow: hidden;
+                font-size: 14px;
+                color: #a0a0a0;
+              }
+
+              > .bottom {
+                @include flex(row, flex-start, center);
+                gap: 4px;
+                margin-top: 8px;
+                box-sizing: border-box;
+                text-decoration: none;
+                color: #222222;
+
+              }
+
+            }
+          }
+
+          > .text-table {
+            @include flex(row, center, space-between);
+            padding: 3px 16px 7px 16px;
+            margin: 0;
+            box-sizing: border-box;
+            background-color: rgb(255, 255, 255);
+            width: 100%;
+
+            > .text {
+              margin-right: 8px;
+              gap: 0 2px;
+              padding: 1px 0 0;
+
+            }
+
+            > .text-body {
+              gap: 0 2px;
+              padding: 1px 0 0;
+              margin-right: 8px;
+
+              &:nth-of-type(2) {
+                font-size: 17px;
+                font-weight: bold;
+              }
+            }
+          }
+
+          > .status {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            background-color: rgb(255, 255, 255);
+            width: 100%;
+            padding-bottom: 23px;
+            padding-right: 23px;
+            box-sizing: border-box;
+            height: 50px;
+
+          }
+
+          > .button-list {
+            @include flex(row, center, center);
+            background-color: rgb(255, 255, 255);
+            padding: 0 16px 20px 16px;
+            gap: 0 8px;
+            margin: 0;
+            width: 100%;
+            box-sizing: border-box;
+
+            > .button {
+              border-radius: 10px;
+              padding: 2px 20px;
+              background-color: #222222;
+              color: #ffffff;
+              cursor: pointer;
+              width: 100%;
+              height: 36px;
+
+            }
+          }
+
+          > .text-collapse {
+            border-radius: 0 0 10px 10px;
+            padding: 16px;
+            background-color: rgb(250, 250, 250);
+            margin: 0;
+            box-sizing: border-box;
+            width: 100%;
+
+            > .text-body {
+              @include flex(row, center, space-between);
+
+              > .text {
+                font-weight: 700;
+              }
+
+            }
+
+            > .content {
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+              width: 100%;
+
+
+              > .line {
+                height: 1px;
+                margin: 16px 0 0 0;
+                border-bottom: 1px solid #f4f4f4;
+                background-color: #ebebeb;
+
+              }
+
+              > .text-table {
+                margin: 16px 0 4px 0;
+                padding: 3px 0;
+                box-sizing: border-box;
+
+                > .box {
+                  @include flex(row, center, space-between);
+                  margin: 0;
+                  padding: 0;
+                  box-sizing: border-box;
+
+                  > .text:nth-of-type(1) {
+                    color: #a0a0a0;
+                  }
+                }
+              }
+            }
+          }
+
+
+        }
+      }
+    }
+
+    > .text-body {
+      border-radius: 10px 10px 0 0;
+      width: 100%;
+      gap: 0 2px;
+      padding: 15px 16px;
+      background-color: rgb(255, 255, 255);
+      box-sizing: border-box;
+
+      > .text {
+        text-align: left;
+        font-size: 16px;
+        font-weight: 700;
+        margin: 0;
+        padding: 0;
+
+      }
+    }
+
+    > .line {
+      width: 100%;
+      height: 1px;
+      padding: 0 16px;
+      background-color: rgb(255, 255, 255);
+      border-bottom: 1px solid #f4f4f4;
+      box-sizing: border-box;
+
+    }
+
+    > .layout-list {
+      @include flex(column, flex-start, center);
+      gap: 4px 0;
+      padding: 12px 16px;
+      background-color: rgb(255, 255, 255);
+      width: 100%;
+      box-sizing: border-box;
+
+      > .item {
+        @include flex(row, center, space-between);
+        margin: 0;
+        padding: 0;
+        font-size: 14px;
+        width: 100%;
+
+        > .text:nth-of-type(1) {
+          color: #a0a0a0;
+        }
+
+        > .text:nth-of-type(2) {
+          font-weight: 700;
+        }
+
+      }
+
+    }
+
+    > .text-table {
+      border-radius: 0 0 10px 10px;
+      padding: 15px 16px;
+      background-color: rgb(255, 255, 255);
+
+      > .box {
+        @include flex(row, flex-start, space-between);
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        width: 100%;
+
+        > .text {
+          font-weight: bold;
+
+        }
+      }
+    }
+
+    > .bullet-header {
+      @include flex(row, center, flex-start, 0.5rem);
+      border-radius: 10px 10px 0 0;
+      width: 100%;
+      background-color: #eeeeee;
+      box-sizing: border-box;
+      padding: 16px 16px 6px 16px;
+      font-size: 13px;
+
+
+    }
+
+    > .bullet {
+      @include flex(row, center, flex-start, 0.5rem);
+      width: 100%;
+      background-color: #eeeeee;
+      box-sizing: border-box;
+      padding: 0 16px 6px 16px;
+      font-size: 13px;
+
+    }
+
+    > .bullet-bottom {
+      width: 100%;
+      @include flex(row, center, flex-start, 0.5rem);
+      padding: 0 16px 16px 16px;
+      border-radius: 0 0 10px 10px;
+      background-color: #eeeeee;
+      box-sizing: border-box;
+      font-size: 13px;
+
+    }
+
+  }
+
+  > .cart-footer {
+    background: #ffffff;
+    bottom: 0;
+    box-shadow: 0 -1px 1px 0 rgba(0, 0, 0, .06);
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    width: 100%;
+    z-index: 3;
+
+    > .content-area {
+      width: 700px;
+      margin: 0;
+      padding: 0;
+
+      > .button {
+        min-height: 52px;
+        min-width: 100%;
+        border-radius: 10px;
+        margin: 8px;
+        padding: 10px 16px;
+        background-color: rgb(239, 98, 83);
+        cursor: pointer;
+
+        > .text {
+          color: rgb(255, 255, 255);
+          width: 100%;
+          font-weight: 700;
+          font-size: 16px;
+          text-align: center;
+
+        }
+      }
+    }
+  }
+}
+
+#footer {
+  width: 100vw;
+
+  > .footer-container {
+    width: 100%;
+    max-width: 80rem;
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 2.5rem;
+    border-top: 0.0625rem solid #eeeeee;
+
+    > .service-area {
+      @include flex(row, flex-start, flex-start, 1rem);
+
+      > .footer-menu {
+        @include flex(row, center, flex-start, 5rem);
+
+        > .menu-box {
+          @include flex(column, flex-start, flex-start, 0.9rem);
+
+          > .menu-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: inherit;
+          }
+
+          > .menu-list {
+            @include flex(column, flex-start, flex-strart, 0.7rem);
+
+            > .menu-item {
+              font-size: 0.8rem;
+              color: #22222280;
+            }
+          }
+        }
+      }
+
+      > .customer-service {
+        @include flex(column, flex-start, flex-start, 0.9rem);
+
+        > .service-title {
+          font-size: 0.9rem;
+          font-weight: 700;
+          color: inherit;
+        }
+
+        > .service-time {
+          @include flex(column, flex-start, flex-start, 0.7rem);
+
+          > .time-term {
+            font-size: 0.8rem;
+            color: #22222280;
+          }
+        }
+
+        > .service-noti {
+          font-size: 0.8rem;
+        }
+      }
+    }
+
+    > .corporation-are {
+      @include flex(column, flex-start, flex-start, 0.5rem);
+      margin-top: 3rem;
+      padding-top: 2rem;
+      box-sizing: border-box;
+      border-top: 0.0625rem solid #eeeeee;
+
+      > .term-list {
+        @include flex(row, flex-start, flex-start, 1.5rem);
+
+        > .term-item {
+          font-size: 0.8rem;
+          font-weight: 400;
+          color: #000000;
+
+          &.bold {
+            font-weight: 700;
+          }
+        }
+      }
+
+      > .business-info {
+        width: 35rem;
+        line-height: 1rem;
+        font-size: 0.7rem;
+        color: #22222280;
+      }
+    }
+
+    > .notice-guarantee {
+      @include flex(column, flex-start, flex-start, 0.2rem);
+      margin-top: 2rem;
+      font-size: 0.7rem;
+
+      > .title {
+        font-weight: 700;
+      }
+
+      > .description {
+        color: #22222280;
+      }
+    }
+
+    > .notice-area {
+      width: 35rem;
+      font-size: 0.7rem;
+      color: #22222280;
+      margin-top: 1rem;
+    }
+  }
+}

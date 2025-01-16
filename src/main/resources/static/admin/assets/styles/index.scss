@@ -1,0 +1,112 @@
+@charset "UTF-8";
+
+@import "../../../assets/styles/global";
+
+#main {
+  width: 100%;
+  height: auto;
+  opacity: 1;
+  pointer-events: all;
+  transform: scale(100%);
+  margin-top: 8rem;
+  box-sizing: border-box;
+  padding: 1rem;
+
+  > .box-container {
+    @include flex(row, center, center, 3rem);
+
+    > .box {
+      @include flex(row, flex-start, flex-start);
+      width: calc(30%);
+      height: 6rem;
+      background-color: #222;
+      border-radius: 0.5rem;
+      color: #ffffff;
+      font-weight: bold;
+      margin: 2rem 1.5rem 2rem 1rem;
+      padding: 0.5rem;
+      position: relative;
+
+      > .icon {
+        padding: 0 0.5rem;
+      }
+
+      > .count {
+        top: 50%;
+        left: 50%;
+        font-size: 3rem;
+        transform: translate(-50%, -50%);
+        position: absolute;
+      }
+    }
+  }
+
+  > .table-container {
+    @include flex(column, flex-start, flex-start);
+    border: #222 solid 0.1rem;
+    border-radius: 0.2rem;
+    margin: 1rem 1.5rem 0 1rem;
+    padding: 0.8rem;
+
+    > .table-header {
+      @include flex(row, center, flex-start);
+      width: 100%;
+      border-left: 4px solid #222;
+      font-size: .875rem;
+      word-break: break-all;
+
+      > .title {
+        font-weight: bold;
+        padding-left: 0.5rem;
+      }
+
+      > a {
+        background-color: #222;
+        border-radius: 0.3rem;
+        color: #ffffff;
+        text-decoration: none;
+        padding: 0.2rem 0.5rem;
+        margin-right: 0.2rem;
+      }
+    }
+
+    > .table-main > table {
+      width: 100%;
+      border: 1px solid #ddd;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 14px;
+      margin-top: 0.5rem;
+
+      > thead > tr > th {
+        border: 1px solid #ddd;
+        font-weight: 800;
+        text-align: center;
+        padding: 10px;
+        overflow: hidden;
+      }
+
+      > tbody > tr > .cover-td {
+        width: 3rem;
+        height: 3rem;
+        padding: 0.1rem;
+
+        > .cover {
+          background-color: #eeeeee;
+          width: 3rem;
+          height: 3rem;
+          object-fit: cover;
+          object-position: center;
+        }
+      }
+
+      > tbody > tr > td {
+        border: 1px solid #ddd;
+        font-weight: 400;
+        text-align: center;
+        padding: 10px;
+        overflow: hidden;
+      }
+    }
+  }
+}

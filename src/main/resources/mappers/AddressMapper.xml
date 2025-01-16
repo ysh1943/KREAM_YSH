@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kream.kream.mappers.AddressMapper">
+    <insert id="insertAddress"
+            useGeneratedKeys="true"
+            keyColumn="id"
+            keyProperty="id"
+            parameterType="com.kream.kream.entities.AddressEntity">
+        INSERT INTO `kream`.`address`(`user_id`, `name`, `contact`, `postal`, `basic_address`, `detail_address`,
+                                      `is_default`, `created_at`, `updated_at`, `is_deleted`)
+        VALUES (#{userId}, #{name}, #{contact}, #{postal}, #{basicAddress}, #{detailAddress}, #{isDefault},
+                #{createdAt}, #{updatedAt}, #{isDeleted})
+    </insert>
+
+    <select id="selectAddressById"
+            resultType="com.kream.kream.entities.AddressEntity">
+        SELECT `id`             AS `id`,
+               `user_id`        AS `userId`,
+               `name`           AS `name`,
+               `contact`        AS `contact`,
+               `postal`         AS `postal`,
+               `basic_address`  AS `basicAddress`,
+               `detail_address` AS `detailAddress`,
+               `is_default`     AS `isDefault`,
+               `created_at`     AS `createdAt`,
+               `updated_at`     AS `updatedAt`,
+               `is_deleted`     AS `isDeleted`
+        FROM `kream`.`address`
+        WHERE `user_id` = #{userId}
+          AND `is_deleted` = false
+    </select>
+
+    <select id="selectAllAddress"
+            resultType="com.kream.kream.entities.AddressEntity">
+        SELECT `id`             AS `id`,
+               `user_id`        AS `userId`,
+               `name`           AS `name`,
+               `contact`        AS `contact`,
+               `postal`         AS `postal`,
+               `basic_address`  AS `basicAddress`,
+               `detail_address` AS `detailAddress`,
+               `is_default`     AS `isDefault`,
+               `created_at`     AS `createdAt`,
+               `updated_at`     AS `updatedAt`,
+               `is_deleted`     AS `isDeleted`
+        FROM `kream`.`address`
+        WHERE `user_id` = #{userId}
+          AND `is_deleted` = false
+    </select>
+
+    <select id="selectmodifyAddressById"
+            resultType="com.kream.kream.entities.AddressEntity">
+        SELECT `id`             AS `id`,
+               `user_id`        AS `userId`,
+               `name`           AS `name`,
+               `contact`        AS `contact`,
+               `postal`         AS `postal`,
+               `basic_address`  AS `basicAddress`,
+               `detail_address` AS `detailAddress`,
+               `is_default`     AS `isDefault`,
+               `created_at`     AS `createdAt`,
+               `updated_at`     AS `updatedAt`,
+               `is_deleted`     AS `isDeleted`
+        FROM `kream`.`address`
+        WHERE `id` = #{id}
+          AND `is_deleted` = false
+
+    </select>
+
+    <select id="selectAddressByUserId" resultType="com.kream.kream.entities.AddressEntity">
+        SELECT `id`             AS `id`,
+               `user_id`        AS `userId`,
+               `name`           AS `name`,
+               `contact`        AS `contact`,
+               `postal`         AS `postal`,
+               `basic_address`  AS `basicAddress`,
+               `detail_address` AS `detailAddress`,
+               `is_default`     AS `isDefault`,
+               `created_at`     AS `createdAt`,
+               `updated_at`     AS `updatedAt`,
+               `is_deleted`     AS `isDeleted`
+        FROM `kream`.`address`
+        WHERE `address`.`user_id` = #{userId}
+          AND `address`.`is_default` = 1
+          AND `is_deleted` = false
+    </select>
+
+    <update id="modifyAddress"
+            parameterType="com.kream.kream.entities.AddressEntity">
+        UPDATE `kream`.`address`
+        SET `name`           = #{name},
+            `contact`        = #{contact},
+            `postal`         = #{postal},
+            `basic_address`  = #{basicAddress},
+            `detail_address` = #{detailAddress},
+            `is_default`     = #{isDefault},
+            `updated_at`     = #{updatedAt}
+        WHERE `id` = #{id}
+    </update>
+
+    <update id="deleteAddress"
+            parameterType="com.kream.kream.entities.AddressEntity">
+        UPDATE `kream`.`address`
+        SET `is_deleted` = #{isDeleted}
+        WHERE `id` = #{id}
+    </update>
+
+    <update id="isdefault"
+            parameterType="com.kream.kream.entities.AddressEntity">
+        UPDATE `kream`.`address`
+        SET `is_default` = #{isDefault}
+        WHERE `user_id` = #{userId}
+    </update>
+
+    <select id="deleteAddressById"
+            resultType="com.kream.kream.entities.AddressEntity">
+        SELECT `id`             AS `id`,
+               `user_id`        AS `userId`,
+               `name`           AS `name`,
+               `contact`        AS `contact`,
+               `postal`         AS `postal`,
+               `basic_address`  AS `basicAddress`,
+               `detail_address` AS `detailAddress`,
+               `is_default`     AS `isDefault`,
+               `created_at`     AS `createdAt`,
+               `updated_at`     AS `updatedAt`,
+               `is_deleted`     AS `isDeleted`
+        FROM `kream`.`address`
+        WHERE `id` = #{id}
+    </select>
+</mapper>

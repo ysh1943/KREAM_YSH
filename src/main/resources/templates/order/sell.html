@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>KREAM</title>
+    <link rel="shortcut icon" th:href="@{'/assets/images/favicon.ico'}">
+    <link rel="stylesheet" th:href="@{'/assets/styles/common.css'}" type="text/css">
+    <link rel="stylesheet" th:href="@{'/order/assets/styles/sell.css'}" type="text/css">
+    <script defer src="/assets/scripts/common.js" type="text/javascript"></script>
+    <script defer src="/order/assets/scripts/sell.js" type="text/javascript"></script>
+    <script src="https://kit.fontawesome.com/20d32b3086.js" crossorigin="anonymous"></script>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script th:if="${user == null}">
+        location.href = './login';
+    </script>
+</head>
+<body th:if="${user != null}">
+<header id="header">
+    <div class="header-container">
+        <div class="top-inner">
+            <ul class="top-list">
+                <li class="-spring"></li>
+                <li class="top-item">
+                    <a class="top-link" th:if="${user != null && user.isAdmin()}" th:href="@{'/admin/'}">관리자 페이지</a>
+                </li>
+                <li class="top-item">
+                    <a class="top-link" th:href="${user == null} ? '/login' : '/my/'">마이페이지</a>
+                </li>
+                <li class="top-item">
+                    <a class="top-link" th:href="${user == null} ? '/login' : '/logout'"
+                       th:text="${user == null} ? '로그인' : '로그아웃'"></a>
+                </li>
+            </ul>
+        </div>
+        <div class="main-inner">
+            <a class="logo" th:href="@{'/'}">
+                <img class="logo-icon" alt="logo" src="/assets/images/logo.png">
+            </a>
+            <div class="-spring"></div>
+            <nav class="menu">
+                <ul class="menu-list">
+                    <li class="menu-item">
+                        <a class="menu-link bold" th:href="@{'/'}">HOME</a>
+                    </li>
+                    <li class="menu-item">
+                        <a class="menu-link" th:href="@{'/shop'}">SHOP</a>
+                    </li>
+                </ul>
+            </nav>
+            <a class="search" th:href="@{'/search'}">
+                <img class="search-icon" alt="search-icon" src="/home/assets/images/search-icon.png">
+            </a>
+            <a class="cart" th:href="${user == null} ? '/login' : '/cart/'">
+                <img class="cart-icon" alt="cart-icon" src="/home/assets/images/cart_icon.png">
+            </a>
+        </div>
+    </div>
+</header>
+<div class="layer">
+    <div class="cover" id="cover"></div>
+    <form class="layer_container">
+        <button class="close" type="button">
+            <svg class="ico-close" height="24" viewBox="0,0,256,256" width="24" x="0px"
+                 xmlns="http://www.w3.org/2000/svg" y="0px">
+                <g fill="#000000" fill-rule="nonzero" font-family="none" font-size="none"
+                   font-weight="none" stroke="none" stroke-dasharray=""
+                   stroke-dashoffset="0" stroke-linecap="butt" stroke-linejoin="miter"
+                   stroke-miterlimit="10"
+                   stroke-width="1" style="mix-blend-mode: normal" text-anchor="none">
+                    <g transform="scale(5.12,5.12)">
+                        <path d="M7.71875,6.28125l-1.4375,1.4375l17.28125,17.28125l-17.28125,17.28125l1.4375,1.4375l17.28125,-17.28125l17.28125,17.28125l1.4375,-1.4375l-17.28125,-17.28125l17.28125,-17.28125l-1.4375,-1.4375l-17.28125,17.28125z"></path>
+                    </g>
+                </g>
+            </svg>
+        </button>
+        <div class="layer_header">
+            <h2 class="title">주소록</h2>
+        </div>
+        <div class="address-list-container">
+            <!--            <button class="add-address" type="button">-->
+            <!--                <span class="text">+ 새 주소 추가하기</span>-->
+            <!--            </button>-->
+            <!--            <div class="address-item">-->
+            <!--                <label class="label">-->
+            <!--                <span class="address-info">-->
+            <!--                    <span class="name-wrap">-->
+            <!--                        <span class="name">문요셉</span>-->
+            <!--                        <span class="default">기본배송지</span>-->
+            <!--                    </span>-->
+            <!--                    <span class="text">(41088) 대구 동구 안심로 402 (신서동, 영조아름다운나날1단지) 101동 1301호</span>-->
+            <!--                    <span class="contact">010-5827-1723</span>-->
+            <!--                </span>-->
+            <!--                    <input class="_input" type="checkbox" name="check">-->
+            <!--                    <span class="_box"></span>-->
+            <!--                </label>-->
+            <!--            </div>-->
+        </div>
+        <div class="layer_content">
+            <div class="delivery_bind">
+                <label>
+                    <input name="userId" th:value="${user.getId()}" type="hidden">
+                </label>
+                <div class="delivery_input">
+                    <div class="input_box">
+                        <h4 class="title">이름</h4>
+                        <label class="--obj-label">
+                            <input autocomplete="off" class="input-text" name="name" placeholder="수령인의 이름"
+                                   type="text">
+                            <span class="_warning"></span>
+                        </label>
+                    </div>
+                    <div class="input_box">
+                        <h4 class="title">휴대폰 번호</h4>
+                        <label class="--obj-label">
+                            <input autocomplete="off" class="input-text" maxlength="11" name="contact"
+                                   placeholder="-없이 입력" type="text">
+                            <span class="_warning"></span>
+                        </label>
+                    </div>
+                    <div class="input_box">
+                        <h4 class="title">우편번호</h4>
+                        <label class="--obj-label">
+                            <input autocomplete="off" class="input-text" name="postal"
+                                   placeholder="우편번호를 검색하세요"
+                                   type="text">
+                            <input class="button" id="btn" type="button" value="우편번호">
+                            <span class="_warning"></span>
+                        </label>
+                    </div>
+                    <div class="input_box">
+                        <h4 class="title">주소</h4>
+                        <label class="--obj-label">
+                            <input autocomplete="off" class="input-text" name="basicAddress"
+                                   placeholder="우편번호 검색 후 자동 입력 됩니다."
+                                   type="text">
+                            <span class="_warning"></span>
+                        </label>
+                    </div>
+                    <div class="input_box">
+                        <h4 class="title">상세 주소</h4>
+                        <label class="--obj-label">
+                            <input autocomplete="off" class="input-text" name="detailAddress"
+                                   placeholder="건물, 아파트, 동/호수 입력"
+                                   type="text">
+                            <span class="_warning"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="layer_btn">
+                <button class="close" type="button">취소</button>
+                <button class="save" type="submit">저장하기</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="account-dialog">
+    <div class="account-cover"></div>
+    <form class="account-form">
+        <input name="user-id" th:value="${user.getId()}" type="hidden">
+        <button class="close" type="button">
+            <svg class="ico-close" height="24" viewBox="0,0,256,256" width="24" x="0px"
+                 xmlns="http://www.w3.org/2000/svg" y="0px">
+                <g fill="#000000" fill-rule="nonzero" font-family="none" font-size="none"
+                   font-weight="none" stroke="none" stroke-dasharray=""
+                   stroke-dashoffset="0" stroke-linecap="butt" stroke-linejoin="miter"
+                   stroke-miterlimit="10"
+                   stroke-width="1" style="mix-blend-mode: normal" text-anchor="none">
+                    <g transform="scale(5.12,5.12)">
+                        <path d="M7.71875,6.28125l-1.4375,1.4375l17.28125,17.28125l-17.28125,17.28125l1.4375,1.4375l17.28125,-17.28125l17.28125,17.28125l1.4375,-1.4375l-17.28125,-17.28125l17.28125,-17.28125l-1.4375,-1.4375l-17.28125,17.28125z"></path>
+                    </g>
+                </g>
+            </svg>
+        </button>
+        <div class="layer_header">
+            <h2 class="title">판매 정산 계좌</h2>
+        </div>
+        <div class="register-account-container">
+            <div class="account-info">
+                <span class="text">등록된 계좌 정보</span>
+                <span class="account">농협은행 3521173335273 / 문요셉</span>
+            </div>
+            <span class="-spring"></span>
+            <button class="delete" type="button">삭제</button>
+        </div>
+        <div class="dialog-main">
+            <div class="input_box">
+                <h4 class="input_title">은행명</h4>
+                <label class="--obj-label" data-id="bankName">
+                    <input autocomplete="off" class="input_txt" id="selectedBank" name="bank-name" placeholder="선택하세요"
+                           readonly type="text">
+                    <button class="btn" type="button">
+                        <img alt="down-circle" class="image" height="24"
+                             src="/my/images/icons8-down-button-50.png" width="24">
+                    </button>
+                    <div class="layerDropdown">
+                        <div class="layer-background"></div>
+                        <div class="layer_container">
+                            <div class="layer_content">
+                                <ul class="drop_list">
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">국민은행</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">신한은행</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">우리은행</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">하나은행</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">기업은행</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">농협은행</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">SC은행</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">우체국</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">한국씨티은행</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">산업은행</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">카카오뱅크</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">부산은행</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">대구은행</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">광주은행</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">케이뱅크</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">수협중앙회</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">제주은행</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">전북은행</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">지역농축협</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">경남은행</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">새마을금고연합회</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">신협</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">저축은행</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">HSBC은행</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">도이치은행</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">제이피모간체이스은행</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">BOA은행</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">비엔피파리바은행</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">중국공상은행</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">산림조합</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">중국건설은행</a>
+                                    </li>
+                                    <li class="drop_item">
+                                        <a class="drop_link" href="#">토스뱅크</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="_warning"></span>
+                </label>
+            </div>
+            <div class="input_box">
+                <h4 class="input_title">계좌번호</h4>
+                <label class="--obj-label" data-id="bankNumber">
+                    <input class="input_txt" name="account-number" placeholder="-없이 입력하세요" type="text">
+                    <span class="_warning"></span>
+                </label>
+            </div>
+            <div class="input_box">
+                <h4 class="input_title">예금주</h4>
+                <label class="--obj-label" data-id="name">
+                    <input class="input_txt" name="account-owner" placeholder="예금주명을 정확히 입력하세요" type="text">
+                    <span class="_warning"></span>
+                </label>
+            </div>
+            <div class="registrationbtn">
+                <button class="button" type="submit">저장하기</button>
+            </div>
+        </div>
+    </form>
+</div>
+<form id="form">
+    <input type="hidden" name="user-id" th:value="${user.getId()}">
+    <input type="hidden" name="size-id" th:value="${orderProduct.getSizeId()}">
+    <input type="hidden" name="buyer-bid-id" th:value="${productPrice.getBuyerBidId()}">
+    <div class="top">
+        <span class="top-title"></span>
+    </div>
+    <div class="main">
+        <div class="order-container">
+            <div class="first-page">
+                <div class="product-wrap">
+                    <img class="image" th:src="${orderProduct.getBase64Image()}" alt="product-image">
+                    <div class="product-info">
+                        <span class="model-number" th:text="${orderProduct.getModelNumber()}"></span>
+                        <span class="product-name-en" th:text="${orderProduct.getProductNameEn()}"></span>
+                        <span class="product-name-ko" th:text="${orderProduct.getProductNameKo()}"></span>
+                        <span class="size" th:text="${orderProduct.getSizeType()}"></span>
+                    </div>
+                </div>
+                <div class="price-wrap">
+                    <div class="price-list">
+                        <div class="item">
+                            <span class="title">즉시 구매가</span>
+                            <span class="price"
+                                  th:text="${productPrice.getSellPrice() != 0 ? #numbers.formatInteger(productPrice.getSellPrice() , 0 , 'COMMA') + '원' : '-'}"></span>
+                        </div>
+                        <div class="item">
+                            <span class="title">즉시 판매가</span>
+                            <span class="price"
+                                  th:text="${productPrice.getBuyPrice() != 0 ? #numbers.formatInteger(productPrice.getBuyPrice() , 0 , 'COMMA') + '원' : '-'}"></span>
+                        </div>
+                    </div>
+                    <div class="select-button">
+                        <button class="button add" type="button">
+                            <span class="button-text">판매 입찰</span>
+                        </button>
+                        <button class="button sell" type="button">
+                            <span class="button-text">즉시 판매</span>
+                        </button>
+                    </div>
+                    <div class="price-now">
+                        <div class="title-wrap">
+                            <span class="price-now-title">즉시 판매가</span>
+                            <span class="-spring"></span>
+                            <span class="_warning">2만원 부터 천원단위로 입력하세요.</span>
+                        </div>
+                        <label class="label">
+                            <span class="-spring"></span>
+                            <input autocomplete="off" maxlength="10" minlength="5" placeholder="희망가 입력"
+                                   type="text" name="price" class="input">
+                            <span class="text">원</span>
+                        </label>
+                        <span class="price"
+                              th:text="${#numbers.formatInteger(productPrice.getBuyPrice() , 0 , 'COMMA') + '원'}"></span>
+                    </div>
+                    <div class="price-bind">
+                        <div class="order-content-wrap">
+                            <div class="content-title-wrap">
+                                <span class="content-title">검수비</span>
+                                <span class="content-title">수수료</span>
+                                <span class="content-title">배송비</span>
+                            </div>
+                            <div class="-spring"></div>
+                            <div class="content-text-wrap">
+                                <span class="content-text">무료</span>
+                                <span class="content-text charge">-</span>
+                                <span class="content-text">선불 • 판매자 부담</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="deadline-wrap">
+                    <span class="deadline-title">입찰 마감기한</span>
+                    <label class="label">
+                        <span class="deadline">180일</span>
+                        <input readonly type="text" name="deadline" class="deadline-date">
+                        <span class="text">마감</span>
+                    </label>
+                    <div class="date-button-wrap">
+                        <button class="date-button" type="button" data-days="1">1일</button>
+                        <button class="date-button" type="button" data-days="3">3일</button>
+                        <button class="date-button" type="button" data-days="7">7일</button>
+                        <button class="date-button" type="button" data-days="30">30일</button>
+                        <button class="date-button" type="button" data-days="60">60일</button>
+                        <button class="date-button" type="button" data-days="90">90일</button>
+                        <button class="date-button" type="button" data-days="180">180일</button>
+                    </div>
+                </div>
+                <div class="button-wrap">
+                    <div class="price-total">
+                        <span class="price-total-title">정산금액</span>
+                        <span class="-spring"></span>
+                        <span class="price-total-text"></span>
+                    </div>
+                    <button class="continue-button" type="button">
+                        <span class="button-text">판매 입찰 계속</span>
+                    </button>
+                </div>
+            </div>
+            <div class="next-page">
+                <div class="order-product-container">
+                    <div class="product-content-wrap">
+                        <img class="image" th:src="${orderProduct.getBase64Image()}" alt="product-image">
+                        <div class="product-info">
+                            <span class="model-number" th:text="${orderProduct.getModelNumber()}"></span>
+                            <span class="product-name-en" th:text="${orderProduct.getProductNameEn()}"></span>
+                            <span class="product-name-ko" th:text="${orderProduct.getProductNameKo()}"></span>
+                            <span class="size" th:text="${orderProduct.getSizeType()}"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="account-container">
+                    <div class="account-title-wrap">
+                        <span class="title">판매 정산 계좌</span>
+                        <span class="-spring"></span>
+                        <button class="account-button" type="button">
+                            <span class="account-button-text">변경</span>
+                        </button>
+                    </div>
+<!--                    <div class="account-content-wrap">-->
+                    <!--                        <label class="label">-->
+                    <!--                            <span class="title">계좌</span>-->
+                    <!--                            <input maxlength="25" minlength="15" type="text" name="account" class="account" value="농협은행 352117335273">-->
+                    <!--                        </label>-->
+                    <!--                        <label class="label">-->
+                    <!--                            <span class="title">예금주</span>-->
+                    <!--                            <input maxlength="10" minlength="1" type="text" name="name" class="name" value="문요셉">-->
+                    <!--                        </label>-->
+<!--                    </div>-->
+                </div>
+                <div class="address-container">
+                    <div class="address-title-wrap">
+                        <span class="title">반송 주소</span>
+                        <span class="-spring"></span>
+                        <button class="address-button" type="button">
+                            <span class="address-button-text">주소 변경</span>
+                        </button>
+                    </div>
+                    <!--                                        <div class="address-content-wrap">-->
+                    <!--                                                <label class="label">-->
+                    <!--                                                    <span class="title">받는 분</span>-->
+                    <!--                                                    <input maxlength="10" minlength="1" type="text" name="name" class="name" value="문요셉">-->
+                    <!--                                                </label>-->
+                    <!--                                                <label class="label">-->
+                    <!--                                                    <span class="title">연락처</span>-->
+                    <!--                                                    <input maxlength="11" minlength="10" type="tel" name="contact" class="contact" value="010-5827-1723">-->
+                    <!--                                                </label>-->
+                    <!--                                                <label class="label">-->
+                    <!--                                                    <span class="title">주소</span>-->
+                    <!--                                                    <input maxlength=50 minlength="20" type="text" name="address" class="address" value="대구 동구 신서동 영조아름다운나날">-->
+                    <!--                                                </label>-->
+                    <!--                                        </div>-->
+                    <!--                    <button class="note-button" type="button">-->
+                    <!--                        <span class="note">요청사항 없음</span>-->
+                    <!--                        <span class="-spring"></span>-->
+                    <!--                        <i class="fa-solid fa-chevron-right"></i>-->
+                    <!--                    </button>-->
+                </div>
+                <!--                <div class="order-container">-->
+                <!--                    <span class="title">최종 주문정보</span>-->
+                <!--                    <div class="order-content-wrap">-->
+                <!--                        <div class="content-title-wrap">-->
+                <!--                            <span class="content-title bold">판매 희망가</span>-->
+                <!--                            <span class="content-title">검수비</span>-->
+                <!--                            <span class="content-title">수수료</span>-->
+                <!--                            <span class="content-title">배송비</span>-->
+                <!--                        </div>-->
+                <!--                        <div class="-spring"></div>-->
+                <!--                        <div class="content-text-wrap">-->
+                <!--                            <span class="content-text bold"></span>-->
+                <!--                            <span class="content-text">무료</span>-->
+                <!--                            <span class="content-text charge"></span>-->
+                <!--                            <span class="content-text">선불 • 판매자 부담</span>-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                    <div class="deadline-wrap">-->
+                <!--                        <span class="deadline-title">입찰 마감기한</span>-->
+                <!--                        <span class="-spring"></span>-->
+                <!--                                                <span class="deadline-text">180일 2025/06/23 까지</span>-->
+                <!--                    </div>-->
+                <!--                    <div class="all-price-wrap">-->
+                <!--                        <span class="all-price-title">정산 금액</span>-->
+                <!--                                                <span class="all-price-text">23,000원</span>-->
+                <!--                    </div>-->
+                <!--                </div>-->
+                <div class="order-button-wrap">
+                    <button class="order-button" type="submit">
+                        <!--                                                <span class="order-button-text"></span>-->
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<footer id="footer">
+    <div class="footer-container">
+        <div class="service-area">
+            <div class="footer-menu">
+                <div class="menu-box">
+                    <span class="menu-title">이용안내</span>
+                    <ul class="menu-list">
+                        <li class="menu-item">검수기준</li>
+                        <li class="menu-item">이용정책</li>
+                        <li class="menu-item">페널티 정책</li>
+                        <li class="menu-item">커뮤니티 가이드라인</li>
+                    </ul>
+                </div>
+                <div class="menu-box">
+                    <span class="menu-title">고객지원</span>
+                    <ul class="menu-list">
+                        <li class="menu-item">공지사항</li>
+                        <li class="menu-item">서비스 소개</li>
+                        <li class="menu-item">스토어 안내</li>
+                        <li class="menu-item">판매자 방문접수</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="-spring"></div>
+            <div class="customer-service">
+                <span class="service-title">고객센터 1588-7813</span>
+                <span class="service-time">
+                    <span class="time-term">운영시간 평일 10:00 - 18:00 (토•일, 공휴일 휴무)</span>
+                    <span class="time-term">점심시간 평일 13:00 - 14:00</span>
+                </span>
+                <span class="service-noti">1:1 문의하기는 앱에서만 가능합니다.</span>
+            </div>
+        </div>
+        <div class="corporation-are">
+            <ul class="term-list">
+                <li class="term-item">회사소개</li>
+                <li class="term-item">인재채용</li>
+                <li class="term-item">제휴제안</li>
+                <li class="term-item">이용약관</li>
+                <li class="term-item bold">개인정보처리방침</li>
+            </ul>
+            <span class="business-info">크림 주식회사 · 대표 김창욱사업자등록번호 : 570-88-01618 사업자정보확인통신판매업 : 제 2021-성남분당C-0093호사업장소재지 : 경기도 성남시 분당구 분당내곡로 131 판교테크원 타워1, 7층호스팅 서비스 : 네이버 클라우드 ㈜</span>
+        </div>
+        <div class="notice-guarantee">
+            <span class="title">신한은행 채무지급보증 안내</span>
+            <span class="description">당사는 고객님의 현금 결제 금액에 대해 신한은행과 채무지급보증 계약을 체결하여 안전거래를 보장하고 있습니다.서비스가입 사실 확인</span>
+        </div>
+        <div class="notice-area">
+            <span class="notice">크림(주)는 통신판매 중개자로서 통신판매의 당사자가 아닙니다. 본 상품은 개별판매자가 등록한 상품으로 상품, 상품정보, 거래에 관한 의무와 책임은 각 판매자에게 있습니다. 단, 이용약관 및 정책, 기타 거래 체결 과정에서 고지하는 내용 등에 따라 검수하고 보증하는 내용에 대한 책임은 크림(주)에 있습니다.</span>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

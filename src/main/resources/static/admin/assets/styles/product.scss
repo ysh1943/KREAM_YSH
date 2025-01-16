@@ -1,0 +1,457 @@
+@charset "UTF-8";
+
+@import "../../../assets/styles/global";
+
+.header-menu {
+  > .tabs > .tab > .-selected {
+    border-bottom: 2px solid #222;
+    font-weight: 500;
+  }
+}
+
+.main-container {
+  @include flex(row, flex-start, flex-start);
+  width: 100%;
+  box-sizing: border-box;
+  position: absolute;
+  margin-top: 8.5rem;
+  padding: 0;
+
+  #nav {
+    @include flex(column, center, flex-start);
+    width: 8rem;
+    height: 100vh;
+    margin-left: 1.5rem;
+
+    > .icon {
+      font-size: 2rem;
+      margin-top: 2.3rem;
+      margin-bottom: 1rem;
+    }
+
+    > h2 {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    > ul {
+      margin-top: 1.5rem;
+
+      > .item {
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 300;
+        padding: 1rem 0 1rem 0;
+
+        &:hover {
+          font-weight: bold;
+        }
+
+        &.-selected {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  #main {
+    @include flex(row, flex-start, flex-start);
+
+    > .content[rel="product-list"] {
+      width: 100%;
+      box-sizing: border-box;
+      max-width: calc(100% - 5rem);
+      position: absolute;
+
+      > h1 {
+        font-size: 2rem;
+        font-weight: bold;
+        margin: 1rem 2rem;
+      }
+
+      > .searchForm {
+        @include flex(row, center, flex-start);
+        width: 100%;
+        margin: 1rem 2rem;
+
+        > .filter-label {
+          border: 0.0625rem solid #222;
+          padding: 0.3rem;
+          margin: 0 0.5rem;
+        }
+
+        > .input-label {
+          border: 0.0625rem solid #222;
+          padding: 0.3rem;
+          margin-right: 0.5rem;
+        }
+
+        > .button {
+          background-color: #222;
+          border-radius: 0.3rem;
+          color: #ffffff;
+          cursor: pointer;
+          padding: 0.4rem 0.6rem;
+          margin-right: 0.5rem;
+        }
+
+        > .delete {
+          background-color: #A9A9A9;
+          border-radius: 0.3rem;
+          color: #ffffff;
+          cursor: pointer;
+          padding: 0.4rem 0.6rem;
+
+          &:hover {
+            background-color: #222;
+            color: #ffffff;
+          }
+        }
+      }
+
+
+      > table {
+        width: 100%;
+        max-width: 100%;
+        border: 1px solid #ddd;
+        border-collapse: collapse;
+        box-sizing: border-box;
+        table-layout: auto;
+        font-size: 14px;
+
+        position: relative;
+        margin: 1rem 2rem;
+
+        > thead > tr > th {
+          border: 1px solid #ddd;
+          font-weight: 800;
+          text-align: center;
+          padding: 0.5rem 0.2rem;
+          white-space: nowrap;
+        }
+
+        > tbody > tr > .cover-td {
+          width: 3rem;
+          height: 3rem;
+          padding-bottom: 0;
+
+          > .cover {
+            background-color: #eeeeee;
+            width: 3rem;
+            height: 3rem;
+            object-fit: cover;
+            object-position: center;
+          }
+        }
+
+        > tbody > tr > td {
+          border: 1px solid #ddd;
+          font-weight: 400;
+          text-align: center;
+          padding: 0.25rem;
+          white-space: normal;
+
+          > button[name="delete"] {
+            background-color: #A9A9A9;
+            border-radius: 0.3rem;
+            color: #ffffff;
+            cursor: pointer;
+            padding: 0.4rem 0.6rem;
+
+            &:hover {
+              background-color: #222;
+              color: #ffffff;
+            }
+          }
+        }
+      }
+
+      > .move {
+        align-items: stretch;
+        display: flex;
+        flex-direction: row;
+        gap: 0.0625rem;
+        line-height: 1;
+        justify-content: center;
+
+        .page {
+          width: 1.75rem;
+          color: #a0a0a0;
+          font-size: 1rem;
+          font-weight: bold;
+          line-height: 1;
+          text-decoration: none;
+          user-select: none;
+          padding: 0 0.5rem;
+
+          align-items: center;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+
+          &:hover {
+            color: #222;
+          }
+
+          &:active {
+            color: #222;
+          }
+
+          &.selected {
+            color: #222;
+            cursor: pointer;
+            pointer-events: none;
+          }
+        }
+
+        > .page.first,
+        > .page.next {
+          border-top-left-radius: 0.25rem;
+          border-bottom-left-radius: 0.25rem;
+        }
+
+        > .page.prev,
+        > .page.last {
+          border-top-right-radius: 0.25rem;
+          border-bottom-right-radius: 0.25rem;
+        }
+
+        .page-container {
+          margin: 0 0.5rem;
+
+          align-items: stretch;
+          display: flex;
+          flex-direction: row;
+          gap: 0.0625rem;
+          justify-content: center;
+
+          > .page:first-of-type {
+            border-top-left-radius: 0.25rem;
+            border-bottom-left-radius: 0.25rem;
+          }
+
+          > .page:last-of-type {
+            border-top-right-radius: 0.25rem;
+            border-bottom-right-radius: 0.25rem;
+          }
+        }
+      }
+    }
+
+    > .content[rel="product-register"] {
+      width: 100%;
+      box-sizing: border-box;
+      max-width: calc(100% - 5rem);
+      position: absolute;
+
+      > h1 {
+        font-size: 2rem;
+        font-weight: bold;
+        margin: 1rem 2rem;
+      }
+
+      > form {
+        display: flex;
+        flex-direction: column;
+        margin-left: 2rem;
+
+        > table {
+          width: 100%;
+          border: 1px solid #ddd;
+          border-collapse: collapse;
+          text-align: left;
+
+        }
+
+        tr > th {
+          border: 1px solid #ddd;
+          width: 8rem;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          padding: 0.5rem;
+        }
+
+        tr > td {
+          border: 1px solid #ddd;
+
+          > ._input {
+            width: 13rem;
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            margin: 0.3rem;
+          }
+
+          > select {
+            width: 8rem;
+            border: 1px solid #ddd;
+            padding: 0.3rem;
+            margin: 0.3rem;
+          }
+        }
+
+        tr > .size-box {
+          @include flex(row, flex-start, flex-start);
+          border: none;
+          width: 20rem;
+          height: 10rem;
+          padding: 0.5rem;
+
+          > .clothes-container {
+            @include flex(column, flex-start, flex-start);
+
+            > .title {
+              font-size: 1rem;
+              font-weight: 500;
+              padding: 0.5rem;
+            }
+
+            > .size-container {
+              display: grid;
+              grid-template-columns: repeat(3, 1fr); /* 1줄에 3개씩 */
+              gap: 10px;
+              padding: 0.5rem;
+
+              > .check {
+                @include flex(column, center, center);
+                width: 5rem;
+                height: 2rem;
+                border: #222 solid 1px;
+                border-radius: 0.3rem;
+                background-color: #ffffff;
+
+                > input {
+                  display: none;
+                }
+
+                > input:checked + ._box {
+                  color: white;
+                }
+              }
+            }
+          }
+
+          > .line {
+            height: 8rem;
+            margin: 0.7rem 3rem;
+            border: #ddd solid 1px;
+          }
+
+          > .shoes-container {
+            @include flex(column, flex-start, flex-start);
+
+            > .title {
+              font-size: 1rem;
+              font-weight: 500;
+              padding: 0.5rem;
+            }
+
+            > .size-container {
+              display: grid;
+              grid-template-columns: repeat(5, 1fr); /* 1줄에 3개씩 */
+              gap: 10px;
+              padding: 0.5rem;
+
+              > .check {
+                @include flex(column, center, center);
+                width: 5rem;
+                height: 2rem;
+                border: #222 solid 1px;
+                border-radius: 0.3rem;
+                background-color: #ffffff;
+
+                > input {
+                  display: none;
+                }
+
+                > input:checked + ._box {
+                  color: white;
+                }
+              }
+            }
+          }
+
+          > .oneSize-container {
+            @include flex(column, flex-start, flex-start);
+
+            > .title {
+              font-size: 1rem;
+              font-weight: 500;
+              padding: 0.5rem;
+            }
+
+            > .size-container {
+              display: grid;
+              grid-template-columns: repeat(5, 1fr); /* 1줄에 3개씩 */
+              gap: 10px;
+              padding: 0.5rem;
+
+              > .check {
+                @include flex(column, center, center);
+                width: 5rem;
+                height: 2rem;
+                border: #222 solid 1px;
+                border-radius: 0.3rem;
+                background-color: #ffffff;
+
+                > input {
+                  display: none;
+                }
+
+                > input:checked + ._box {
+                  color: white;
+                }
+              }
+            }
+          }
+        }
+
+        tr > td {
+          > .row {
+            @include flex(row, flex-start, flex-start, 0.3rem);
+
+            > .preview-wrapper {
+              @include flex(row, center, center);
+              width: 12rem;
+              height: 12rem;
+              border: 0.0625rem solid #222;
+              cursor: pointer;
+              font-size: 2rem;
+              overflow: hidden;
+              margin: 0.5rem;
+
+              > .image {
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: cover;
+                object-position: center;
+              }
+            }
+          }
+
+          > .tip {
+            padding: 1rem 0.4rem 0.5rem 0.4rem;
+
+            > ul {
+              list-style-type: disc;
+              padding: 1rem;
+
+              > li {
+                padding-bottom: 1rem;
+              }
+            }
+          }
+        }
+
+        > button {
+          align-self: flex-end;
+          background-color: #222;
+          border-radius: 0.3rem;
+          color: #ffffff;
+          cursor: pointer;
+          padding: 0.4rem 0.6rem;
+          margin-top: 1rem;
+        }
+      }
+    }
+  }
+}

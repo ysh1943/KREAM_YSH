@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>KREAM Administrator</title>
+    <link rel="shortcut icon" th:href="@{'/assets/images/favicon.ico'}">
+    <link rel="stylesheet" type="text/css" th:href="@{'/assets/styles/common.css'}">
+    <link rel="stylesheet" type="text/css" th:href="@{'/admin/assets/styles/common.css'}">
+    <link rel="stylesheet" type="text/css" th:href="@{'/admin/assets/styles/index.css'}">
+    <script defer type="text/javascript" th:src="@{'/assets/scripts/common.js'}"></script>
+    <script src="https://kit.fontawesome.com/79ae8a0168.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<header>
+    <div class="header-top">
+        <div class="main-inner">
+            <h1>
+                <a class="logo" th:href="@{../}">KREAM</a>
+                <a class="logo" th:href="@{/admin/}">Administrator</a>
+            </h1>
+        </div>
+        <div class="-spring"></div>
+        <div class="header-right">
+            <nav class="link-container">
+                <a th:href="@{/logout}"><i class="icon fa-solid fa-arrow-right-from-bracket"></i></a>
+            </nav>
+        </div>
+    </div>
+    <nav class="header-menu">
+        <ul class="tabs">
+            <li class="tab"><a class="link" th:href="@{/admin/user}">회원관리</a></li>
+            <li class="tab"><a class="link" th:href="@{/admin/product}">상품관리</a></li>
+            <li class="tab"><a class="link" th:href="@{/admin/order}">주문관리</a></li>
+        </ul>
+    </nav>
+</header>
+<main id="main">
+    <div class="box-container">
+        <div class="box">
+            <i class="icon fa-regular fa-user"></i>
+            <span class="name">회원 수</span>
+            <span class="count" th:text="${userCount}"></span>
+        </div>
+        <div class="box">
+            <i class="icon fa-solid fa-chart-simple"></i>
+            <span class="name">총 거래량</span>
+            <span class="count" th:text="${orderCounts.getAllOrder()}"></span>
+        </div>
+        <div class="box">
+            <i class="icon fa-solid fa-hourglass-start"></i>
+            <span class="name">입고 대기</span>
+            <span class="count" th:text="${orderCounts.getStatePending()}"></span>
+        </div>
+        <div class="box">
+            <i class="icon fa-solid fa-chart-simple"></i>
+            <span class="name">총 검수량</span>
+            <span class="count" th:text="${orderCounts.getStateInspecting()}"></span>
+        </div>
+    </div>
+    <div class="table-container">
+        <div class="table-header">
+            <span class="title">최근 회원가입</span>
+            <div class="-spring"></div>
+            <a th:href="@{/admin/user}">회원관리 바로가기</a>
+        </div>
+        <div class="table-main">
+            <table>
+                <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>이메일</th>
+                    <th>소셜 타입</th>
+                    <th>전화번호 </th>
+                    <th>닉네임</th>
+                    <th>거래량</th>
+                    <th>가입일시</th>
+                    <th>접근차단</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.getId()}"></td>
+                    <td th:text="${user.getEmail()}"></td>
+                    <td th:if="${user.getSocialTypeCode() != null}"
+                        th:text="${user.getSocialTypeCode()}"></td>
+                    <td th:if="${user.getSocialTypeCode()} == null">KREAM</td>
+                    <td th:text="${user.getContact()}"></td>
+                    <td th:text="${user.getNickname()}"></td>
+                    <td th:text="${user.getUserOrderCount() + user.getUserSellerBidCount() + user.getUserBuyerBidCount()} + '건'"></td>
+                    <td th:text="${#temporals.format(user.getCreatedAt(), 'yyyy-MM-dd')}"></td>
+                    <td th:if="${user.isSuspended() == false}">활동</td>
+                    <td th:if="${user.isSuspended() == true}">정지</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="table-container">
+        <div class="table-header">
+            <span class="title">최근 거래내역</span>
+            <div class="-spring"></div>
+            <a th:href="@{/admin/order}">주문관리 바로가기</a>
+        </div>
+        <div class="table-main">
+            <table>
+                <thead>
+                <tr>
+                    <th style="width: 2rem;">번호</th>
+                    <th style="width: 2.5rem"></th>
+                    <th style="width: 15rem;">상품명</th>
+                    <th>가격</th>
+                    <th>판매자 이메일</th>
+                    <th>구매자 이메일</th>
+                    <th>구매자 주소</th>
+                    <th style="width: 5rem">주문 상태</th>
+                    <th>거래 날짜</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="order : ${orders}">
+                    <td th:text="${order.getId()}"></td>
+                    <td class="cover-td">
+                        <img class="cover" alt="이미지" th:src="@{${order.getBase64Image()}}">
+                    </td>
+                    <td th:if="${order.getSellerProductName() == null}"
+                        th:text="${order.getBuyerProductName()}"></td>
+                    <td th:if="${order.getBuyerProductName() == null}"
+                        th:text="${order.getSellerProductName()}"></td>
+                    <td th:text="${#numbers.formatInteger(order.getPrice(), 0, 'COMMA') + '원'}"></td>
+                    <td th:if="${order.getType() == 'SELL'}"
+                        th:text="${order.getUserEmail()}"></td>
+                    <td th:if="${order.getType() != 'SELL'}"
+                        th:text="${order.getSellerUserEmail()}"></td>
+                    <td th:if="${order.getType() == 'BUY'}"
+                        th:text="${order.getUserEmail()}"></td>
+                    <td th:if="${order.getType() != 'BUY'}"
+                        th:text="${order.getBuyerUserEmail()}"></td>
+                    <td th:if="${order.getBuyerAddress() != null}"
+                        th:text="${order.getBuyerAddress()}"></td>
+                    <td th:if="${order.getBuyerBidAddress() != null}"
+                        th:text="${order.getBuyerBidAddress()}"></td>
+                    <td th:if="${order.getState() == 'PENDING'}">대기중</td>
+                    <td th:if="${order.getState() == 'INSPECTING'}">검수중</td>
+                    <td th:if="${order.getState() == 'INSPECTION_FAILED'}">검수불합격</td>
+                    <td th:if="${order.getState() == 'INSPECTION_PASSED'}">검수합격</td>
+                    <td th:if="${order.getState() == 'IN_TRANSIT'}">배송중</td>
+                    <td th:if="${order.getState() == 'FAILED'}">거래실패</td>
+                    <td th:if="${order.getState() == 'DELIVERED'}">배송완료</td>
+                    <td th:if="${order.getState() == 'CANCELED'}">취소완료</td>
+                    <td th:if="${order.getState() == 'SETTLED'}">정산완료</td>
+                    <td th:text="${#temporals.format(order.getCreatedAt(), 'yyyy-MM-dd')}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+<footer>
+
+</footer>
+</body>
+</html>

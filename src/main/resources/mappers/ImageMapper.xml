@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kream.kream.mappers.ImageMapper">
+
+    <insert id="insertImage"
+            useGeneratedKeys="true"
+            keyColumn="id"
+            keyProperty="id"
+            parameterType="com.kream.kream.entities.ImageEntity">
+        INSERT INTO `kream`.`image` (`id`, `product_id`, `data`, `type`, `name`, `is_primary`, `created_at`)
+        VALUES (#{id}, #{productId}, #{data}, #{type}, #{name}, #{isPrimary}, #{createdAt})
+    </insert>
+
+    <select id="selectImageByProductIdAndIsPrimary"
+            resultType="com.kream.kream.entities.ImageEntity">
+        SELECT `id`         AS `id`,
+               `product_id` AS `productId`,
+               `data`       AS `data`,
+               `type`       AS `type`,
+               `name`       AS `name`,
+               `is_primary` AS `isPrimary`,
+               `created_at` AS `createdAt`
+        FROM `kream`.`image`
+        WHERE `product_id` = #{id} AND `is_primary` = true
+        LIMIT 1
+    </select>
+
+    <select id="selectImageById"
+            resultType="com.kream.kream.entities.ImageEntity">
+        SELECT `id`         AS `id`,
+               `product_id` AS `productId`,
+               `data`       AS `data`,
+               `type`       AS `type`,
+               `name`       AS `name`,
+               `is_primary` AS `isPrimary`,
+               `created_at` AS `createdAt`
+        FROM `kream`.`image`
+        WHERE `product_id` = #{id}
+    </select>
+
+</mapper>
